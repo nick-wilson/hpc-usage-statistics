@@ -1,0 +1,77 @@
+#!/bin/bash
+
+. ./config
+
+orgs="NUS NTU IHPC"
+
+# R script to merge output from pbs-report with job application statistics
+scripts="PBS-Application-Stats.R PBS-Application-Stats-Unknown.R"
+# Filter out monthly statistics by organisation
+if [ $monthly -eq 1 ] ; then
+for org in $orgs ; do
+ scripts="$scripts PBS-Application-Stats-$org.R"
+done
+fi
+
+# Name is referenced in R script above
+alljobs="alljobs.$suffix.csv"
+
+# base directory
+base=/home/projects/stats
+
+# Merge together all application data
+if [ ! -f "$alljobs" ] ; then
+for f in $base/printjob/archive/{?,??,???}.csv ; do sort $f | uniq ; done > "$alljobs"
+# Tidy up the names
+sed -i -e "s/ , /,/" \
+ -e "s/gromacs/Gromacs/" \
+ -e "s/vasp/VASP/" \
+ -e "s/fluent/ANSYS Fluent/" \
+ -e "s/quantum_espresso/Quantum Espresso/" \
+ -e "s/molpro/Molpro/" \
+ -e "s/g09/Gaussian/" \
+ -e "s/bioinformatics..STAR/STAR/" \
+ -e "s/python_.py_file/python/" \
+ -e "s/R_.R_file/R/" \
+ -e "s/caffe/Caffe/" \
+ -e "s/GA100K/GATK/" \
+ -e "s/cpmd.x/CPMD/" \
+ -e "s/relion/Relion/" \
+ -e "s/openmx/OpenMX/" \
+ -e "s/tensorflow/TensorFlow/" \
+ -e "s/longranger_python/Longranger/" \
+ -e "s/canu_perl/Canu/" \
+ -e "s/main_NW.*\.x/main_NW*.x/" \
+ -e "s,unknown,Unknown," \
+ "$alljobs"
+cat $base/qstat/csv/{?,??,???}-interactive.csv >> "$alljobs"
+fi
+
+# Gather username information and merge with formatted replacements
+if [ ! -f usernames.csv ] ; then
+awk -F\| '{print $2}' pbs-report.intermediate.$suffix.csv | tail -n +2 | sort | uniq | ./get-user-information > usernames-raw.csv
+module load R
+./combine-users.R
+fi
+
+# Modify R script with today's date
+sed -i -e 's,^suffix<-.*,suffix<-"'"$suffix"'",' $scripts
+
+# Run the script to generate csv files with statistics
+for script in $scripts ; do
+ echo running $script
+ Rscript "$script"
+done
+
+cp -pv {alldata,application_by_user,application_usage_{cpu,gpu},{org,user}_walltime}.*$suffix.csv /app/nsccadmin/log/usage-statistics/
+
+if [ $monthly -eq 1 ] ; then
+for org in $orgs ; do
+  rm -rf ${prefix}-${org} && \
+  mkdir ${prefix}-${org} && \
+  cp -p *.${org}.${suffix}.csv ${prefix}-${org} && \
+  rm -f ${prefix}-${org}.zip && \
+  zip -r ${prefix}-${org}.zip ${prefix}-${org} && \
+  rm -rf ${prefix}-${org}
+done
+fi

@@ -1,0 +1,10 @@
+sy=2016
+sm=09
+sd=01
+ey=$sy
+em=$sm
+ed=30
+suffix="$sy$sm$sd-$ey$em$ed"
+# Is this the monthly statistics
+monthly=1
+prefix="${ey}-${em}"
