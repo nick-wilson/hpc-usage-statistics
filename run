@@ -1,5 +1,3 @@
 #!/bin/bash
-. ./config
-./get-pbsreport $sy $sm $sd $ey $em $ed
+./get-pbsreport
 ./generate-application-statistics
-#cp -p /app/nsccadmin/log/usage-statistics/*.NUS.* ~ccewjh/Monthly_Usage/ && chown ccewjh.nus ~ccewjh/Monthly_Usage/*

@@ -1,20 +1,14 @@
 #!/bin/bash
 
-if [ $# -ne 6 ] ; then echo arg error ; exit 1 ; fi
-syear=$1
-smonth=$2
-sday=$3
-year=$4
-month=$5
-day=$6
+. ./config
 
-rawfile="pbs-report.raw.$syear$smonth$sday-$year$month$day.csv"
-csvfile="pbs-report.intermediate.$syear$smonth$sday-$year$month$day.csv"
-csvfile2="pbs-report.final.$syear$smonth$sday-$year$month$day.csv"
+rawfile="pbs-report.raw.$suffix.csv"
+csvfile="pbs-report.intermediate.$suffix.csv"
+csvfile2="pbs-report.final.$suffix.csv"
 
 if [ ! -f "$rawfile" ] ; then
  echo running pbs-report
- pbs-report --verbose --csv "|" --begin $syear$smonth$sday --end $year$month$day --time full > "$rawfile" || exit $?
+ pbs-report --verbose --csv "|" --begin $sy$sm$sd --end $ey$em$ed --time full > "$rawfile" || exit $?
 fi
 
 if [ ! -f "$csvfile" ] ; then

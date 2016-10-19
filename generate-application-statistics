@@ -1,6 +1,7 @@
 #!/bin/bash
 
 . ./config
+echo 'suffix<-"'$suffix'"' > config.R
 
 orgs="NUS NTU IHPC"
 
@@ -17,11 +18,11 @@ fi
 alljobs="alljobs.$suffix.csv"
 
 # base directory
-base=/home/projects/stats
+base=/app/nsccadmin/log
 
 # Merge together all application data
 if [ ! -f "$alljobs" ] ; then
-for f in $base/printjob/archive/{?,??,???}.csv ; do sort $f | uniq ; done > "$alljobs"
+for f in $base/printjob/{?,??,???}.csv ; do sort $f | uniq ; done > "$alljobs"
 # Tidy up the names
 sed -i -e "s/ , /,/" \
  -e "s/gromacs/Gromacs/" \
@@ -44,7 +45,7 @@ sed -i -e "s/ , /,/" \
  -e "s/main_NW.*\.x/main_NW*.x/" \
  -e "s,unknown,Unknown," \
  "$alljobs"
-cat $base/qstat/csv/{?,??,???}-interactive.csv >> "$alljobs"
+cat /home/projects/stats/qstat/csv/{?,??,???}-interactive.csv >> "$alljobs"
 fi
 
 # Gather username information and merge with formatted replacements
@@ -57,6 +58,7 @@ fi
 # Modify R script with today's date
 sed -i -e 's,^suffix<-.*,suffix<-"'"$suffix"'",' $scripts
 
+type Rscript || module load R
 # Run the script to generate csv files with statistics
 for script in $scripts ; do
  echo running $script
@@ -74,4 +76,6 @@ for org in $orgs ; do
   zip -r ${prefix}-${org}.zip ${prefix}-${org} && \
   rm -rf ${prefix}-${org}
 done
+cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
+chown ccewjh.nus ~ccewjh/Monthly_Usage/*
 fi

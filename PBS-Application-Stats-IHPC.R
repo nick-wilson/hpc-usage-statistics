@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 library(dplyr,warn.conflicts=FALSE)
-suffix<-"20160901-20160930"
+source("config.R")
 
 # Edit following section for different filters
 filter<-"IHPC"

@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-suffix<-"20160901-20160930"
+source("config.R")
 
 pbsreport<-paste0("pbs-report.final.",suffix,".csv")
 apps<-paste0("alljobs.",suffix,".csv")

@@ -1,5 +1,6 @@
 #!/usr/bin/env Rscript
 library(dplyr,warn.conflicts=FALSE)
+source("config.R")
 suffix<-"20160901-20160930"
 
 # Edit following section for different filters
