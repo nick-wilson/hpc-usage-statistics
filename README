@@ -7,3 +7,6 @@ There are three stages to generate the statistics:
 1. Set time period required in "config"
 2. Run "./get-pbsreport" as root on wlm01
 3. Run "./generate-application-statistics" as a normal user somewhere "module load R" works.
+
+The "get-pbsreport" can take a lot of time to run, particularly if there lots of jobs in the report.
+The slow step is a shell script which cleans up the output of pbs-report and calculates core-hours.
