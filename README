@@ -1,0 +1,9 @@
+
+The data for the application statistics is being regularly collected in several locations.
+These scripts collect the information, clean the data and produce csv files with the statistics.
+
+There are three stages to generate the statistics:
+
+1. Set time period required in "config"
+2. Run "./get-pbsreport" as root on wlm01
+3. Run "./generate-application-statistics" as a normal user somewhere "module load R" works.

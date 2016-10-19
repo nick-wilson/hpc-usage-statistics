@@ -5,6 +5,6 @@ ey=$sy
 em=$sm
 ed=18
 suffix="$sy$sm$sd-$ey$em$ed"
-# Is this the monthly statistics
+# If monthly statistics then set monthly=1
 monthly=0
 prefix="${ey}-${em}"
