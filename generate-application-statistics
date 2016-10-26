@@ -58,7 +58,7 @@ fi
 # Modify R script with today's date
 sed -i -e 's,^suffix<-.*,suffix<-"'"$suffix"'",' $scripts
 
-type Rscript || module load R
+type Rscript > /dev/null 2>&1 || module load R
 # Run the script to generate csv files with statistics
 for script in $scripts ; do
  echo running $script
