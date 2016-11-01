@@ -55,9 +55,6 @@ module load R
 ./combine-users.R
 fi
 
-# Modify R script with today's date
-sed -i -e 's,^suffix<-.*,suffix<-"'"$suffix"'",' $scripts
-
 type Rscript > /dev/null 2>&1 || module load R
 # Run the script to generate csv files with statistics
 for script in $scripts ; do
@@ -76,6 +73,8 @@ for org in $orgs ; do
   zip -r ${prefix}-${org}.zip ${prefix}-${org} && \
   rm -rf ${prefix}-${org}
 done
-cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
-chown ccewjh.nus ~ccewjh/Monthly_Usage/*
+ if [  ${publish:-0} -eq 1 ] ; then
+  cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
+  chown ccewjh.nus ~ccewjh/Monthly_Usage/*
+ fi
 fi
