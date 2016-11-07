@@ -47,7 +47,7 @@ sed -i -e "s/ , /,/" \
  -e "s/main_NW.*\.x/main_NW*.x/" \
  -e "s,unknown,Unknown," \
  "$alljobs"
-cat /home/projects/stats/qstat/csv/{?,??,???}-interactive.csv >> "$alljobs"
+cat /app/nsccadmin/log/printjob/interactive/{?,??,???}-interactive.csv >> "$alljobs"
 fi
 
 # Gather username information and merge with formatted replacements
