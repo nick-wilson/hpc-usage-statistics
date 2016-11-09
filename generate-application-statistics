@@ -45,6 +45,8 @@ sed -i -e "s/ , /,/" \
  -e "s/longranger_python/Longranger/" \
  -e "s/canu_perl/Canu/" \
  -e "s/main_NW.*\.x/main_NW*.x/" \
+ -e "s/\$LAMMPS_EXECUTABLE/LAMMPS/" \
+ -e "s/\$MDRUN/AMBER/" \
  -e "s,unknown,Unknown," \
  "$alljobs"
 cat /app/nsccadmin/log/printjob/interactive/{?,??,???}-interactive.csv >> "$alljobs"
