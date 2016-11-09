@@ -22,4 +22,7 @@ veryclean: clean
 distclean: veryclean
 	rm -f pbs-report.raw.*.csv
 
+.PHONY: all
+all:
+	./run
 
