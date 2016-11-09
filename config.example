@@ -11,7 +11,7 @@ ed=31
 # If monthly statistics then set monthly=1
 monthly=1
 
-# To copy files out to 
+# To copy files out to stakeholders set publish=1
 publish=0
 
 # Do not modify the next 2 lines
