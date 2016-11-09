@@ -52,6 +52,7 @@ sed -i -e "s/ , /,/" \
  -e "s/main_NW.*\.x/main_NW*.x/" \
  -e "s/\$LAMMPS_EXECUTABLE/LAMMPS/" \
  -e "s/\$MDRUN/AMBER/" \
+ -e "s/starccm+/STAR-CCM+/" \
  -e "s,unknown,Unknown," \
  "$alljobs"
 cat /app/nsccadmin/log/printjob/interactive/{?,??,???}-interactive.csv >> "$alljobs"
@@ -71,8 +72,7 @@ for script in $scripts ; do
  Rscript "$script"
 done
 
-cp -pv {alldata,application_by_user,application_usage_{cpu,gpu},{org,user}_walltime}.*$suffix.csv /app/nsccadmin/log/usage-statistics/
-
+# Make zip file for each organisation
 if [ $monthly -eq 1 ] ; then
 for org in $orgs ; do
   rm -rf ${prefix}-${org} && \
@@ -82,6 +82,17 @@ for org in $orgs ; do
   zip -r ${prefix}-${org}.zip ${prefix}-${org} && \
   rm -rf ${prefix}-${org}
 done
+
+# Copy data to log directory
+logdir=/app/nsccadmin/log/usage-statistics
+cp -pv {alldata,application_by_user,application_usage_{cpu,gpu},{org,user}_walltime}.*$suffix.csv $logdir/
+
+# Set appropriate file permissions on data
+for d in "$PWD" "$logdir" ; do
+ setfacl -R -bk "$d" ;  chmod -R u+rwX,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
+done
+
+# Copy NUS data to Junhong home directory
  if [  ${publish:-0} -eq 1 ] ; then
   cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
   chown ccewjh.nus ~ccewjh/Monthly_Usage/*
