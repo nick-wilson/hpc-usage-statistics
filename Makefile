@@ -13,7 +13,7 @@ veryclean: clean
 	rm -f pbs-report.cleaned.*.csv cores.*.csv
 
 .PHONY : distclean
-veryclean: veryclean
+distclean: veryclean
 	rm -f pbs-report.raw.*.csv
 
 
