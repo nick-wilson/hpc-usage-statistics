@@ -1,7 +1,12 @@
 #!/bin/bash
 
 . ./config
-echo 'suffix<-"'$suffix'"' > config.R
+
+for f in config.mk config.R ; do
+ if [ ! -f $f ] ; then
+  eval ./make-$f
+ fi
+done
 
 orgs="NUS NTU IHPC"
 

@@ -1,7 +1,13 @@
 default_target: stats
 
+config.mk: config
+	./make-config.mk
+
+config.R: config
+	./make-config.R
+
 .PHONY : stats
-stats:
+stats: config.mk config.R
 	./generate-application-statistics
 
 .PHONY : clean
