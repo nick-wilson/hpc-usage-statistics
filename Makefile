@@ -1,26 +1,41 @@
 default_target: stats
 
-config.mk: config
-	./make-config.mk
+include config
 
+# Log onto wlm01 and gather pbs-report data for required period
+pbs-report.raw.$(suffix).csv:
+	echo ssh to root@wlm01 to run pbs-report ; ssh root@wlm01 "cd $(PWD) ; ./pbsreport-get ; chown $(LOGNAME) pbs-report.raw.$(suffix).csv"
+
+# Clean raw pbs-report data
+pbs-report.cleaned.$(suffix).csv: pbs-report.raw.$(suffix).csv
+	./pbsreport-clean
+
+# Parse pbs-report to calculate number of cores in each job
+cores.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
+	./pbsreport-count-cores
+
+# convert config file into format to be read into R scripts
 config.R: config
 	./make-config.R
 
 .PHONY : stats
-stats: config.mk config.R
+stats: pbs-report.raw.$(suffix).csv pbs-report.cleaned.$(suffix).csv jobs.$(suffix).csv config.R
 	./generate-application-statistics
 
+# Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f all{data,jobs}.*.csv *.Rdata {unknown,org,application}_*.csv usernames{,-raw}.csv config.R
+	rm -f alldata.$(suffix).csv *.Rdata {unknown,org,application}_*.csv usernames{,-raw}.csv config.R
 
+# Only remove application data if necessary as it takes a little while to regnerate
 .PHONY : veryclean
 veryclean: clean
-	rm -f pbs-report.cleaned.*.csv cores.*.csv
+	rm -f alljobs.$(suffix).csv
 
+# Only remove pbs-report data as a last resort as it takes a long time to regenerate
 .PHONY : distclean
 distclean: veryclean
-	rm -f pbs-report.raw.*.csv
+	rm -f pbs-report.raw.$(suffix).csv pbs-report.$(suffix).csv cores.$(suffix).csv
 
 .PHONY: all
 all:

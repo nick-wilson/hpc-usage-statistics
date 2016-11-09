@@ -1,0 +1,19 @@
+# Example config file for generating application statistics
+# Do not use " and use ${....} format so that file can be included into both shell scripts and Makefile
+
+sy=2016
+sm=10
+sd=01
+ey=${sy}
+em=${sm}
+ed=31
+
+# If monthly statistics then set monthly=1
+monthly=1
+
+# To copy files out to 
+publish=0
+
+# Do not modify the next 2 lines
+suffix=${sy}${sm}${sd}-${ey}${em}${ed}
+prefix=${ey}-${em}
