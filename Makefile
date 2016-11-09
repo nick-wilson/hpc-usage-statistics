@@ -19,7 +19,7 @@ config.R: config
 	./make-config.R
 
 .PHONY : stats
-stats: pbs-report.raw.$(suffix).csv pbs-report.cleaned.$(suffix).csv jobs.$(suffix).csv config.R
+stats: pbs-report.raw.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv config.R
 	./generate-application-statistics
 
 # Clean up data generated from R scripts
