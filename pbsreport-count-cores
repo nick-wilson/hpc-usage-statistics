@@ -1,0 +1,24 @@
+#!/bin/bash
+
+. ./config
+
+csvfile="pbs-report.cleaned.$suffix.csv"
+csvfile2="cores.$suffix.csv"
+
+if [ ! -f "$csvfile" ] ; then echo no input file ; exit 1 ; fi
+
+if [ ! -f "$csvfile2" ] ; then
+echo Job.ID,Cores > "$csvfile2"
+while read -r line ; do
+ jobid="${line//|*/}"
+ hosts=`echo "$line" | awk -F\| '{print $(NF-8)}'`
+ if [ x"$hosts" != xExecution -a x"$hosts" != x"Host(s)" ] ; then
+  hosts2bc=`echo $hosts | sed -e "s/-ib0//g" -e "s,wlm0[0-9]/[0-9]*,1,g" -e "s,vis[0-9][0-9]/[0-9]*\*,,g" -e "s,vis[0-9][0-9]/[0-9]*,1,g" -e "s,[a-z]*[0-9][0-9][0-9][0-9]/[0-9]*\*,,g" -e "s,[a-z]*[0-9][0-9][0-9][0-9]/[0-9]*,1,g"`
+  cores=`echo $hosts2bc | bc`
+  if [ x"$cores" = x ] ; then echo ERROR: $jobid $hosts ; break ; fi
+  echo "${jobid},${cores}"
+ fi
+done < "$csvfile" >> "$csvfile2"
+fi
+
+grep ERROR: "$csvfile2" && rm -f "$csvfile2"

@@ -10,4 +10,10 @@ clean:
 
 .PHONY : veryclean
 veryclean: clean
-	rm -f pbs-report.*.csv
+	rm -f pbs-report.cleaned.*.csv cores.*.csv
+
+.PHONY : distclean
+veryclean: veryclean
+	rm -f pbs-report.raw.*.csv
+
+
