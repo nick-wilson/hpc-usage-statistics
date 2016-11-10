@@ -4,11 +4,13 @@ source("config.R")
 
 pbsreport<-paste0("pbs-report.cleaned.",suffix,".csv")
 jobcores<-paste0("cores.",suffix,".csv")
+usernames<-paste0("usernames.",suffix,".csv")
 apps<-paste0("alljobs.",suffix,".csv")
 alldata<-paste0("alldata.",suffix,".csv")
 userdata<-paste0("user_walltime.",suffix,".csv")
 app_by_user<-paste0("application_by_user.",suffix,".csv")
 orgdata<-paste0("org_walltime.",suffix,".csv")
+org2data<-paste0("org2_walltime.",suffix,".csv")
 appcpu<-paste0("application_usage_cpu.",suffix,".csv")
 appgpu<-paste0("application_usage_gpu.",suffix,".csv")
 top100<-paste0("top100.",suffix,".csv")
@@ -44,8 +46,19 @@ data<-merge(data,jobnames,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Application.Name[is.na(data$Application.Name)]<-"Unknown"
 
 # merge in names of users
-users<-read.csv(file="usernames.csv")
+users<-read.csv(usernames)
 data<-merge(data,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
+
+# write out data for use in other scripts
+write.csv(data,file=alldata)
+save(data,file='data.Rdata')
+save(users,file='users.Rdata')
+
+# Categorize organizations
+data$Organization.HighLevel<-"Other"
+data[grepl("NUS",data$Organization),"Organization.HighLevel"]<-"NUS"
+data[data$Organization=="NTU","Organization.HighLevel"]<-"NTU"
+data[data$Organization=="GIS"|data$Organization=="IHPC"|data$Organization=="BII"|data$Organization=="IMCB"|data$Organization=="SCEI"|data$Organization=="I2R"|data$Organization=="BMSI"|data$Organization=="ICES"|data$Organization=="DSI"|data$Organization=="IMRE"|data$Organization=="IME"|data$Organization=="SIMT"|data$Organization=="IBN","Organization.HighLevel"]<-"A*STAR"
 
 # write out data for use in other scripts
 write.csv(data,file=alldata)
@@ -95,3 +108,9 @@ org_corehours<-data%>%group_by(Organization)%>%summarise(sum(CoreHours),length(J
 colnames(org_corehours)<-c("Organization","CoreHours","NumJobs")
 org_corehours<-arrange(org_corehours,desc(CoreHours))
 write.csv(org_corehours,file=orgdata)
+
+# Calculate corehours per organisation
+org2_corehours<-data%>%group_by(Organization.HighLevel)%>%summarise(sum(CoreHours),length(Job.ID))
+colnames(org2_corehours)<-c("Organization.HighLevel","CoreHours","NumJobs")
+org2_corehours<-arrange(org2_corehours,desc(CoreHours))
+write.csv(org2_corehours,file=org2data)

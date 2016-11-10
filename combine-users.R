@@ -1,7 +1,8 @@
 #!/usr/bin/env Rscript
-csv_raw<-"usernames-raw.csv"
+source("config.R")
+csv_raw<-paste0("usernames-raw.",suffix,".csv")
 csv_fixed<-"usernames-fixed.csv"
-csv_out<-"usernames.csv"
+csv_out<-paste0("usernames.",suffix,".csv")
 data_raw<-read.csv(file=csv_raw,header=TRUE)
 data_fixed<-read.csv(file=csv_fixed,header=TRUE)
 data<-rbind(data_fixed,data_raw)

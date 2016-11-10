@@ -3,9 +3,9 @@ library(dplyr,warn.conflicts=FALSE)
 source("config.R")
 
 # Edit following section for different filters
-filter<-"NUS"
+filter<-"ASTAR"
 load(file='data.Rdata')
-data<-data%>%filter(Organization.HighLevel==filter)
+data<-data%>%filter(Organization.HighLevel=="A*STAR")
 
 alldata<-paste0("alldata.",filter,".",suffix,".csv")
 userdata<-paste0("user_walltime.",filter,".",suffix,".csv")
