@@ -35,7 +35,7 @@ veryclean: clean
 # Only remove pbs-report data as a last resort as it takes a long time to regenerate
 .PHONY : distclean
 distclean: veryclean
-	rm -f pbs-report.raw.$(suffix).csv pbs-report.$(suffix).csv cores.$(suffix).csv $(prefix)-*.zip
+	rm -f pbs-report.raw.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv $(prefix)-*.zip
 
 .PHONY: all
 all:
