@@ -4,7 +4,5 @@
 
 rawfile="pbs-report.raw.$suffix.csv"
 
-if [ ! -f "$rawfile" ] ; then
- echo running pbs-report
- pbs-report --verbose --csv "|" --begin $sy$sm$sd --end $ey$em$ed --time full > "$rawfile" || exit $?
-fi
+echo running pbs-report
+pbs-report --verbose --csv "|" --begin $sy$sm$sd --end $ey$em$ed --time full > "$rawfile"

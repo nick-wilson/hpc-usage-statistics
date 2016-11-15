@@ -2,10 +2,13 @@
 
 source("config.R")
 
+# Inputs
 pbsreport<-paste0("pbs-report.cleaned.",suffix,".csv")
 jobcores<-paste0("cores.",suffix,".csv")
 usernames<-paste0("usernames.",suffix,".csv")
 apps<-paste0("alljobs.",suffix,".csv")
+
+# Outputs
 alldata<-paste0("alldata.",suffix,".csv")
 userdata<-paste0("user_walltime.",suffix,".csv")
 app_by_user<-paste0("application_by_user.",suffix,".csv")

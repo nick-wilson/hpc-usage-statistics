@@ -21,4 +21,9 @@ while read -r line ; do
 done < "$csvfile" >> "$csvfile2"
 fi
 
-grep ERROR: "$csvfile2" && rm -f "$csvfile2"
+if grep ERROR: "$csvfile2" ; then
+ rm -f "$csvfile2"
+ exit 1
+else
+ exit 0
+fi
