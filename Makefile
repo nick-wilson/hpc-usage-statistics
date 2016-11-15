@@ -25,7 +25,7 @@ stats: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv config.R
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f alldata.$(suffix).csv *.Rdata {unknown,org,application}_*.csv usernames{,-raw}.csv config.R
+	rm -f alldata.$(suffix).csv *.Rdata {unknown,org{,2},application,user}_*.$(suffix).csv top100.$(suffix).csv usernames{,-raw}.csv config.R
 
 # Only remove application data if necessary as it takes a little while to regnerate
 .PHONY : veryclean
