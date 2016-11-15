@@ -12,8 +12,10 @@ apps<-paste0("alljobs.",suffix,".csv")
 alldata<-paste0("alldata.",suffix,".csv")
 userdata<-paste0("user_walltime.",suffix,".csv")
 app_by_user<-paste0("application_by_user.",suffix,".csv")
-orgdata<-paste0("org_walltime.",suffix,".csv")
-org2data<-paste0("org2_walltime.",suffix,".csv")
+orgdata_cpu<-paste0("org_walltime_cpu.",suffix,".csv")
+orgdata_gpu<-paste0("org_walltime_gpu.",suffix,".csv")
+org2data_cpu<-paste0("org2_walltime_cpu.",suffix,".csv")
+org2data_gpu<-paste0("org2_walltime_gpu.",suffix,".csv")
 appcpu<-paste0("application_usage_cpu.",suffix,".csv")
 appgpu<-paste0("application_usage_gpu.",suffix,".csv")
 top100<-paste0("top100.",suffix,".csv")
@@ -106,14 +108,26 @@ colnames(df1)<-c("Application.Name","CoreHours","NumJobs","NumUsers")
 df1<-arrange(df1,desc(CoreHours))
 write.csv(df1,file=appgpu)
 
-# Calculate corehours per organisation
-org_corehours<-data%>%group_by(Organization)%>%summarise(sum(CoreHours),length(Job.ID))
-colnames(org_corehours)<-c("Organization","CoreHours","NumJobs")
-org_corehours<-arrange(org_corehours,desc(CoreHours))
-write.csv(org_corehours,file=orgdata)
+# Calculate CPU corehours per organisation
+org_corehours_cpu<-data%>%filter(Node.Type=="CPU")%>%group_by(Organization)%>%summarise(sum(CoreHours),length(Job.ID))
+colnames(org_corehours_cpu)<-c("Organization","CoreHours","NumJobs")
+org_corehours_cpu<-arrange(org_corehours_cpu,desc(CoreHours))
+write.csv(org_corehours_cpu,file=orgdata_cpu)
 
-# Calculate corehours per organisation
-org2_corehours<-data%>%group_by(Organization.HighLevel)%>%summarise(sum(CoreHours),length(Job.ID))
-colnames(org2_corehours)<-c("Organization.HighLevel","CoreHours","NumJobs")
-org2_corehours<-arrange(org2_corehours,desc(CoreHours))
-write.csv(org2_corehours,file=org2data)
+# Calculate GPU corehours per organisation
+org_corehours_gpu<-data%>%filter(Node.Type=="GPU")%>%group_by(Organization)%>%summarise(sum(CoreHours),length(Job.ID))
+colnames(org_corehours_gpu)<-c("Organization","CoreHours","NumJobs")
+org_corehours_gpu<-arrange(org_corehours_gpu,desc(CoreHours))
+write.csv(org_corehours_gpu,file=orgdata_gpu)
+
+# Calculate CPU corehours per high-level organisation
+org2_corehours_cpu<-data%>%filter(Node.Type=="CPU")%>%group_by(Organization.HighLevel)%>%summarise(sum(CoreHours),length(Job.ID))
+colnames(org2_corehours_cpu)<-c("Organization.HighLevel","CoreHours","NumJobs")
+org2_corehours_cpu<-arrange(org2_corehours_cpu,desc(CoreHours))
+write.csv(org2_corehours_cpu,file=org2data_cpu)
+
+# Calculate GPU corehours per high-level organisation
+org2_corehours_gpu<-data%>%filter(Node.Type=="GPU")%>%group_by(Organization.HighLevel)%>%summarise(sum(CoreHours),length(Job.ID))
+colnames(org2_corehours_gpu)<-c("Organization.HighLevel","CoreHours","NumJobs")
+org2_corehours_gpu<-arrange(org2_corehours_gpu,desc(CoreHours))
+write.csv(org2_corehours_gpu,file=org2data_gpu)
