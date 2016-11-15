@@ -1,12 +1,14 @@
 #!/usr/bin/env Rscript
 
-unknown_job_csv<-'unknown_job.csv'
-unknown_gpujob_csv<-'unknown_gpujob.csv'
-unknown_user_csv<-'unknown_user.csv'
+source("config.R")
+source("PBS-Application-Stats-Common.R")
 
-library(dplyr,warn.conflicts=FALSE)
+load(file=alldata_R)
 
-load("data.Rdata")
+unknown_job_csv<-paste0("unknown_job.",suffix,".csv")
+unknown_gpujob_csv<-paste0("unknown_gpujob.",suffix,".csv")
+unknown_user_csv<-paste0("unknown_user.",suffix,".csv")
+
 unknown<-data%>%filter(Application.Name=="Unknown")%>%arrange(desc(CoreHours))
 write.csv(unknown,file=unknown_job_csv)
 unknown_gpu<-unknown%>%filter(Node.Type=="GPU")%>%arrange(desc(CoreHours))

@@ -11,7 +11,7 @@ done
 orgs="NUS NTU ASTAR GIS IHPC"
 
 # R script to merge output from pbs-report with job application statistics
-scripts="PBS-Application-Stats.R PBS-Application-Stats-Unknown.R"
+scripts="PBS-Application-Stats-Clean.R PBS-Application-Stats-Combined.R PBS-Application-Stats-Unknown.R"
 # Filter out monthly statistics by organisation
 if [ $monthly -eq 1 ] ; then
 for org in $orgs ; do
@@ -84,8 +84,8 @@ for org in $orgs ; do
 done
 
 # Copy data to log directory
-logdir=/app/nsccadmin/log/usage-statistics
-cp -pv {alldata,application_by_user,application_usage_{cpu,gpu},{org{,2},user}_walltime}.*$suffix.csv $logdir/
+logdir=$base/usage-statistics
+cp -pv {alldata,top100,org,application,user_}*.$suffix.csv $logdir/
 
 # Set appropriate file permissions on data
 for d in "$PWD" "$logdir" ; do
