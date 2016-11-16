@@ -85,15 +85,16 @@ done
 
 # Copy data to log directory
 logdir=$base/usage-statistics
+outputfiles=`echo {alldata,top100,org,application,user_}*.$suffix.csv`
 if [ $monthly -eq 1 ] ; then
- cp -pv {alldata,top100,org,application,user_}*.$suffix.csv $logdir/
+ cp -pv $outputfiles $logdir/
  mkdir -p $logdir/by-org
  for org in $orgs ; do
   mv -v $logdir/*.$org.$suffix.csv $logdir/by-org/
  done
 else
  mkdir -p $logdir/weekly
- cp -pv {alldata,top100,org,application,user_}*.$suffix.csv $logdir/weekly/
+ cp -pv $outputfiles $logdir/weekly/
 fi
 
 # Set appropriate file permissions on data
