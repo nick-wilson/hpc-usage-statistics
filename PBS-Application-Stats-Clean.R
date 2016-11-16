@@ -9,9 +9,6 @@ jobcores<-paste0("cores.",suffix,".csv")
 usernames<-paste0("usernames.",suffix,".csv")
 apps<-paste0("alljobs.",suffix,".csv")
 
-# Outputs
-alldata<-paste0("alldata.",suffix,".csv")
-
 # load in csv data from pbsreport and rename the columns
 data<-read.csv(file=pbsreport,header=TRUE,sep="|",skip=1)
 data<-rename(data,Execution.Hosts=Host.s.,Core.Memory=Memory,Virtual.Memory=Memory.1,Suspend.Time=Time,Date.Created=Created)
@@ -51,6 +48,5 @@ data[data$Organization=="NTU","Organization.HighLevel"]<-"NTU"
 data[data$Organization=="GIS"|data$Organization=="IHPC"|data$Organization=="BII"|data$Organization=="IMCB"|data$Organization=="SCEI"|data$Organization=="I2R"|data$Organization=="BMSI"|data$Organization=="ICES"|data$Organization=="DSI"|data$Organization=="IMRE"|data$Organization=="IME"|data$Organization=="SIMT"|data$Organization=="IBN","Organization.HighLevel"]<-"A*STAR"
 
 # write out data for use in other scripts
-write.csv(data,file=alldata)
 save(data,file=alldata_R)
 save(users,file=users_R)

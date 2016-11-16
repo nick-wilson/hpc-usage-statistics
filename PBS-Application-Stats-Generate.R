@@ -17,6 +17,9 @@ total<-paste0("total.",filter,suffix,".csv")
 data_cpu<-data%>%filter(Node.Type=="CPU")
 data_gpu<-data%>%filter(Node.Type=="GPU")
 
+# Write data on all jobs
+write.csv(data,file=alldata,row.names=FALSE)
+
 # Total core hours
 total_corehours<-data.frame(sum(data$CoreHours),sum(data_cpu$CoreHours),sum(data_gpu$CoreHours))
 colnames(total_corehours)<-c("Combined","CPU","GPU")
