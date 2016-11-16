@@ -1,5 +1,18 @@
 #!/bin/sh
 
+cat << EOF > config
+sy=XXX
+sm=XXX
+sd=XXX
+ey=XXX
+em=XXX
+ed=XXX
+monthly=1
+publish=0
+suffix=aggregate
+prefix=aggregate
+EOF
+
 . ./config
 
 d=20160328-20160617
