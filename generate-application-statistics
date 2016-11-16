@@ -85,7 +85,7 @@ done
 
 # Copy data to log directory
 logdir=$base/usage-statistics
-outputfiles=`echo {alldata,top100,org,application,user_}*.$suffix.csv`
+outputfiles=`echo {alldata,top100,total,org,application,user_}*.$suffix.csv`
 if [ $monthly -eq 1 ] ; then
  cp -pv $outputfiles $logdir/
  mkdir -p $logdir/by-org
