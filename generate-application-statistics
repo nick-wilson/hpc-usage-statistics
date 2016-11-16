@@ -19,42 +19,11 @@ for org in $orgs ; do
 done
 fi
 
-# Name is referenced in R script above
-alljobs="alljobs.$suffix.csv"
-
 # base directory
 base=/app/nsccadmin/log
 
 # Merge together all application data
-if [ ! -f "$alljobs" ] ; then
-for f in $base/printjob/{?,??,???}.csv ; do sort $f | uniq ; done > "$alljobs"
-# Tidy up the names
-sed -i -e "s/ , /,/" \
- -e 's,",,g' \
- -e "s,[()], ,g" \
- -e "s/gromacs/Gromacs/" \
- -e "s/vasp/VASP/" \
- -e "s/fluent/ANSYS Fluent/" \
- -e "s/quantum_espresso/Quantum Espresso/" \
- -e "s/molpro/Molpro/" \
- -e "s/g09/Gaussian/" \
- -e "s/bioinformatics..STAR/STAR/" \
- -e "s/python_.py_file/python/" \
- -e "s/R_.R_file/R/" \
- -e "s/caffe/Caffe/" \
- -e "s/GA100K/GATK/" \
- -e "s/cpmd.x/CPMD/" \
- -e "s/relion/Relion/" \
- -e "s/openmx/OpenMX/" \
- -e "s/tensorflow/TensorFlow/" \
- -e "s/longranger_python/Longranger/" \
- -e "s/canu_perl/Canu/" \
- -e "s/main_NW.*\.x/main_NW*.x/" \
- -e "s/starccm+/STAR-CCM+/" \
- -e "s,unknown,Unknown," \
- "$alljobs"
-cat /app/nsccadmin/log/printjob/interactive/{?,??,???}-interactive.csv >> "$alljobs"
-fi
+./make-alljobs
 
 # Gather username information and merge with formatted replacements
 if [ ! -f usernames.$suffix.csv ] ; then
