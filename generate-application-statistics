@@ -30,9 +30,9 @@ if [ ! -f "$alljobs" ] ; then
 for f in $base/printjob/{?,??,???}.csv ; do sort $f | uniq ; done > "$alljobs"
 # Tidy up the names
 sed -i -e "s/ , /,/" \
+ -e 's,",,g' \
+ -e "s,[()], ,g" \
  -e "s/gromacs/Gromacs/" \
- -e "s,pmemd.cuda.MPI,AMBER," \
- -e "s,pmemd.cuda,AMBER," \
  -e "s/vasp/VASP/" \
  -e "s/fluent/ANSYS Fluent/" \
  -e "s/quantum_espresso/Quantum Espresso/" \
@@ -50,8 +50,6 @@ sed -i -e "s/ , /,/" \
  -e "s/longranger_python/Longranger/" \
  -e "s/canu_perl/Canu/" \
  -e "s/main_NW.*\.x/main_NW*.x/" \
- -e "s/\$LAMMPS_EXECUTABLE/LAMMPS/" \
- -e "s/\$MDRUN/AMBER/" \
  -e "s/starccm+/STAR-CCM+/" \
  -e "s,unknown,Unknown," \
  "$alljobs"
