@@ -4,7 +4,7 @@ include config
 
 # Log onto wlm01 and gather pbs-report data for required period
 pbs-report.raw.$(suffix).csv:
-	echo ssh to root@wlm01 to run pbs-report ; ssh root@wlm01 "cd $(PWD) && ./pbsreport-get && chown $(LOGNAME) pbs-report.raw.$(suffix).csv"
+	./pbsreport-get
 
 # Clean raw pbs-report data
 pbs-report.cleaned.$(suffix).csv: pbs-report.raw.$(suffix).csv
