@@ -10,27 +10,34 @@ usernames<-paste0("usernames.",suffix,".csv")
 apps<-paste0("alljobs.",suffix,".csv")
 
 # load in csv data from pbsreport and rename the columns
+cat("load from csv\n")
 data<-read.csv(file=pbsreport,header=TRUE,sep="|",skip=1)
+cat("rename columns\n")
 data<-rename(data,Execution.Hosts=Host.s.,Core.Memory=Memory,Virtual.Memory=Memory.1,Suspend.Time=Time,Date.Created=Created)
 
 # convert seconds into hours
+cat("seconds->hours\n")
 data$Wall.Time.Hours<-as.numeric(data$Wall.Time)/3600.0
 data$Wait.Time.Hours<-as.numeric(data$Wait.Time)/3600.0
 data$CPU.Time.Hours<-as.numeric(data$CPU.Time)/3600.0
 data$Suspend.Time.Hours<-as.numeric(data$Suspend.Time)/3600.0
 
 # Check Execution hosts for string gpu to classify job as CPU or GPU
+cat("classify as CPU or GPU\n")
 data$Node.Type<-"CPU"
 data[grepl("gpu",data$Execution.Hosts),"Node.Type"]<-"GPU"
 
 # Merge in separately calculated data on cores per job
+cat("merge in cores per job\n")
 cores<-read.csv(file=jobcores,header=TRUE)
 data<-merge(data,cores,all.x=TRUE,all.y=FALSE,sort=FALSE)
 
 # Multiply cores by wall time to get CoreHours
+cat("calculate core hours\n")
 data$CoreHours<-as.numeric(data$Cores)*as.numeric(data$Wall.Time.Hours)
 
 # Create new column with Job Index removed and match that against application data
+cat("create job id without index\n")
 data$Job.ID.NoIndex<-gsub('\\[\\d+\\]','[]',data$Job.ID)
 jobnames<-read.csv(file=apps,header=FALSE,colClasses="character")
 colnames(jobnames)<-c("Job.ID.NoIndex","Application.Name")
@@ -38,10 +45,12 @@ data<-merge(data,jobnames,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Application.Name[is.na(data$Application.Name)]<-"Unknown"
 
 # merge in names of users
+cat("merge in names of users\n")
 users<-read.csv(usernames)
 data<-merge(data,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
 
 # Categorize organizations
+cat("categorize organizations\n")
 data$Organization.HighLevel<-"Other"
 data[grepl("NUS",data$Organization),"Organization.HighLevel"]<-"NUS"
 data[data$Organization=="NTU","Organization.HighLevel"]<-"NTU"
