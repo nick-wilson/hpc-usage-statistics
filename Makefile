@@ -37,7 +37,7 @@ veryclean: clean
 distclean: veryclean
 	rm -f pbs-report.raw.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv $(prefix)-*.zip
 
-.PHONY: all
-all:
-	./run
+.PHONY: aggregate
+aggregate:
+	./aggregate ; $(MAKE) stats
 
