@@ -1,10 +1,14 @@
 #!/bin/bash
 echo Username,Name,Organization
 while read username ; do
-cn=`ldapsearch -x -LLL "(uid=$username)" | grep ^cn: | sed -e "s,^cn. ,,"`
-sn=`ldapsearch -x -LLL "(uid=$username)" | grep ^sn: | sed -e "s,^sn. ,,"`
-name=`echo $cn $sn | sed -e "s/,//g" -e "s/#//"`
-name="${name% .}"
+ name=`ldapsearch -x -LLL "(uid=$username)" | grep ^givenName | sed -e 's,^givenName. ,,'`
+ name="${name/./}"
+if [ x"$name" == x ] ; then
+ cn=`ldapsearch -x -LLL "(uid=$username)" | grep ^cn: | sed -e "s,^cn. ,,"`
+ sn=`ldapsearch -x -LLL "(uid=$username)" | grep ^sn: | sed -e "s,^sn. ,,"`
+ name=`echo $cn $sn | sed -e 's/,//g' -e 's/#//g' -e 's/  */ /'`
+ name="${name% .}"
+fi
 dn=`ldapsearch -x -LLL "(uid=$username)" | grep ^dn: | sed -e "s/^dn. uid=${username},ou=//" -e "s/,.*//" | tr '[a-z]' '[A-Z]'`
 
 echo ${username},${name},${dn}
