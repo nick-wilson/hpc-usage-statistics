@@ -1,5 +1,0 @@
-#!/bin/bash
-ssh root@wlm01 "cd $PWD && ./pbsreport-get"
-./pbsreport-clean
-./pbsreport-count-cores
-./generate-application-statistics
