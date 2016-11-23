@@ -15,15 +15,38 @@ EOF
 
 . ./config
 
+# Alpha Phase
 d=20160328-20160617
+echo $d
+head -n 7 ../$d/pbs-report.raw.$d.csv > pbs-report.raw.$suffix.csv
+n=`grep -n "PBS Pro Cluster Accounting Summary Statistics" ../$d/pbs-report.raw.$d.csv | sed -e 's,:.*,,'`
+((n=n-9))
+tail -n +8 ../$d/pbs-report.raw.$d.csv | head -n $n | sed -e 's,^,A,' >>  pbs-report.raw.$suffix.csv
 
-touch pbs-report.raw.$suffix.csv
+# Beta Phase
+for dd in 20160618-20160630 2016{07..12}01-* {2017..2020}{01..12}01-* ; do
+ d=`cd .. ; echo $dd`
+ if [ ! -d ../$d ] ; then continue ; fi
+ echo $d
+ n=`grep -n "PBS Pro Cluster Accounting Summary Statistics" ../$d/pbs-report.raw.$d.csv | sed -e 's,:.*,,'`
+ ((n=n-9))
+ tail -n +8 ../$d/pbs-report.raw.$d.csv | head -n $n >>  pbs-report.raw.$suffix.csv
+done
+
+
+# generate cleaned and core csv files, disabled for now
+if [ 0 -eq 1 ] ; then
+d=20160328-20160617
+echo $d
 head -n 2 ../$d/pbs-report.cleaned.$d.csv > pbs-report.cleaned.$suffix.csv
 tail -n +3 ../$d/pbs-report.cleaned.$d.csv | sed -e 's,^,A,' >> pbs-report.cleaned.$suffix.csv
 head -n 1 ../$d/cores.$d.csv > cores.$suffix.csv
 tail -n +2 ../$d/cores.$d.csv | sed -e 's,^,A,' >> cores.$suffix.csv
-
-for d in 20160618-20160630 20160701-20160731 20160801-20160831 20160901-20160930 20161001-20161031 20161101-20161130 ; do
+for dd in 20160618-20160630 2016{07..12}01-* {2017..2020}{01..12}01-* ; do
+ d=`cd .. ; echo $dd`
+ if [ ! -d ../$d ] ; then continue ; fi
+ echo $d
  tail -n +3 ../$d/pbs-report.cleaned.$d.csv >> pbs-report.cleaned.$suffix.csv
  tail -n +2 ../$d/cores.$d.csv >> cores.$suffix.csv
 done
+fi
