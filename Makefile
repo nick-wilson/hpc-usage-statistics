@@ -11,15 +11,15 @@ pbs-report.cleaned.$(suffix).csv: pbs-report.raw.$(suffix).csv config.py
 	./pbsreport-clean.py
 
 # Parse pbs-report to calculate number of cores in each job
-cores.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	./pbsreport-count-cores
+cores.$(suffix).csv: pbs-report.cleaned.$(suffix).csv config.py
+	./pbsreport-count-cores.py
 
 # convert config file into format to be read into R scripts
 config.py config.R: config
 	./make-config
 
 .PHONY : stats
-stats: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv config.R config.py
+stats: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv config.R
 	./generate-application-statistics
 
 # Clean up data generated from R scripts
