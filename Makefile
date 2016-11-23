@@ -26,9 +26,12 @@ usernames.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 alljobs.$(suffix).csv: pbs-report.raw.$(suffix).csv
 	./make-alljobs
 
-.PHONY : stats
-stats: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv alljobs.$(suffix).csv config.R
+# Generate statistics if any source files have been updated
+alldata.$(suffix).csv: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv alljobs.$(suffix).csv config.R
 	./make-stats
+
+.PHONY : stats
+stats: alldata.$(suffix).csv
 
 # Clean up data generated from R scripts
 .PHONY : clean
