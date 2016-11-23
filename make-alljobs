@@ -9,7 +9,6 @@ alljobs="alljobs.$suffix.csv"
 base=/app/nsccadmin/log
 
 # Merge together all application data
-if [ ! -f "$alljobs" ] ; then
 for f in $base/printjob/{?,??,???}.csv ; do sort $f | uniq ; done > "$alljobs"
 # Tidy up the names
 sed -i -e "s/ , /,/" \
@@ -36,5 +35,4 @@ sed -i -e "s/ , /,/" \
  -e "s/starccm+/STAR-CCM+/" \
  -e "s,unknown,Unknown," \
  "$alljobs"
-cat /app/nsccadmin/log/printjob/interactive/{?,??,???}-interactive.csv >> "$alljobs"
-fi
+cat $base/printjob/interactive/{?,??,???}-interactive.csv >> "$alljobs"

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+. ./config
+
+usernames_csv="usernames.$suffix.csv"
+usernames_raw_csv="usernames-raw.$suffix.csv"
+report_cleaned_csv="pbs-report.cleaned.$suffix.csv"
+
+# Fail if PBS report is not found
+if [ ! -f "$report_cleaned_csv" ] ; then exit 1 ; fi
+
+# Gather raw username information
+echo Username,Name,Organization > "$usernames_raw_csv"
+awk -F\| '{print $2}' "$report_cleaned_csv" | tail -n +3 | sort | uniq | while read username ; do
+ name=`ldapsearch -x -LLL "(uid=$username)" | grep ^givenName | sed -e 's,^givenName. ,,' -e 's/,/ /g' -e 's/  */ /g'`
+ name="${name/./}"
+ if [ x"$name" == x ] ; then
+  cn=`ldapsearch -x -LLL "(uid=$username)" | grep ^cn: | sed -e "s,^cn. ,," -e 's/,/ /g' -e 's/  */ /g'`
+  sn=`ldapsearch -x -LLL "(uid=$username)" | grep ^sn: | sed -e "s,^sn. ,," -e 's/,/ /g' -e 's/  */ /g'`
+  name=`echo $cn $sn | sed -e 's/,//g' -e 's/#//g' -e 's/  */ /'`
+  name="${name% .}"
+ fi
+ dn=`ldapsearch -x -LLL "(uid=$username)" | grep ^dn: | sed -e "s/^dn. uid=${username},ou=//" -e "s/,.*//" | tr '[a-z]' '[A-Z]'`
+ echo ${username},${name},${dn}
+done >> "$usernames_raw_csv"
+
+# Merge raw usernames with formatted replacements
+type Rscript > /dev/null 2>&1 || module load R
+./combine-users.R || mv "$usernames_csv" "$usernames_csv"~

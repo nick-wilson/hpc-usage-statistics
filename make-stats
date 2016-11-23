@@ -22,16 +22,6 @@ fi
 # base directory
 base=/app/nsccadmin/log
 
-# Merge together all application data
-./make-alljobs
-
-# Gather username information and merge with formatted replacements
-if [ ! -f usernames.$suffix.csv ] ; then
-awk -F\| '{print $2}' pbs-report.cleaned.$suffix.csv | tail -n +3 | sort | uniq | ./get-user-information > usernames-raw.$suffix.csv
-module load R
-./combine-users.R
-fi
-
 type Rscript > /dev/null 2>&1 || module load R
 # Run the script to generate csv files with statistics
 for script in $scripts ; do
