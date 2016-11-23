@@ -2,11 +2,17 @@
 The data for the application statistics is being regularly collected in several locations.
 These scripts collect the information, clean the data and produce csv files with the statistics.
 
-There are three stages to generate the statistics:
+To generate the statistics use the following procedure:
 
-1. Set time period required in "config"
-2. Run "./get-pbsreport" as root on wlm01
-3. Run "./generate-application-statistics" as a normal user somewhere "module load R" works.
+    cp config.example config
+    # edit config with correct dates and settings
+    make
 
-The "get-pbsreport" can take a lot of time to run, particularly if there lots of jobs in the report.
-The slow step is a shell script which cleans up the output of pbs-report and calculates core-hours.
+This will do the following:
+
+1. Run pbs-report over date range specified in config as root on wlm01 (uses ssh if username or hostname is not correct)
+2. Clean output to correct for any "|" characters in job names and to remove header and footer lines
+3. Count the number of cores used by each job (gpu nodes always counted as 24 cores) in a csv file
+4. Collect application information in a csv file
+5. Collect information about all users who submitted jobs in a csv file
+6. Run R scripts to generate statistics
