@@ -39,6 +39,7 @@ for org in $orgs ; do
   zip -r ${prefix}-${org}.zip ${prefix}-${org} && \
   rm -rf ${prefix}-${org}
 done
+fi
 
 # Copy data to log directory
 logdir=$base/usage-statistics
@@ -64,4 +65,3 @@ done
   cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
   chown ccewjh.nus ~ccewjh/Monthly_Usage/*
  fi
-fi
