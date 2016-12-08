@@ -61,8 +61,11 @@ for d in "$PWD" "$logdir" ; do
  setfacl -R -bk "$d" ;  chmod -R u+rwX,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
 done
 
-# Copy NUS data to Junhong home directory
- if [  ${publish:-0} -eq 1 ] ; then
-  cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
-  chown ccewjh.nus ~ccewjh/Monthly_Usage/*
- fi
+if [  ${publish:-0} -eq 1 ] ; then
+ # Copy NUS data to Junhong home directory
+ cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
+ chown ccewjh.nus ~ccewjh/Monthly_Usage/*
+ # Copy NTU data to Melvin home directory
+ cp -ip *.NTU* ~melvin/Monthly_Usage/ < /dev/null
+ chown melvin.ntu ~melvin/Monthly_Usage/*
+fi
