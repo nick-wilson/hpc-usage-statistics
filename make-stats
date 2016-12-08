@@ -30,7 +30,8 @@ for script in $scripts ; do
 done
 
 # Make zip file for each organisation
-if [ $monthly -eq 1 ] ; then
+makezip=${makezip:-0}
+if [ $makezip -eq 1 ] ; then
 for org in $orgs ; do
   rm -rf ${prefix}-${org} && \
   mkdir ${prefix}-${org} && \
