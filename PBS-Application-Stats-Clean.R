@@ -55,7 +55,8 @@ data$Organization.HighLevel<-"Other"
 data[grepl("NUS",data$Organization),"Organization.HighLevel"]<-"NUS"
 data[data$Organization=="NTU","Organization.HighLevel"]<-"NTU"
 data[data$Organization=="GIS"|data$Organization=="IHPC"|data$Organization=="BII"|data$Organization=="IMCB"|data$Organization=="SCEI"|data$Organization=="I2R"|data$Organization=="BMSI"|data$Organization=="ICES"|data$Organization=="DSI"|data$Organization=="IMRE"|data$Organization=="IME"|data$Organization=="SIMT"|data$Organization=="IBN","Organization.HighLevel"]<-"A*STAR"
-data[data$Organization=="CREATE"|data$Organization=="SMART"|data$Organization=="ETHZ"|data$Organization=="H2I"|data$Organization=="MIT"|data$Organization=="BEARS-BERKELEY"|data$Organization=="TUM-CREATE"|data$Organization=="SINBERISE"|data$Organization=="E2S2"|data$Organization=="SINBERBEST"|data$Organization=="CARES","Organization.HighLevel"]<-"CREATE"
+#data[data$Organization=="CREATE"|data$Organization=="SMART"|data$Organization=="ETHZ"|data$Organization=="H2I"|data$Organization=="MIT"|data$Organization=="BEARS-BERKELEY"|data$Organization=="TUM-CREATE"|data$Organization=="SINBERISE"|data$Organization=="E2S2"|data$Organization=="SINBERBEST"|data$Organization=="CARES","Organization.HighLevel"]<-"CREATE"
+data[data$Organization=="CREATE"|data$Organization=="SMART"|data$Organization=="ETHZ"|data$Organization=="MIT"|data$Organization=="BEARS-BERKELEY"|data$Organization=="TUM-CREATE"|data$Organization=="SINBERISE"|data$Organization=="E2S2"|data$Organization=="SINBERBEST"|data$Organization=="CARES","Organization.HighLevel"]<-"CREATE"
 
 # write out data for use in other scripts
 save(data,file=alldata_R)
