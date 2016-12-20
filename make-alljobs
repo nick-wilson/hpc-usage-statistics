@@ -24,6 +24,7 @@ sed -i -e "s/ , /,/" \
  -e "s/python_.py_file/python/" \
  -e "s/R_.R_file/R/" \
  -e "s/caffe/Caffe/" \
+ -e "s/Caffe.bin/Caffe/" \
  -e "s/GA100K/GATK/" \
  -e "s/cpmd.x/CPMD/" \
  -e "s/relion/Relion/" \

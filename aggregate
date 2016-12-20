@@ -57,8 +57,8 @@ for dd in 20160618-20160630 2016{07..12}01-* {2017..2020}{01..12}01-* ; do
  tst="../$d/alljobs.$d.csv"
  if [ -f $tst ] ; then file="$tst" ; fi
 done
-cp -v $file alljobs.aggregate.csv
+cp -v $file alljobs.$suffix.csv
 
 # Accumulate all username information
-echo Username,Name,Organization > usernames.aggregate.csv
-cat ../20*/usernames.*.csv | grep -v ^Username | sort | uniq >> usernames.aggregate.csv
+echo Username,Name,Organization > usernames.$suffix.csv
+cat ../20*/usernames.*.csv | grep -v ^Username | sort | uniq >> usernames.$suffix.csv
