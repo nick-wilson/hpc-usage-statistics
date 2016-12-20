@@ -3,7 +3,8 @@
 alldata<-paste0("alldata.",filter,suffix,".csv")
 userdata_cpu<-paste0("user_walltime_cpu.",filter,suffix,".csv")
 userdata_gpu<-paste0("user_walltime_gpu.",filter,suffix,".csv")
-app_by_user<-paste0("application_by_user.",filter,suffix,".csv")
+app_by_user_cpu<-paste0("application_by_user_cpu.",filter,suffix,".csv")
+app_by_user_gpu<-paste0("application_by_user_gpu.",filter,suffix,".csv")
 orgdata_cpu<-paste0("org_walltime_cpu.",filter,suffix,".csv")
 orgdata_gpu<-paste0("org_walltime_gpu.",filter,suffix,".csv")
 org2data_cpu<-paste0("org2_walltime_cpu.",filter,suffix,".csv")
@@ -45,12 +46,21 @@ write.csv(tmpdata,file=userdata_gpu)
 rm(tmpdata)
 
 # Calculate corehours per user per application
-tmpdata<-data%>%group_by(Username,Application.Name)%>%summarise(sum(CoreHours),length(Job.ID))
+tmpdata<-data_cpu%>%group_by(Username,Application.Name)%>%summarise(sum(CoreHours),length(Job.ID))
 tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
 tmpdata<-tmpdata[,c(2,1,5,6,3,4)]
 colnames(tmpdata)<-c("Application","Username","Name","Organization","CoreHours","NumJobs")
 tmpdata<-tmpdata%>%arrange(Application,CoreHours)
-write.csv(tmpdata,file=app_by_user,row.names=FALSE)
+write.csv(tmpdata,file=app_by_user_cpu,row.names=FALSE)
+rm(tmpdata)
+
+# Calculate corehours per user per application
+tmpdata<-data_gpu%>%group_by(Username,Application.Name)%>%summarise(sum(CoreHours),length(Job.ID))
+tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdata<-tmpdata[,c(2,1,5,6,3,4)]
+colnames(tmpdata)<-c("Application","Username","Name","Organization","CoreHours","NumJobs")
+tmpdata<-tmpdata%>%arrange(Application,CoreHours)
+write.csv(tmpdata,file=app_by_user_gpu,row.names=FALSE)
 rm(tmpdata)
 
 # Calculate largest CPU jobs
