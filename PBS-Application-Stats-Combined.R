@@ -25,15 +25,23 @@ data<-odata%>%filter(Organization.HighLevel==dfilter)
 filter<-"ASTAR."
 source("PBS-Application-Stats-Generate.R")
 
-for (filter in c("NUS","NTU","SMART","ETHZ","SinBeRISE","SinBerBEST","TUM-CREATE","BEARS-BERKELEY")){
+for (filter in c("NUS","NTU","CREATE")){
  data<-odata%>%filter(Organization.HighLevel==filter)
  filter<-paste0(filter,".")
  source("PBS-Application-Stats-Generate.R")
 }
 
 # Stats for Individual Organizations
-for (filter in c("GIS","IHPC")){
+for (filter in c("GIS","IHPC")) {
  data<-odata%>%filter(Organization==filter)
  filter<-paste0(filter,".")
  source("PBS-Application-Stats-Generate.R")
 }
+
+## ## CREATE
+## ## BEARS-BERKELEY CARES E2S2 ETHZ NRD SinBerBEST SinBeRISE SMART TUM-CREATE
+## for (filter in c("BEARS-BERKELEY","CARES","E2S2","ETHZ","NRD","SINBERBEST","SINBERISE","SMART","TUM-CREATE")) {
+##  data<-odata%>%filter(Organization==filter)
+##  filter<-paste0(filter,".")
+##  source("PBS-Application-Stats-Generate.R")
+## }

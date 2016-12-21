@@ -9,9 +9,10 @@ for f in config.R ; do
 done
 
 # High level institutes
-orgs="ASTAR NUS NTU BEARS-BERKELEY ETHZ SinBerBEST SinBeRISE SMART TUM-CREATE"
+orgs="ASTAR NUS NTU CREATE"
 # Individual organizations
 orgs="$orgs GIS IHPC"
+#orgs="$orgs BEARS-BERKELEY CARES E2S2 ETHZ NRD SINBERBEST SINBERISE SMART TUM-CREATE"
 
 # R script to merge output from pbs-report with job application statistics
 scripts="PBS-Application-Stats-Clean.R PBS-Application-Stats-Combined.R"
@@ -39,6 +40,15 @@ for org in $orgs ; do
 done
 fi
 
+if [  ${publish:-0} -eq 1 ] ; then
+ # Copy NUS data to Junhong home directory
+ cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
+ chown ccewjh.nus ~ccewjh/Monthly_Usage/*
+ # Copy NTU data to Melvin home directory
+ cp -ip *.NTU* ~melvin/Monthly_Usage/ < /dev/null
+ chown melvin.ntu ~melvin/Monthly_Usage/*
+fi
+
 # Copy data to log directory
 logdir=$base/usage-statistics
 outputfiles=`echo {alldata,top100,total,org,application,user_}*.$suffix.csv`
@@ -47,6 +57,7 @@ if [ $monthly -eq 1 ] ; then
  mkdir -p $logdir/by-org
  for org in $orgs ; do
   mv -v $logdir/*.$org.$suffix.csv $logdir/by-org/
+  mkdir -p by-org && mv *.$org.$suffix.csv by-org/
  done
 else
  mkdir -p $logdir/weekly
@@ -58,11 +69,3 @@ for d in "$PWD" "$logdir" ; do
  setfacl -R -bk "$d" ;  chmod -R u+rwX,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
 done
 
-if [  ${publish:-0} -eq 1 ] ; then
- # Copy NUS data to Junhong home directory
- cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
- chown ccewjh.nus ~ccewjh/Monthly_Usage/*
- # Copy NTU data to Melvin home directory
- cp -ip *.NTU* ~melvin/Monthly_Usage/ < /dev/null
- chown melvin.ntu ~melvin/Monthly_Usage/*
-fi

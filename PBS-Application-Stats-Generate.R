@@ -25,13 +25,14 @@ data_gpu<-data%>%filter(Node.Type=="GPU")
 write.csv(data,file=alldata,row.names=FALSE)
 
 # Application by Organisation
-tmpdata<-data%>%group_by(Organization.HighLevel,Application.Name)%>%summarise(sum(CoreHours),length(Job.ID))
+tmpdata<-data%>%group_by(Organization,Application.Name)%>%summarise(sum(CoreHours),length(Job.ID))
 colnames(tmpdata)<-c("Organization","Application","CoreHours","NumJobs")
+tmpdata<-tmpdata%>%arrange(Application,CoreHours)
 write.csv(tmpdata,app_by_org)
 rm(tmpdata)
 
 # Application by Organisation and Node Type
-tmpdata<-data%>%group_by(Organization.HighLevel,Application.Name,Node.Type)%>%summarise(sum(CoreHours),length(Job.ID))
+tmpdata<-data%>%group_by(Organization,Application.Name,Node.Type)%>%summarise(sum(CoreHours),length(Job.ID))
 colnames(tmpdata)<-c("Organization","Application","NodeType","CoreHours","NumJobs")
 write.csv(tmpdata,app_by_org_node)
 rm(tmpdata)

@@ -45,43 +45,66 @@ data<-merge(data,jobnames,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Application.Name[is.na(data$Application.Name)]<-"Unknown"
 
 # merge in names of users
-cat("merge in names of users\n")
+cat("read in user information\n")
 users<-read.csv(usernames)
+# edits for misplaced CREATE usernames
+cat("clean user information\n")
+org<-"ETHZ"
+vec_u<-c("secpjf")
+for (u in vec_u){
+ if(any(users$Username==u)){
+  users[users$Username==u,"Organization"]<-org
+ }
+}
+org<-"NRD"
+vec_u<-c("nrdmgb","nrdzw","nrdmela","nrdnbka")
+for (u in vec_u){
+ if(any(users$Username==u)){
+  users[users$Username==u,"Organization"]<-org
+ }
+}
+org<-"SINBERBEST"
+vec_u<-c("sbbrlg")
+for (u in vec_u){
+ if(any(users$Username==u)){
+  users[users$Username==u,"Organization"]<-org
+ }
+}
+org<-"SMART"
+vec_u<-c("smrqx","smrpvr")
+for (u in vec_u){
+ if(any(users$Username==u)){
+  users[users$Username==u,"Organization"]<-org
+ }
+}
+org<-"TUM-CREATE"
+vec_u<-c("tumjiaj")
+for (u in vec_u){
+ if(any(users$Username==u)){
+  users[users$Username==u,"Organization"]<-org
+ }
+}
+if (any(users$Organization=="MIT")) {users[users$Organization=="MIT","Organization"]<-"SMART"}
+## cannot use the following line as it makes a new factor
+#if (any(users$Organization=="CREATE")) {users[users$Organization=="CREATE","Organization"]<-"CREATE-OTHERS"}
+
+cat("merge user information with job information\n")
 data<-merge(data,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
 
 # Categorize organizations
 cat("categorize organizations\n")
 data$Organization.HighLevel<-"Other"
-# 
+# NUS
 data[grepl("NUS",data$Organization),"Organization.HighLevel"]<-"NUS"
-# 
+# NTU
 data[data$Organization=="NTU","Organization.HighLevel"]<-"NTU"
-# 
+# A*STAR
 data[data$Organization=="GIS"|data$Organization=="IHPC"|data$Organization=="BII"|data$Organization=="IMCB"|data$Organization=="SCEI"|data$Organization=="I2R"|data$Organization=="BMSI"|data$Organization=="ICES"|data$Organization=="DSI"|data$Organization=="IMRE"|data$Organization=="IME"|data$Organization=="SIMT"|data$Organization=="IBN","Organization.HighLevel"]<-"A*STAR"
-# 
-## data[data$Organization=="CREATE"|data$Organization=="SMART"|data$Organization=="ETHZ"|data$Organization=="MIT"|data$Organization=="BEARS-BERKELEY"|data$Organization=="TUM-CREATE"|data$Organization=="SINBERISE"|data$Organization=="E2S2"|data$Organization=="SINBERBEST"|data$Organization=="CARES","Organization.HighLevel"]<-"CREATE"
-# CREATE organizations
-data[data$Organization=="BEARS-BERKELEY","Organization.HighLevel"]<-"BEARS-BERKELEY"
-data[data$Organization=="CARES","Organization.HighLevel"]<-"CARES"
-data[data$Organization=="E2S2","Organization.HighLevel"]<-"E2S2"
-data[data$Username=="secpjf","Organization"]<-"ETHZ"
-data[data$Organization=="ETHZ","Organization.HighLevel"]<-"ETHZ"
-data[data$Username=="nrdmgb","Organization"]<-"NRD"
-data[data$Username=="nrdzw","Organization"]<-"NRD"
-data[data$Username=="nrdmela","Organization"]<-"NRD"
-data[data$Username=="nrdnbka","Organization"]<-"NRD"
-data[data$Organization=="NRD","Organization.HighLevel"]<-"NRD"
-data[data$Username=="sbbrlg","Organization"]<-"SINBERBEST"
-data[data$Organization=="SINBERBEST","Organization.HighLevel"]<-"SinBerBEST"
-data[data$Organization=="SINBERISE","Organization.HighLevel"]<-"SinBeRISE"
-data[data$Username=="smrqx","Organization"]<-"SMART"
-data[data$Username=="smrpvr","Organization"]<-"SMART"
-data[data$Organization=="MIT","Organization"]<-"SMART"
-data[data$Organization=="SMART","Organization.HighLevel"]<-"SMART"
-data[data$Username=="tumjiaj","Organization"]<-"TUM-CREATE"
-data[data$Organization=="TUM-CREATE","Organization.HighLevel"]<-"TUM-CREATE"
+# CREATE
+data[data$Organization=="CREATE"|data$Organization=="BEARS-BERKELEY"|data$Organization=="CARES"|data$Organization=="E2S2"|data$Organization=="ETHZ"|data$Organization=="NRD"|data$Organization=="SINBERBEST"|data$Organization=="SINBERISE"|data$Organization=="SMART"|data$Organization=="TUM-CREATE","Organization.HighLevel"]<-"CREATE"
 # 
 
 # write out data for use in other scripts
+cat("write data to file\n")
 save(data,file=alldata_R)
 save(users,file=users_R)
