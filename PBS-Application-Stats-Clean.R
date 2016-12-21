@@ -52,11 +52,35 @@ data<-merge(data,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
 # Categorize organizations
 cat("categorize organizations\n")
 data$Organization.HighLevel<-"Other"
+# 
 data[grepl("NUS",data$Organization),"Organization.HighLevel"]<-"NUS"
+# 
 data[data$Organization=="NTU","Organization.HighLevel"]<-"NTU"
+# 
 data[data$Organization=="GIS"|data$Organization=="IHPC"|data$Organization=="BII"|data$Organization=="IMCB"|data$Organization=="SCEI"|data$Organization=="I2R"|data$Organization=="BMSI"|data$Organization=="ICES"|data$Organization=="DSI"|data$Organization=="IMRE"|data$Organization=="IME"|data$Organization=="SIMT"|data$Organization=="IBN","Organization.HighLevel"]<-"A*STAR"
-#data[data$Organization=="CREATE"|data$Organization=="SMART"|data$Organization=="ETHZ"|data$Organization=="H2I"|data$Organization=="MIT"|data$Organization=="BEARS-BERKELEY"|data$Organization=="TUM-CREATE"|data$Organization=="SINBERISE"|data$Organization=="E2S2"|data$Organization=="SINBERBEST"|data$Organization=="CARES","Organization.HighLevel"]<-"CREATE"
-data[data$Organization=="CREATE"|data$Organization=="SMART"|data$Organization=="ETHZ"|data$Organization=="MIT"|data$Organization=="BEARS-BERKELEY"|data$Organization=="TUM-CREATE"|data$Organization=="SINBERISE"|data$Organization=="E2S2"|data$Organization=="SINBERBEST"|data$Organization=="CARES","Organization.HighLevel"]<-"CREATE"
+# 
+## data[data$Organization=="CREATE"|data$Organization=="SMART"|data$Organization=="ETHZ"|data$Organization=="MIT"|data$Organization=="BEARS-BERKELEY"|data$Organization=="TUM-CREATE"|data$Organization=="SINBERISE"|data$Organization=="E2S2"|data$Organization=="SINBERBEST"|data$Organization=="CARES","Organization.HighLevel"]<-"CREATE"
+# CREATE organizations
+data[data$Organization=="BEARS-BERKELEY","Organization.HighLevel"]<-"BEARS-BERKELEY"
+data[data$Organization=="CARES","Organization.HighLevel"]<-"CARES"
+data[data$Organization=="E2S2","Organization.HighLevel"]<-"E2S2"
+data[data$Username=="secpjf","Organization"]<-"ETHZ"
+data[data$Organization=="ETHZ","Organization.HighLevel"]<-"ETHZ"
+data[data$Username=="nrdmgb","Organization"]<-"NRD"
+data[data$Username=="nrdzw","Organization"]<-"NRD"
+data[data$Username=="nrdmela","Organization"]<-"NRD"
+data[data$Username=="nrdnbka","Organization"]<-"NRD"
+data[data$Organization=="NRD","Organization.HighLevel"]<-"NRD"
+data[data$Username=="sbbrlg","Organization"]<-"SINBERBEST"
+data[data$Organization=="SINBERBEST","Organization.HighLevel"]<-"SinBerBEST"
+data[data$Organization=="SINBERISE","Organization.HighLevel"]<-"SinBeRISE"
+data[data$Username=="smrqx","Organization"]<-"SMART"
+data[data$Username=="smrpvr","Organization"]<-"SMART"
+data[data$Organization=="MIT","Organization"]<-"SMART"
+data[data$Organization=="SMART","Organization.HighLevel"]<-"SMART"
+data[data$Username=="tumjiaj","Organization"]<-"TUM-CREATE"
+data[data$Organization=="TUM-CREATE","Organization.HighLevel"]<-"TUM-CREATE"
+# 
 
 # write out data for use in other scripts
 save(data,file=alldata_R)

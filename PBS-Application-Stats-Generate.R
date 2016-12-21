@@ -1,8 +1,11 @@
 
 # Outputs
 alldata<-paste0("alldata.",filter,suffix,".csv")
+app_by_org<-paste0("application_by_organization",filter,suffix,".csv")
 userdata_cpu<-paste0("user_walltime_cpu.",filter,suffix,".csv")
 userdata_gpu<-paste0("user_walltime_gpu.",filter,suffix,".csv")
+app_by_org<-paste0("application_by_organization.",filter,suffix,".csv")
+app_by_org_node<-paste0("application_by_organization_and_nodetype.",filter,suffix,".csv")
 app_by_user_cpu<-paste0("application_by_user_cpu.",filter,suffix,".csv")
 app_by_user_gpu<-paste0("application_by_user_gpu.",filter,suffix,".csv")
 orgdata_cpu<-paste0("org_walltime_cpu.",filter,suffix,".csv")
@@ -20,6 +23,18 @@ data_gpu<-data%>%filter(Node.Type=="GPU")
 
 # Write data on all jobs
 write.csv(data,file=alldata,row.names=FALSE)
+
+# Application by Organisation
+tmpdata<-data%>%group_by(Organization.HighLevel,Application.Name)%>%summarise(sum(CoreHours),length(Job.ID))
+colnames(tmpdata)<-c("Organization","Application","CoreHours","NumJobs")
+write.csv(tmpdata,app_by_org)
+rm(tmpdata)
+
+# Application by Organisation and Node Type
+tmpdata<-data%>%group_by(Organization.HighLevel,Application.Name,Node.Type)%>%summarise(sum(CoreHours),length(Job.ID))
+colnames(tmpdata)<-c("Organization","Application","NodeType","CoreHours","NumJobs")
+write.csv(tmpdata,app_by_org_node)
+rm(tmpdata)
 
 # Total core hours
 total_corehours<-data.frame(sum(data$CoreHours),sum(data_cpu$CoreHours),sum(data_gpu$CoreHours))

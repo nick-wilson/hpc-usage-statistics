@@ -1,9 +1,4 @@
-#!/usr/bin/env Rscript
-
-source("config.R")
-source("PBS-Application-Stats-Common.R")
-
-load(file=alldata_R)
+# Look for unknown applications
 
 unknown_job_csv<-paste0("unknown_job.",suffix,".csv")
 unknown_gpujob_csv<-paste0("unknown_gpujob.",suffix,".csv")
@@ -24,3 +19,7 @@ unknown_gpu%>%select(Username,Job.ID,Queue,CoreHours,Application.Name)%>%head(n=
 cat("\n")
 head(unknown_user)
 cat("\n")
+
+rm(unknown)
+rm(unknown_gpu)
+rm(unknown_user)
