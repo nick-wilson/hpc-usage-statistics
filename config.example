@@ -1,15 +1,21 @@
 # Example config file for generating application statistics
 # Do not use " and use ${....} format so that file can be included into both shell scripts and Makefile
 
+# Start year
 sy=2016
-sm=10
-sd=01
+# Start month
+sm=12
+# Start day
+sd=21
+# End year
 ey=${sy}
+# End month
 em=${sm}
-ed=31
+# End day
+ed=27
 
 # If monthly statistics then set monthly=1
-monthly=1
+monthly=0
 
 # To copy files out to stakeholders set publish=1
 publish=0
