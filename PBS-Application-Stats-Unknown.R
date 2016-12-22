@@ -12,7 +12,7 @@ unknown_user<-unknown%>%group_by(Username)%>%summarise(sum(CoreHours),length(Job
 colnames(unknown_user)<-c("Username","CoreHours","NumJobs")
 unknown_user<-unknown_user%>%arrange(desc(CoreHours))
 write.csv(unknown_user,file=unknown_user_csv)
-cat("\nTotal: ",sum(unknown$CoreHours),"\n\n")
+cat("\nInformation abour Unknown Applications\nTotal: ",sum(unknown$CoreHours),"\n\n")
 print(unknown%>%select(Username,Job.ID,Queue,CoreHours,Application.Name)%>%head(n=20))
 cat("\n")
 print(unknown_gpu%>%select(Username,Job.ID,Queue,CoreHours,Application.Name)%>%head(n=5))
