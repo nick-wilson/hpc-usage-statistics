@@ -50,6 +50,7 @@ if [  ${publish:-0} -eq 1 ] ; then
 fi
 
 # Copy data to log directory
+if [  ${publish:-0} -eq 1 ] ; then
 logdir=$base/usage-statistics
 outputfiles=`echo {alldata,top100,total,org,application,user_}*.$suffix.csv`
 if [ $monthly -eq 1 ] ; then
@@ -68,4 +69,4 @@ fi
 for d in "$PWD" "$logdir" ; do
  setfacl -R -bk "$d" ;  chmod -R u+rwX,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
 done
-
+fi
