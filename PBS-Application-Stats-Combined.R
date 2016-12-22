@@ -14,6 +14,7 @@ source("PBS-Application-Stats-Unknown.R")
 filter<-""
 source("PBS-Application-Stats-Generate.R")
 
+if ( monthly==1) {
 #copy data for reuse by each filtered pass through the statistics generation
 #could be refactored to avoid this copy if required
 odata<-data
@@ -45,3 +46,5 @@ for (filter in c("GIS","IHPC")) {
 ##  filter<-paste0(filter,".")
 ##  source("PBS-Application-Stats-Generate.R")
 ## }
+
+} # monthly=1
