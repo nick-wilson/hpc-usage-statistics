@@ -36,7 +36,7 @@ stats: alldata.$(suffix).csv
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f {alldata,top100,unknown,org,total,application,user_}*.$(suffix).csv $(prefix)-*.zip *.Rdata
+	rm -f {alldata,top100,unknown,org,total,application,user_,stats_by_core}*.$(suffix).csv $(prefix)-*.zip *.Rdata
 
 # Only remove application and user data if necessary as it takes a little while to regnerate
 .PHONY : veryclean

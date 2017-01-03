@@ -12,8 +12,9 @@ if [ ! -f "$report_cleaned_csv" ] ; then exit 1 ; fi
 # Gather raw username information
 echo Username,Name,Organization > "$usernames_raw_csv"
 awk -F\| '{print $2}' "$report_cleaned_csv" | tail -n +3 | sort | uniq | while read username ; do
- name=`ldapsearch -x -LLL "(uid=$username)" | grep ^givenName | sed -e 's,^givenName. ,,' -e 's/,/ /g' -e 's/  */ /g'`
- name="${name/./}"
+# name=`ldapsearch -x -LLL "(uid=$username)" | grep ^givenName | sed -e 's,^givenName. ,,' -e 's/,/ /g' -e 's/  */ /g'`
+# name="${name/./}"
+ name=""
  if [ x"$name" == x ] ; then
   cn=`ldapsearch -x -LLL "(uid=$username)" | grep ^cn: | sed -e "s,^cn. ,," -e 's/,/ /g' -e 's/  */ /g'`
   sn=`ldapsearch -x -LLL "(uid=$username)" | grep ^sn: | sed -e "s,^sn. ,," -e 's/,/ /g' -e 's/  */ /g'`

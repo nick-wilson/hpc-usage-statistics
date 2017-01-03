@@ -32,6 +32,16 @@ cat("merge in cores per job\n")
 cores<-read.csv(file=jobcores,header=TRUE)
 data<-merge(data,cores,all.x=TRUE,all.y=FALSE,sort=FALSE)
 
+# Categorize Cores
+cat("Categorize jobs by core count\n")
+data$CoresGroup<-"Unknown"
+data[data$Cores==1,"CoresGroup"]<-"1"
+data[data$Cores>1&data$Cores<=24,"CoresGroup"]<-"2-24"
+data[data$Cores>24&data$Cores<=96,"CoresGroup"]<-"25-96"
+data[data$Cores>96&data$Cores<=240,"CoresGroup"]<-"97-240"
+data[data$Cores>240&data$Cores<=960,"CoresGroup"]<-"241-960"
+data[data$Cores>960,"CoresGroup"]<-">960"
+
 # Multiply cores by wall time to get CoreHours
 cat("calculate core hours\n")
 data$CoreHours<-as.numeric(data$Cores)*as.numeric(data$Wall.Time.Hours)
