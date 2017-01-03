@@ -1,0 +1,52 @@
+#!/bin/bash
+
+. ./config
+
+# High level institutes
+orgs="ASTAR NUS NTU CREATE"
+# Individual organizations
+orgs="$orgs GIS IHPC"
+#orgs="$orgs BEARS-BERKELEY CARES E2S2 ETHZ NRD SINBERBEST SINBERISE SMART TUM-CREATE"
+
+# base directory
+base=/app/nsccadmin/log
+
+# Make zip file for each organisation
+makezip=${makezip:-0}
+if [ $makezip -eq 1 ] ; then
+for org in $orgs ; do
+  rm -rf ${prefix}-${org} && \
+  mkdir ${prefix}-${org} && \
+  cp -p *.${org}.${suffix}.csv ${prefix}-${org} && \
+  rm -f ${prefix}-${org}.zip && \
+  zip -r ${prefix}-${org}.zip ${prefix}-${org} && \
+  rm -rf ${prefix}-${org}
+done
+fi
+
+# Copy NUS data to Junhong home directory
+cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
+chown ccewjh.nus ~ccewjh/Monthly_Usage/*
+# Copy NTU data to Melvin home directory
+cp -ip *.NTU* ~melvin/Monthly_Usage/ < /dev/null
+chown melvin.ntu ~melvin/Monthly_Usage/*
+
+# Copy data to log directory
+logdir=$base/usage-statistics
+outputfiles=`echo {alldata,top100,total,org,application,user_,stats_by_core}*.$suffix.csv`
+if [ $monthly -eq 1 ] ; then
+ cp -pv $outputfiles $logdir/
+ mkdir -p $logdir/by-org
+ for org in $orgs ; do
+  mv -v $logdir/*.$org.$suffix.csv $logdir/by-org/
+  mkdir -p by-org && mv *.$org.$suffix.csv by-org/
+ done
+else
+ mkdir -p $logdir/weekly
+ cp -pv $outputfiles $logdir/weekly/
+fi
+
+# Set appropriate file permissions on data
+for d in "$PWD" "$logdir" ; do
+ setfacl -R -bk "$d" ;  chmod -R u+rwX,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
+done
