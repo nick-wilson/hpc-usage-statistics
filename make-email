@@ -1,0 +1,16 @@
+#!/bin/bash
+
+. ./config
+
+email_csv="email.$suffix.csv"
+report_cleaned_csv="pbs-report.cleaned.$suffix.csv"
+
+# Fail if PBS report is not found
+if [ ! -f "$report_cleaned_csv" ] ; then exit 1 ; fi
+
+# Gather raw username information
+echo Username,Email > "$email_csv"
+awk -F\| '{print $2}' "$report_cleaned_csv" | tail -n +3 | sort | uniq | while read username ; do
+ email=`ldapsearch -x -LLL "(uid=$username)" | grep ^mail | sed -e 's,^mail: ,,'`
+ echo ${username},${email}
+done >> "$email_csv"
