@@ -43,7 +43,7 @@ d<-data%>%filter(Queue=="long")
 boxplot(Wait.Time.Hours~CoresGroup,data=d,las=2,main="Queue wait times for long",ylab=ylabel)
 dev.off()
 
-filename<-paste0("wait_bycore_gpu",suffix,".png")
+filename<-paste0("wait_bycore_gpu.",suffix,".png")
 png(filename,width=854,height=544)
 par(mar=c(8.1,4.1,4.1,2.1))
 par(mfrow=c(1,2))
