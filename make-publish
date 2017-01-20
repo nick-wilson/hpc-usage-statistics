@@ -39,7 +39,6 @@ if [ $monthly -eq 1 ] ; then
  mkdir -p $logdir/by-org
  for org in $orgs ; do
   mv -v $logdir/*.$org.$suffix.csv $logdir/by-org/
-  mkdir -p by-org && mv *.$org.$suffix.csv by-org/
  done
 else
  mkdir -p $logdir/weekly
