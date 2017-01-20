@@ -36,12 +36,12 @@ stats: alldata.$(suffix).csv
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f {alldata,top100,unknown,org,total,application,user_,stats_by_core}*.$(suffix).csv $(prefix)-*.zip *.Rdata
+	rm -f {alldata,top100,unknown,org,total,application,user_,stats_by_core}*.$(suffix).csv $(prefix)-*.zip
 
 # Only remove application and user data if necessary as it takes a little while to regnerate
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv usernames{,-raw}.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv config.R config.pyc config.py
+	rm -f alljobs.$(suffix).csv usernames{,-raw}.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv config.R config.pyc config.py data.Rdata user.Rdata
 
 # Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : distclean
