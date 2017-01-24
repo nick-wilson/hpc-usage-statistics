@@ -38,15 +38,15 @@ stats: alldata.$(suffix).csv
 clean:
 	rm -f {alldata,top100,unknown,org,total,application,user_,stats_by_core}*.$(suffix).csv $(prefix)-*.zip *.$(suffix).png
 
-# Only remove application and user data if necessary as it takes a little while to regnerate
+# Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv usernames{,-raw}.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv config.R config.pyc config.py data.Rdata user.Rdata
+	rm -f alljobs.$(suffix).csv usernames{,-raw}.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata
 
 # Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : distclean
 distclean: veryclean
-	rm -f pbs-report.raw.$(suffix).csv
+	rm -f pbs-report.raw.$(suffix).csv config
 
 .PHONY: aggregate
 aggregate:
