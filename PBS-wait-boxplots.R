@@ -3,65 +3,65 @@
 source("config.R")
 source("PBS-Application-Stats-Common.R")
 
-maintitle<-paste("Queue wait times (",suffix,")")
-ylabel<-"Wait Time / hour"
+openpng<-function(filename){
+  png(filename,width=854,height=544)
+  #par(mar=c(8.1,4.1,4.1,2.1))
+}
+
+makeboxplot<-function(data,main,outline) {
+  ylabel<-"Wait Time / hour"
+  boxplot(Wait.Time.Hours~CoresGroup,data=data,las=2,main=main,ylab=ylabel,outline=outline)
+}
 
 # Load cleaned data
 load(file=alldata_R)
 load(file=users_R)
+bkupdata<-data
 
-title_outliers<-""
+data<-data%>%filter(Queue=="dev"|Queue=="small"|Queue=="medium"|Queue=="normal"|Queue=="long"|Queue=="q1"|Queue=="q4"|Queue=="largemem"|Queue=="production"|Queue=="paidq"|Queue=="vis"|Queue=="iworkq"|Queue=="gpunormal"|Queue=="gpulong")
+data$Queue<-factor(data$Queue)
+data$CoresGroup<-factor(data$CoresGroup,coresgroup_sort)
+
+outline<-TRUE
 file_outliers<-"+outliers"
 filename<-paste0("wait_byqueue",file_outliers,".",suffix,".png")
-png(filename,width=854,height=544)
-par(mar=c(8.1,4.1,4.1,2.1))
-boxplot(Wait.Time.Hours~Queue,data=data,las=2,main=maintitle,ylab=ylabel)
-dev.off()
-data$CoresGroup<-factor(data$CoresGroup,coresgroup_sort)
-filename<-paste0("wait_bycore_cpu+outliers.",suffix,".png")
-png(filename,width=854,height=544)
-par(mar=c(8.1,4.1,4.1,2.1))
-par(mfrow=c(2,3))
-for (q in c("dev","small","medium","q1","q4","long")) {
- d<-data%>%filter(Queue==q)
- boxplot(Wait.Time.Hours~CoresGroup,data=d,las=2,main=paste0("Queue wait times for ",q),ylab=ylabel)
-}
-dev.off()
-filename<-paste0("wait_bycore_gpu+outliers.",suffix,".png")
-png(filename,width=854,height=544)
-par(mar=c(8.1,4.1,4.1,2.1))
-par(mfrow=c(1,2))
-d<-data%>%filter(Queue=="gpunormal")
-boxplot(Wait.Time.Hours~CoresGroup,data=d,las=2,main="Queue wait times for gpunormal",ylab=ylabel)
-d<-data%>%filter(Queue=="gpulong")
-boxplot(Wait.Time.Hours~CoresGroup,data=d,las=2,main="Queue wait times for gpulong",ylab=ylabel)
+openpng(filename)
+main<-paste("Queue wait times (",suffix,")")
+makeboxplot(data,main,outline)
 dev.off()
 
+outline<-FALSE
+file_outliers<-"-outliers"
+filename<-paste0("wait_byqueue",file_outliers,".",suffix,".png")
+openpng(filename)
+main<-paste0("Queue wait times (",suffix,")\n outliers removed")
+makeboxplot(data,main,outline)
+dev.off()
 
 outline<-FALSE
 title_outliers<-"\n(outliers removed)"
-file_outliers<-"-outliers"
-filename<-paste0("wait_byqueue",file_outliers,".",suffix,".png")
-png(filename,width=854,height=544)
-par(mar=c(8.1,4.1,4.1,2.1))
-boxplot(Wait.Time.Hours~Queue,data=data,las=2,main=paste0(maintitle,title_outliers),ylab=ylabel,outline=outline)
-dev.off()
-data$CoresGroup<-factor(data$CoresGroup,coresgroup_sort)
-filename<-paste0("wait_bycore_cpu-outliers.",suffix,".png")
-png(filename,width=854,height=544)
-par(mar=c(8.1,4.1,4.1,2.1))
+file_outliers<-"-outliers."
+filename<-paste0("wait_bycore_cpu",file_outliers,suffix,".png")
+openpng(filename)
 par(mfrow=c(2,3))
 for (q in c("dev","small","medium","q1","q4","long")) {
- d<-data%>%filter(Queue==q)
- boxplot(Wait.Time.Hours~CoresGroup,data=d,las=2,main=paste0("Queue wait times for ",q,title_outliers),ylab=ylabel,outline=outline)
+  data<-bkupdata%>%filter(Queue==q)
+  data$CoresGroup<-factor(data$CoresGroup,coresgroup_sort)
+  main<-paste0("Queue wait times for ",q,title_outliers)
+  makeboxplot(data,main,outline)
 }
 dev.off()
-filename<-paste0("wait_bycore_gpu-outliers.",suffix,".png")
-png(filename,width=854,height=544)
-par(mar=c(8.1,4.1,4.1,2.1))
+
+gpudata<-bkupdata%>%filter(Node.Type=="GPU")
+gpudata[gpudata$CoresGroup=="25-96","CoresGroup"]<-"48-96"
+gpudata[gpudata$CoresGroup=="97-240","CoresGroup"]<-"120-240"
+gpudata$CoresGroup<-factor(gpudata$CoresGroup,c("24","48-96","120-240"))
+filename<-paste0("wait_bycore_gpu",file_outliers,suffix,".png")
+openpng(filename)
 par(mfrow=c(1,2))
 for (q in c("gpunormal","gpulong")) {
- d<-data%>%filter(Queue==q)
- boxplot(Wait.Time.Hours~CoresGroup,data=d,las=2,main=paste0("Queue wait times for ",q,title_outliers),ylab=ylabel,outline=outline)
+  data<-gpudata%>%filter(Queue==q)
+  main<-paste0("Queue wait times for ",q,title_outliers)
+  makeboxplot(data,main,outline)
 }
 dev.off()

@@ -2,17 +2,17 @@
 # Do not use " and use ${....} format so that file can be included into both shell scripts and Makefile
 
 # Start year
-sy=2016
+sy=2017
 # Start month
-sm=12
+sm=01
 # Start day
-sd=21
+sd=25
 # End year
 ey=${sy}
 # End month
 em=${sm}
 # End day
-ed=27
+ed=31
 
 # If monthly statistics then set monthly=1
 monthly=0
@@ -23,3 +23,6 @@ publish=0
 # Do not modify the next 2 lines
 suffix=${sy}${sm}${sd}-${ey}${em}${ed}
 prefix=${ey}-${em}
+
+# Location of application information
+csvalljobs=/app/nsccadmin/log/printjobs/alljobs.csv

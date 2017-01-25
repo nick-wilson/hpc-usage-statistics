@@ -23,8 +23,8 @@ usernames.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 	./make-usernames
 
 # Collect application information
-alljobs.$(suffix).csv: pbs-report.raw.$(suffix).csv
-	./make-alljobs
+alljobs.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
+	cp $(csvalljobs) $@
 
 # Generate statistics if any source files have been updated
 alldata.$(suffix).csv: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv alljobs.$(suffix).csv config.R
