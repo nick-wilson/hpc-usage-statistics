@@ -46,11 +46,11 @@ rownames(total_corehours)<-suffix
 write.csv(total_corehours,total)
 
 # Calculate CPU corehours per user
-tmpdata<-data_cpu%>%group_by(Username)%>%summarise(sum(CoreHours),length(Job.ID))
+tmpdata<-data_cpu%>%group_by(Username)%>%summarise(sum(CoreHours),sum(CPU.Time.Hours),length(Job.ID))
 tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
-colnames(tmpdata)<-c("Username","CoreHours","NumJobs","Name","Organization")
+colnames(tmpdata)<-c("Username","CoreHours","CPUHours","NumJobs","Name","Organization")
 tmpdata<-arrange(tmpdata,desc(CoreHours))
-tmpdata<-tmpdata[,c(1,4,5,2,3)]
+tmpdata<-tmpdata[,c(1,5,6,2,3,4)]
 write.csv(tmpdata,file=userdata_cpu)
 rm(tmpdata)
 

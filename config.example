@@ -25,4 +25,4 @@ suffix=${sy}${sm}${sd}-${ey}${em}${ed}
 prefix=${ey}-${em}
 
 # Location of application information
-csvalljobs=/app/nsccadmin/log/printjobs/alljobs.csv
+csvalljobs=/app/nsccadmin/log/printjob/alljobs.csv
