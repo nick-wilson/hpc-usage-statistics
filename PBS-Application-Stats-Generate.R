@@ -126,16 +126,14 @@ write.csv(tmpdata,file=orgdata_gpu)
 rm(tmpdata)
 
 # Calculate CPU corehours per high-level organisation
-tmpdata<-data_cpu%>%group_by(Organization.HighLevel)%>%summarise(sum(CoreHours),length(Job.ID))
-colnames(tmpdata)<-c("Organization.HighLevel","CoreHours","NumJobs")
-tmpdata<-arrange(tmpdata,desc(CoreHours))
+tmpdata<-data_cpu%>%group_by(Organization.HighLevel)%>%summarise(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))%>%arrange(desc(CoreHours))
+for (org in allorgs){if(!any(tmpdata$Organization.HighLevel==org)){tmpdata<-rbind(tmpdata,c(org,"0","0"))}}
 write.csv(tmpdata,file=org2data_cpu)
 rm(tmpdata)
 
 # Calculate GPU corehours per high-level organisation
-tmpdata<-data_gpu%>%group_by(Organization.HighLevel)%>%summarise(sum(CoreHours),length(Job.ID))
-colnames(tmpdata)<-c("Organization.HighLevel","CoreHours","NumJobs")
-tmpdata<-arrange(tmpdata,desc(CoreHours))
+tmpdata<-data_gpu%>%group_by(Organization.HighLevel)%>%summarise(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))%>%arrange(desc(CoreHours))
+for (org in allorgs){if(!any(tmpdata$Organization.HighLevel==org)){tmpdata<-rbind(tmpdata,c(org,"0","0"))}}
 write.csv(tmpdata,file=org2data_gpu)
 rm(tmpdata)
 

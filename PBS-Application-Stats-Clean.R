@@ -113,7 +113,9 @@ data[data$Organization=="NTU","Organization.HighLevel"]<-"NTU"
 data[data$Organization=="GIS"|data$Organization=="IHPC"|data$Organization=="BII"|data$Organization=="IMCB"|data$Organization=="SCEI"|data$Organization=="I2R"|data$Organization=="BMSI"|data$Organization=="ICES"|data$Organization=="DSI"|data$Organization=="IMRE"|data$Organization=="IME"|data$Organization=="SIMT"|data$Organization=="IBN","Organization.HighLevel"]<-"A*STAR"
 # CREATE
 data[data$Organization=="CREATE"|data$Organization=="BEARS-BERKELEY"|data$Organization=="CARES"|data$Organization=="E2S2"|data$Organization=="ETHZ"|data$Organization=="NRD"|data$Organization=="SINBERBEST"|data$Organization=="SINBERISE"|data$Organization=="SMART"|data$Organization=="TUM-CREATE","Organization.HighLevel"]<-"CREATE"
-# 
+# SUTD
+data[data$Organization=="SUTD","Organization.HighLevel"]<-"SUTD"
+data$Organization.HighLevel<-factor(data$Organization.HighLevel,allorgs)
 
 # write out data for use in other scripts
 cat("write data to file\n")
