@@ -4,15 +4,15 @@
 # Start year
 sy=2017
 # Start month
-sm=01
+sm=02
 # Start day
-sd=25
+sd=01
 # End year
 ey=${sy}
 # End month
 em=${sm}
 # End day
-ed=31
+ed=07
 
 # If monthly statistics then set monthly=1
 monthly=0
