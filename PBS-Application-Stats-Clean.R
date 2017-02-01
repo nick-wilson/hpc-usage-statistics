@@ -115,6 +115,9 @@ data[data$Organization=="GIS"|data$Organization=="IHPC"|data$Organization=="BII"
 data[data$Organization=="CREATE"|data$Organization=="BEARS-BERKELEY"|data$Organization=="CARES"|data$Organization=="E2S2"|data$Organization=="ETHZ"|data$Organization=="NRD"|data$Organization=="SINBERBEST"|data$Organization=="SINBERISE"|data$Organization=="SMART"|data$Organization=="TUM-CREATE","Organization.HighLevel"]<-"CREATE"
 # SUTD
 data[data$Organization=="SUTD","Organization.HighLevel"]<-"SUTD"
+#
+# Convert to a factor and make sure all organizations are included
+allorgs<-c("A*STAR","NUS","NTU","CREATE","SUTD","Other")
 data$Organization.HighLevel<-factor(data$Organization.HighLevel,allorgs)
 
 # write out data for use in other scripts
