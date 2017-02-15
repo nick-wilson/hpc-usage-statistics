@@ -36,7 +36,7 @@ stats: alldata.$(suffix).csv
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f {alldata,top100,unknown,org,total,application,user_,stats_by_core}*.$(suffix).csv $(prefix)-*.zip *.$(suffix).png
+	rm -f {alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_}*.$(suffix).csv $(prefix)-*.zip *.$(suffix).png
 
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
