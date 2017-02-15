@@ -24,16 +24,18 @@ for org in $orgs ; do
 done
 fi
 
+if [ $monthly -eq 1 ] ; then
 # Copy NUS data to Junhong home directory
 cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
 chown ccewjh.nus ~ccewjh/Monthly_Usage/*
 # Copy NTU data to Melvin home directory
 cp -ip *.NTU* ~melvin/Monthly_Usage/ < /dev/null
 chown melvin.ntu ~melvin/Monthly_Usage/*
+fi
 
 # Copy data to log directory
 logdir=$base/usage-statistics
-outputfiles=`echo {alldata,top100,total,org,application,user_,stats_by_core}*.$suffix.csv`
+outputfiles=`echo {alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_}*.$suffix.csv`
 if [ $monthly -eq 1 ] ; then
  cp -pv $outputfiles $logdir/
  mkdir -p $logdir/by-org
