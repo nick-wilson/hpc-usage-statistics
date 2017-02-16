@@ -54,6 +54,7 @@ jobnames<-read.csv(file=apps,header=FALSE,colClasses="character")
 colnames(jobnames)<-c("Job.ID.NoIndex","Application.Name")
 data<-merge(data,jobnames,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Application.Name[is.na(data$Application.Name)]<-"Unknown"
+data$Application.Name[substring(data$Job.ID,1,1)=="A"]<-"Alpha Phase - Not logged"
 
 # merge in names of users
 cat("read in user information\n")
