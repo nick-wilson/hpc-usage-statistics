@@ -3,7 +3,7 @@
 . ./config
 
 # High level institutes
-orgs="ASTAR NUS NTU CREATE"
+orgs="ASTAR NUS NTU CREATE SUTD"
 # Individual organizations
 orgs="$orgs GIS IHPC"
 #orgs="$orgs BEARS-BERKELEY CARES E2S2 ETHZ NRD SINBERBEST SINBERISE SMART TUM-CREATE"
@@ -24,7 +24,7 @@ for org in $orgs ; do
 done
 fi
 
-if [ $monthly -eq 1 ] ; then
+if [ $publish -eq 1 ] ; then
 # Copy NUS data to Junhong home directory
 cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
 chown ccewjh.nus ~ccewjh/Monthly_Usage/*
@@ -37,17 +37,17 @@ fi
 logdir=$base/usage-statistics
 outputfiles=`echo {alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_}*.$suffix.csv`
 if [ $monthly -eq 1 ] ; then
- cp -pv $outputfiles $logdir/
+ mv -v $outputfiles $logdir/
  mkdir -p $logdir/by-org
  for org in $orgs ; do
   mv -v $logdir/*.$org.$suffix.csv $logdir/by-org/
  done
 else
  mkdir -p $logdir/weekly
- cp -pv $outputfiles $logdir/weekly/
+ mv -v $outputfiles $logdir/weekly/
 fi
 
 # Set appropriate file permissions on data
 for d in "$PWD" "$logdir" ; do
- setfacl -R -bk "$d" ;  chmod -R u+rwX,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
+ setfacl -R -bk "$d" ;  chmod -R u+rwX,g-w,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
 done

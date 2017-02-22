@@ -26,7 +26,7 @@ data<-odata%>%filter(Organization.HighLevel==dfilter)
 filter<-"ASTAR."
 source("PBS-Application-Stats-Generate.R")
 
-for (filter in c("NUS","NTU","CREATE")){
+for (filter in c("NUS","NTU","CREATE","SUTD")){
  data<-odata%>%filter(Organization.HighLevel==filter)
  filter<-paste0(filter,".")
  source("PBS-Application-Stats-Generate.R")
