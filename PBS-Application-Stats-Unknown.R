@@ -1,13 +1,15 @@
 # Look for unknown applications
 
 unknown_job_csv<-paste0("unknown_job.",suffix,".csv")
+unknown_jobid_csv<-paste0("unknown_jobid.",suffix,".csv")
 unknown_gpujob_csv<-paste0("unknown_gpujob.",suffix,".csv")
 unknown_user_csv<-paste0("unknown_user.",suffix,".csv")
 
 unknown<-data%>%filter(Application.Name=="Unknown")%>%arrange(desc(CoreHours))
-write.csv(unknown,file=unknown_job_csv)
+write.csv(unknown,file=unknown_job_csv,row.names=FALSE)
+write.csv(unknown$Job.ID.NoIndex,file=unknown_jobid_csv,row.names=FALSE)
 unknown_gpu<-unknown%>%filter(Node.Type=="GPU")%>%arrange(desc(CoreHours))
-write.csv(unknown_gpu,file=unknown_gpujob_csv)
+write.csv(unknown_gpu,file=unknown_gpujob_csv,row.names=FALSE)
 unknown_user<-unknown%>%group_by(Username)%>%summarise(sum(CoreHours),length(Job.ID))
 colnames(unknown_user)<-c("Username","CoreHours","NumJobs")
 unknown_user<-unknown_user%>%arrange(desc(CoreHours))
