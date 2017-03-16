@@ -2,12 +2,15 @@
 
 source("config.R")
 source("PBS-Application-Stats-Common.R")
+library(tidyr)
 
 # Load cleaned data
 load(file=alldata_R)
 
 coremem<-paste0("coremem.",suffix,".csv")
 virtualmem<-paste0("virtualmem.",suffix,".csv")
+coremembyq<-paste0("coremem.byqueue.",suffix,".csv")
+virtualmembyq<-paste0("virtualmem.byqueue.",suffix,".csv")
 
 core1<-data[data$Cores=="1",]
 
@@ -29,8 +32,10 @@ core1[core1$vmem<=3e6,"virtualmemgb"]<-"2-3GB"
 core1[core1$vmem<=2e6,"virtualmemgb"]<-"1-2GB"
 core1[core1$vmem<=1e6,"virtualmemgb"]<-"0-1GB"
 core1$virtualmemgb<-factor(core1$virtualmemgb,memsizes)
-tmpdata<-core1%>%group_by(virtualmemgb)%>%summarise(NumJobs=length(Job.ID),CoreHours=sum(CoreHours))
-write.csv(tmpdata,virtualmem)
+tmpdata<-core1%>%group_by(virtualmemgb)%>%summarise(NumJobs=length(Job.ID),CoreHours=sum(CoreHours))%>%complete(virtualmemgb)
+write.csv(tmpdata,virtualmem,na="0",row.names=FALSE)
+tmpdata<-core1%>%group_by(Queue,virtualmemgb)%>%summarise(NumJobs=length(Job.ID),CoreHours=sum(CoreHours))%>%complete(virtualmemgb)
+write.csv(tmpdata,virtualmembyq,na="0",row.names=FALSE)
 
 core1$corememgb<-"NA"
 core1[core1$cmem>16e6,"corememgb"]<-">16GB"
@@ -45,5 +50,7 @@ core1[core1$cmem<=3e6,"corememgb"]<-"2-3GB"
 core1[core1$cmem<=2e6,"corememgb"]<-"1-2GB"
 core1[core1$cmem<=1e6,"corememgb"]<-"0-1GB"
 core1$corememgb<-factor(core1$corememgb,memsizes)
-tmpdata<-core1%>%group_by(corememgb)%>%summarise(NumJobs=length(Job.ID),CoreHours=sum(CoreHours))
-write.csv(tmpdata,coremem)
+tmpdata<-core1%>%group_by(corememgb)%>%summarise(NumJobs=length(Job.ID),CoreHours=sum(CoreHours))%>%complete(corememgb)
+write.csv(tmpdata,coremem,na="0",row.names=FALSE)
+tmpdata<-core1%>%group_by(Queue,corememgb)%>%summarise(NumJobs=length(Job.ID),CoreHours=sum(CoreHours))%>%complete(corememgb)
+write.csv(tmpdata,coremembyq,na="0",row.names=FALSE)
