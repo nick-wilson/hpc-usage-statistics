@@ -1,0 +1,44 @@
+#!/bin/bash
+
+umask 077
+
+. ./config
+
+if [ x"$suffix" == xaggregate ] ; then
+ p=aggregate
+elif [ $monthly -eq 1 ] ; then
+ p=month
+else
+ p=week
+fi
+
+logdir=/app/nsccadmin/log/user_usage
+chown root.nscc-proj "$logdir"
+chmod 0751 "$logdir"
+for cpu in cpu gpu ; do
+ if [ ! -d "$logdir/$cpu" ] ; then mkdir "$logdir/$cpu" ; fi
+ chown root.nscc-proj "$logdir/$cpu"
+ chmod 0751 "$logdir/$cpu"
+ for pp in week month aggregate ; do
+  if [ ! -d "$logdir/$cpu/$pp" ] ; then mkdir "$logdir/$cpu/$pp" ; fi
+  chown root.nscc-proj "$logdir/$cpu/$pp"
+  chmod 0751 "$logdir/$cpu/$pp"
+ done
+done
+
+getent passwd | awk -F: '{print $1}' | while read u ; do 
+echo extracting data for $u
+
+for cpu in cpu gpu ; do
+
+f="$logdir/$cpu/$p/$u"
+ rm -f "$f" || break
+ grep \"$u\" user_walltime_$cpu.$suffix.csv | \
+  awk -F, '{printf "'$ey/$em/$ed' %'\''d %'\''.1f\n",$6,$5}' > "$f"
+ if [ ! -s "$f" ] ; then echo $ey/$em/$ed 0 0.0 > "$f" ; fi
+ chown $u "$f"
+ chgrp nscc-proj "$f"
+ chmod a-wx,ug+r,o-r "$f"
+done
+
+done
