@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# This script has settings required to run statistics in cron as root on wlm01
+# crontab setting:
+# 00 08 29 * * d=/app/nsccadmin/apps/usage-statistics/reports/weekly/20170322-20170328 ; s=run-cron-root-wlm01 ; $d/$s > $d/$s.stdout 2>&1
+
+
+cd `dirname $0`
+
+export PATH="$PATH":/opt/pbs/default/sbin
+
+. /etc/profile.d/modules.sh
+. /app/modules/modules.sh
+module load R
+which Rscript
+
+x=`ps -ef | grep appstats-archive-cron | grep -v grep`
+while [ x"$x" != x ] ; do
+ sleep 60
+ x=`ps -ef | grep appstats-archive-cron | grep -v grep`
+done
+
+make
+
+ssh nscc01 $PWD/run-boxplots-root-nscc01
