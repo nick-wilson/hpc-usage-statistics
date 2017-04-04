@@ -22,8 +22,12 @@ with open(csvfile, 'rb') as csvfile_in:
     # count any number of cores on gpu as 24
     parsed=string
     #print string
-    parsed=re.sub("gpu[0-9]+(|-ib0)/[0-9]+\*[0-9]+","24",parsed)
-    parsed=re.sub("gpu[0-9]+(|-ib0)/[0-9]+","24",parsed)
+    if row[2] == "q1":
+     parsed=re.sub("gpu[0-9]+(|-ib0)/[0-9]+\*","",parsed)
+     parsed=re.sub("gpu[0-9]+(|-ib0)/[0-9]+","1",parsed)
+    else:
+     parsed=re.sub("gpu[0-9]+(|-ib0)/[0-9]+\*[0-9]+","24",parsed)
+     parsed=re.sub("gpu[0-9]+(|-ib0)/[0-9]+","24",parsed)
     parsed=re.sub("(std|lmn|vis|wlm)[0-9]+(|-ib0)/[0-9]+\*","",parsed)
     parsed=re.sub("(std|lmn|vis|wlm)[0-9]+(|-ib0)/[0-9]+","1",parsed)
     #print parsed
