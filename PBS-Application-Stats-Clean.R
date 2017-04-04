@@ -25,8 +25,8 @@ data$Suspend.Time.Hours<-as.numeric(data$Suspend.Time)/3600.0
 # Check Execution hosts for string gpu to classify job as CPU or GPU
 cat("classify as CPU or GPU\n")
 data$Node.Type<-"CPU"
-data[grepl("gpu",data$Execution.Hosts),"Node.Type"]<-"GPU"
-data[data$Queue=="q1","Node.Type"]<-"CPU"
+data[grepl("^gpu",data$Queue),"Node.Type"]<-"GPU"
+data[grepl("gpu",data$Execution.Hosts)&grepl("^R[0-9]",data$Queue),"Node.Type"]<-"GPU"
 
 # Merge in separately calculated data on cores per job
 cat("merge in cores per job\n")
