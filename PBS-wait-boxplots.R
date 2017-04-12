@@ -73,8 +73,10 @@ file_outliers<-"+outliers"
 filename<-paste0("wait_byqueue_bycore_cpu",file_outliers,".",suffix,".png")
 openpng(filename)
 par(mfrow=c(2,3))
-for (q in c("dev","small","medium","q1","q4","long")) {
-  data<-bkupdata%>%filter(Queue==q)
+for (q in c("dev","medium","q1","q4","long")) {
+  data<-bkupdata
+  data$Queue<-factor(data$Queue,c("dev","small","medium","q1","q4","long"))
+  data<-data%>%filter(Queue==q)
   data$CoresGroup<-factor(data$CoresGroup,coresgroup_sort)
   main<-paste0("CPU Queue wait times for ",q,title_outliers)
   makeboxplot_bycore(data,main,outline)
@@ -87,8 +89,10 @@ file_outliers<-"-outliers"
 filename<-paste0("wait_byqueue_bycore_cpu",file_outliers,".",suffix,".png")
 openpng(filename)
 par(mfrow=c(2,3))
-for (q in c("dev","small","medium","q1","q4","long")) {
-  data<-bkupdata%>%filter(Queue==q)
+for (q in c("dev","medium","q1","q4","long")) {
+  data<-bkupdata
+  data$Queue<-factor(data$Queue,c("dev","small","medium","q1","q4","long"))
+  data<-data%>%filter(Queue==q)
   data$CoresGroup<-factor(data$CoresGroup,coresgroup_sort)
   main<-paste0("CPU Queue wait times for ",q,title_outliers)
   makeboxplot_bycore(data,main,outline)
