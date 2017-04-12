@@ -1,6 +1,7 @@
 #!/bin/sh
-csv1=active.csv
-csv2=active-totals.csv
+. ./config
+csv1=active.$suffix.csv
+csv2=active-totals.$suffix.csv
 
 echo
 echo calculating number of active users
