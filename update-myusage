@@ -31,10 +31,12 @@ echo extracting data for $u
 
 for cpu in cpu gpu ; do
 
+col=5
+if [ x"$cpu" == xgpu ] ; then col=7 ; fi
 f="$logdir/$cpu/$p/$u"
  rm -f "$f" || break
  grep \"$u\" user_walltime_$cpu.$suffix.csv | \
-  awk -F, '{printf "'$ey/$em/$ed' %'\''d %'\''.1f\n",$6,$5}' > "$f"
+  awk -F, '{printf "'$ey/$em/$ed' %'\''d %'\''.1f\n",$6,$'$col'}' > "$f"
  if [ ! -s "$f" ] ; then echo $ey/$em/$ed 0 0.0 > "$f" ; fi
  chown $u "$f"
  chgrp nscc-proj "$f"
