@@ -21,6 +21,8 @@ stats_by_core_cpu<-paste0("stats_by_core_cpu.",filter,suffix,".csv")
 stats_by_core_gpu<-paste0("stats_by_core_gpu.",filter,suffix,".csv")
 cpuwall_cpu<-paste0("cpu_walltime_by_user_by_application_cpu.",filter,suffix,".csv")
 cpuwall_gpu<-paste0("cpu_walltime_by_user_by_application_gpu.",filter,suffix,".csv")
+project_walltime<-paste0("project_walltime.",filter,suffix,".csv")
+project_storage<-paste0("storage-byproject.",filter,suffix,".csv")
 
 data_cpu<-data%>%filter(Node.Type=="CPU")
 data_gpu<-data%>%filter(Node.Type=="GPU")
@@ -166,4 +168,13 @@ tmpdata<-data_gpu%>%group_by(CoresGroup)%>%summarise(length(Job.ID),sum(CoreHour
 tmpdata<-tmpdata[match(coresgroup_sort,tmpdata$CoresGroup),]
 colnames(tmpdata)<-c("Cores","Number of Jobs","Total Core Hours","Median Wait (Hours)","Mean Wait (Hours)")
 write.csv(tmpdata,file=stats_by_core_gpu,row.names=FALSE)
+rm(tmpdata)
+
+# Project corehours
+tmpdata<-data%>%group_by(Project)%>%summarise(CoreHours=sum(CoreHours),length(Job.ID))%>%arrange(desc(CoreHours))
+colnames(tmpdata)<-c("Project","CoreHours","NumJobs")
+s<-read.csv(project_storage)
+tmpdata<-merge(tmpdata,s,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdata$home_gb[is.na(tmpdata$home_gb)] <- -1
+write.csv(tmpdata,file=project_walltime)
 rm(tmpdata)

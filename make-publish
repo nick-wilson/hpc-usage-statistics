@@ -35,7 +35,7 @@ fi
 
 # Copy data to log directory
 logdir=$base/usage-statistics
-outputfiles=`echo {active,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage}*.$suffix.csv`
+outputfiles=`echo {active,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_}*.$suffix.csv`
 if [ $monthly -eq 1 ] ; then
  mv -v $outputfiles $logdir/
  mkdir -p $logdir/by-org

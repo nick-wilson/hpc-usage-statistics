@@ -7,6 +7,7 @@ source("PBS-Application-Stats-Common.R")
 pbsreport<-paste0("pbs-report.cleaned.",suffix,".csv")
 jobcores<-paste0("cores.",suffix,".csv")
 usernames<-paste0("usernames.",suffix,".csv")
+project<-paste0("project.",suffix,".csv")
 apps<-paste0("alljobs.",suffix,".csv")
 
 # load in csv data from pbsreport and rename the columns
@@ -56,6 +57,11 @@ colnames(jobnames)<-c("Job.ID.NoIndex","Application.Name")
 data<-merge(data,jobnames,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Application.Name[is.na(data$Application.Name)]<-"Unknown"
 data$Application.Name[substring(data$Job.ID,1,1)=="A"]<-"Alpha Phase - Not logged"
+
+projects<-read.csv(file=project,header=FALSE,colClasses="character")
+colnames(projects)<-c("Job.ID.NoIndex","Project")
+projects$Project<-as.factor(projects$Project)
+data<-merge(data,projects,all.x=TRUE,all.y=FALSE,sort=FALSE)
 
 # merge in names of users
 cat("read in user information\n")
