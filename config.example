@@ -4,15 +4,15 @@
 # Start year
 sy=2017
 # Start month
-sm=03
+sm=06
 # Start day
-sd=22
+sd=01
 # End year
 ey=${sy}
 # End month
 em=${sm}
 # End day
-ed=28
+ed=30
 
 # If monthly statistics then set monthly=1
 monthly=0
@@ -26,3 +26,4 @@ prefix=${ey}-${em}
 
 # Location of application information
 csvalljobs=/app/nsccadmin/log/printjob/alljobs.csv
+csvproject=/app/nsccadmin/log/printjob/project.csv
