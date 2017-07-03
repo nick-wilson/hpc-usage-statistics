@@ -35,7 +35,7 @@ project.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 	cp $(csvproject) $@
 
 # Generate statistics if any source files have been updated
-alldata.$(suffix).csv: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage.$(suffix).csv alljobs.$(suffix).csv config.R
+alldata.$(suffix).csv: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv config.R
 	./make-stats
 
 .PHONY : stats

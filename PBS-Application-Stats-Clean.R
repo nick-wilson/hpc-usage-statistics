@@ -61,7 +61,9 @@ data$Application.Name[substring(data$Job.ID,1,1)=="A"]<-"Alpha Phase - Not logge
 projects<-read.csv(file=project,header=FALSE,colClasses="character")
 colnames(projects)<-c("Job.ID.NoIndex","Project")
 projects$Project<-as.factor(projects$Project)
+levels(projects$Project)<-c(levels(projects$Project),"Unknown")
 data<-merge(data,projects,all.x=TRUE,all.y=FALSE,sort=FALSE)
+data$Project[is.na(data$Project)]<-"Unknown"
 
 # merge in names of users
 cat("read in user information\n")

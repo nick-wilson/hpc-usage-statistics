@@ -6,7 +6,7 @@ csv2=active-totals.$suffix.csv
 echo
 echo calculating number of active users
 . ./config
-cat user_walltime_* | awk -F, '{print $2}' | grep -v Username | sed -e 's,",,g' | sort | uniq | while read u ; do grep ^\"$u\" alldata.$suffix.csv | head -1 ; done | awk -F, '{print $1,$28}' > "$csv1"
+cat user_walltime_* | awk -F, '{print $2}' | grep -v Username | sed -e 's,",,g' | sort | uniq | while read u ; do grep ^\"$u\" alldata.$suffix.csv | head -1 ; done | awk -F, '{print $1,$29}' > "$csv1"
 rm -f "$csv2"
 for s in A.STAR CREATE NTU NUS SUTD Other ; do
 echo $s , `grep -c \"$s\" "$csv1"` | tee -a "$csv2"
