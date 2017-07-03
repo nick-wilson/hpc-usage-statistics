@@ -21,6 +21,8 @@ stats_by_core_cpu<-paste0("stats_by_core_cpu.",filter,suffix,".csv")
 stats_by_core_gpu<-paste0("stats_by_core_gpu.",filter,suffix,".csv")
 cpuwall_cpu<-paste0("cpu_walltime_by_user_by_application_cpu.",filter,suffix,".csv")
 cpuwall_gpu<-paste0("cpu_walltime_by_user_by_application_gpu.",filter,suffix,".csv")
+project_walltime<-paste0("project_walltime.",filter,suffix,".csv")
+project_storage<-paste0("storage-byproject.",suffix,".csv")
 
 data_cpu<-data%>%filter(Node.Type=="CPU")
 data_gpu<-data%>%filter(Node.Type=="GPU")
@@ -29,6 +31,7 @@ data_gpu<-data%>%filter(Node.Type=="GPU")
 write.csv(data,file=alldata,row.names=FALSE)
 
 # Application by Organisation
+cat("Application by Organisation\n")
 tmpdata<-data%>%group_by(Organization,Application.Name)%>%summarise(sum(CoreHours),length(Job.ID))
 colnames(tmpdata)<-c("Organization","Application","CoreHours","NumJobs")
 tmpdata<-tmpdata%>%arrange(Application,CoreHours)
@@ -42,6 +45,7 @@ write.csv(tmpdata,app_by_org_node,row.names=FALSE)
 rm(tmpdata)
 
 # Total core hours
+cat("Total core hours\n")
 total_corehours<-data.frame(sum(data$CoreHours),sum(data_cpu$CoreHours),sum(data_gpu$CoreHours))
 colnames(total_corehours)<-c("Combined","CPU","GPU")
 rownames(total_corehours)<-suffix
@@ -50,7 +54,7 @@ write.csv(total_corehours,total)
 # Calculate CPU/Walltime efficiency per user per application on CPU nodes
 tmpdata<-data_cpu%>%group_by(Username,Application.Name)%>%summarise(sum(CPU.Time.Hours),sum(CoreHours),sum(CPU.Time.Hours)/sum(CoreHours),length(Job.ID))
 tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
-colnames(tmpdata)<-c("Username","Application","CPUHours","CoreHours","Ratio","NumJobs","Name","Organization")
+colnames(tmpdata)<-c("Username","Application","CPUHours","CoreHours","Ratio","NumJobs","Name","Organization","Organization.HighLevel")
 tmpdata<-arrange(tmpdata,Ratio)
 write.csv(tmpdata,file=cpuwall_cpu,row.names=FALSE)
 rm(tmpdata)
@@ -58,35 +62,37 @@ rm(tmpdata)
 # Calculate CPU/Walltime efficiency per user per application on GPU nodes
 tmpdata<-data_gpu%>%group_by(Username,Application.Name)%>%summarise(sum(CPU.Time.Hours),sum(CoreHours),sum(CPU.Time.Hours)/sum(CoreHours),length(Job.ID))
 tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
-colnames(tmpdata)<-c("Username","Application","CPUHours","CoreHours","Ratio","NumJobs","Name","Organization")
+colnames(tmpdata)<-c("Username","Application","CPUHours","CoreHours","Ratio","NumJobs","Name","Organization","Organization.HighLevel")
 tmpdata<-arrange(tmpdata,Ratio)
 write.csv(tmpdata,file=cpuwall_gpu,row.names=FALSE)
 rm(tmpdata)
 
 # Calculate CPU corehours per user
+cat("Calculate corehours per user\n")
+tmpdata<-data_cpu%>%group_by(Username,Application.Name)%>%rename(Top.Application=Application.Name)%>%summarise(CoreHours=sum(CoreHours))%>%arrange(desc(CoreHours))
+top<-tmpdata[!duplicated(tmpdata$Username),]%>%select(Username,Top.Application)
 tmpdata<-data_cpu%>%group_by(Username)%>%summarise(sum(CoreHours),length(Job.ID))
 tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
-colnames(tmpdata)<-c("Username","CoreHours","NumJobs","Name","Organization")
-tmpdata<-arrange(tmpdata,desc(CoreHours))
-tmpdata<-tmpdata[,c(1,4,5,2,3)]
+colnames(tmpdata)<-c("Username","CoreHours","NumJobs","Name","Organization","Organization.HighLevel")
+tmpdata<-merge(tmpdata,top,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdata<-arrange(tmpdata,desc(CoreHours))%>%select(Username,Name,Organization,CoreHours,NumJobs,Top.Application)
 write.csv(tmpdata,file=userdata_cpu)
 rm(tmpdata)
 
 # Calculate GPU corehours per user
-tmpdata<-data_gpu%>%group_by(Username)%>%summarise(sum(CoreHours),length(Job.ID))
+tmpdata<-data_gpu%>%group_by(Username,Application.Name)%>%rename(Top.Application=Application.Name)%>%summarise(CoreHours=sum(CoreHours))%>%arrange(desc(CoreHours))
+top<-tmpdata[!duplicated(tmpdata$Username),]%>%select(Username,Top.Application)
+tmpdata<-data_gpu%>%group_by(Username)%>%summarise(sum(CoreHours),sum(CoreHours/24.0),length(Job.ID))
 tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
-colnames(tmpdata)<-c("Username","CoreHours","NumJobs","Name","Organization")
-tmpdata<-arrange(tmpdata,desc(CoreHours))
-tmpdata<-tmpdata[,c(1,4,5,2,3)]
+colnames(tmpdata)<-c("Username","CoreHours","GPUHours","NumJobs","Name","Organization","Organization.HighLevel")
+tmpdata<-merge(tmpdata,top,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdata<-arrange(tmpdata,desc(CoreHours))%>%select(Username,Name,Organization,GPUHours,NumJobs,Top.Application,CoreHours)
 write.csv(tmpdata,file=userdata_gpu)
 rm(tmpdata)
 
 # Calculate corehours per user per application
-tmpdata<-data_cpu%>%group_by(Username,Application.Name)%>%summarise(sum(CoreHours),length(Job.ID))
-tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
-tmpdata<-tmpdata[,c(2,1,5,6,3,4)]
-colnames(tmpdata)<-c("Application","Username","Name","Organization","CoreHours","NumJobs")
-tmpdata<-tmpdata%>%arrange(Application,CoreHours)
+tmpdata<-data_cpu%>%group_by(Username,Application.Name)%>%rename(Application=Application.Name)%>%summarise(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))
+tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)%>%select(Application,Username,Name,Organization,CoreHours,NumJobs)%>%arrange(Application,CoreHours)
 write.csv(tmpdata,file=app_by_user_cpu,row.names=FALSE)
 rm(tmpdata)
 
@@ -107,7 +113,10 @@ rm(tmpdata)
 
 # Calculate largest GPU jobs
 tmpdata<-data_gpu%>%select(CoreHours,Application.Name,Username,Job.ID,Queue,Cores,Wall.Time.Hours,Wait.Time.Hours)%>%arrange(desc(CoreHours))%>%head(n=100)
-colnames(tmpdata)<-c("Core Hours","Application","Username","Job ID","Queue","Cores","Wall time","Wait time")
+tmpdata$CoreHours<-tmpdata$CoreHours/24.0
+tmpdata$Cores<-tmpdata$Cores/24.0
+tmpdata<-tmpdata%>%rename(GPUHours=CoreHours,GPUs=Cores)
+colnames(tmpdata)<-c("GPU Hours","Application","Username","Job ID","Queue","GPUs","Wall time","Wait time")
 write.csv(tmpdata,file=top100_gpu)
 rm(tmpdata)
 
@@ -121,15 +130,13 @@ write.csv(tmpdata,file=app_cpu)
 rm(tmpdata)
 
 # Calculate corehours for GPU applications
-tmpdata<-data_gpu%>%group_by(Application.Name,Username)%>%summarize(sum(CoreHours),length(Job.ID))
-colnames(tmpdata)<-c("Application.Name","Username","CoreHours","NumJobs")
-tmpdata<-tmpdata%>%group_by(Application.Name)%>%summarize(sum(CoreHours),sum(NumJobs),length(Username))
-colnames(tmpdata)<-c("Application.Name","CoreHours","NumJobs","NumUsers")
-tmpdata<-arrange(tmpdata,desc(CoreHours))
+tmpdata<-data_gpu%>%group_by(Application.Name,Username)%>%rename(Application=Application.Name)%>%summarise(GPUHours=sum(CoreHours/24.0),CoreHours=sum(CoreHours),NumJobs=length(Job.ID))
+tmpdata<-tmpdata%>%group_by(Application)%>%summarize(GPUHours=sum(GPUHours),CoreHours=sum(CoreHours),NumJobs=sum(NumJobs),NumUsers=length(Username))%>%select(Application,GPUHours,NumJobs,NumUsers,CoreHours)%>%arrange(desc(GPUHours))
 write.csv(tmpdata,file=app_gpu)
 rm(tmpdata)
 
 # Calculate CPU corehours per organisation
+cat("Corehours per organisation\n")
 tmpdata<-data_cpu%>%group_by(Organization)%>%summarise(sum(CoreHours),length(Job.ID))
 colnames(tmpdata)<-c("Organization","CoreHours","NumJobs")
 tmpdata<-arrange(tmpdata,desc(CoreHours))
@@ -137,9 +144,7 @@ write.csv(tmpdata,file=orgdata_cpu)
 rm(tmpdata)
 
 # Calculate GPU corehours per organisation
-tmpdata<-data_gpu%>%group_by(Organization)%>%summarise(sum(CoreHours),length(Job.ID))
-colnames(tmpdata)<-c("Organization","CoreHours","NumJobs")
-tmpdata<-arrange(tmpdata,desc(CoreHours))
+tmpdata<-data_gpu%>%group_by(Organization)%>%summarise(GPUHours=sum(CoreHours/24.0),NumJobs=length(Job.ID))%>%arrange(desc(GPUHours))
 write.csv(tmpdata,file=orgdata_gpu)
 rm(tmpdata)
 
@@ -150,12 +155,13 @@ write.csv(tmpdata,file=org2data_cpu)
 rm(tmpdata)
 
 # Calculate GPU corehours per high-level organisation
-tmpdata<-data_gpu%>%group_by(Organization.HighLevel)%>%summarise(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))%>%arrange(desc(CoreHours))
+tmpdata<-data_gpu%>%group_by(Organization.HighLevel)%>%summarise(GPUHours=sum(CoreHours/24.0),NumJobs=length(Job.ID))%>%arrange(desc(GPUHours))
 for (org in levels(tmpdata$Organization.HighLevel)){if(!any(tmpdata$Organization.HighLevel==org)){tmpdata<-rbind(tmpdata,c(org,"0","0"))}}
 write.csv(tmpdata,file=org2data_gpu)
 rm(tmpdata)
 
 # Calculate CPU stats split by core
+cat("Stats by core count\n")
 tmpdata<-data_cpu%>%group_by(CoresGroup)%>%summarise(length(Job.ID),sum(CoreHours),median(Wait.Time.Hours),mean(Wait.Time.Hours))
 tmpdata<-tmpdata[match(coresgroup_sort,tmpdata$CoresGroup),]
 colnames(tmpdata)<-c("Cores","Number of Jobs","Total Core Hours","Median Wait (Hours)","Mean Wait (Hours)")
@@ -167,4 +173,16 @@ tmpdata<-data_gpu%>%group_by(CoresGroup)%>%summarise(length(Job.ID),sum(CoreHour
 tmpdata<-tmpdata[match(coresgroup_sort,tmpdata$CoresGroup),]
 colnames(tmpdata)<-c("Cores","Number of Jobs","Total Core Hours","Median Wait (Hours)","Mean Wait (Hours)")
 write.csv(tmpdata,file=stats_by_core_gpu,row.names=FALSE)
+rm(tmpdata)
+
+# Project corehours
+cat("Project core hours\n")
+tmpdata<-data%>%group_by(Project)%>%summarise(CoreHours=sum(CoreHours),length(Job.ID))
+colnames(tmpdata)<-c("Project","CoreHours","NumJobs")
+s<-read.csv(project_storage)
+tmpdata<-merge(tmpdata,s,all.x=TRUE,all.y=FALSE,sort=FALSE)
+levels(tmpdata$home_gb)<-c(levels(tmpdata$home_gb),"-1")
+tmpdata$home_gb[is.na(tmpdata$home_gb)] <- -1
+tmpdata<-tmpdata%>%arrange(desc(CoreHours))
+write.csv(tmpdata,file=project_walltime)
 rm(tmpdata)

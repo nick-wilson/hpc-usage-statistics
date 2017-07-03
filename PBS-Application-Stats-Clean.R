@@ -7,6 +7,7 @@ source("PBS-Application-Stats-Common.R")
 pbsreport<-paste0("pbs-report.cleaned.",suffix,".csv")
 jobcores<-paste0("cores.",suffix,".csv")
 usernames<-paste0("usernames.",suffix,".csv")
+project<-paste0("project.",suffix,".csv")
 apps<-paste0("alljobs.",suffix,".csv")
 
 # load in csv data from pbsreport and rename the columns
@@ -57,68 +58,21 @@ data<-merge(data,jobnames,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Application.Name[is.na(data$Application.Name)]<-"Unknown"
 data$Application.Name[substring(data$Job.ID,1,1)=="A"]<-"Alpha Phase - Not logged"
 
+projects<-read.csv(file=project,header=FALSE,colClasses="character")
+colnames(projects)<-c("Job.ID.NoIndex","Project")
+projects$Project<-as.factor(projects$Project)
+levels(projects$Project)<-c(levels(projects$Project),"Unknown")
+data<-merge(data,projects,all.x=TRUE,all.y=FALSE,sort=FALSE)
+data$Project[is.na(data$Project)]<-"Unknown"
+
 # merge in names of users
 cat("read in user information\n")
 users<-read.csv(usernames)
-# edits for misplaced CREATE usernames
-cat("clean user information\n")
-org<-"ETHZ"
-vec_u<-c("secpjf")
-for (u in vec_u){
- if(any(users$Username==u)){
-  users[users$Username==u,"Organization"]<-org
- }
-}
-org<-"NRD"
-vec_u<-c("nrdmgb","nrdzw","nrdmela","nrdnbka")
-for (u in vec_u){
- if(any(users$Username==u)){
-  users[users$Username==u,"Organization"]<-org
- }
-}
-org<-"SINBERBEST"
-vec_u<-c("sbbrlg")
-for (u in vec_u){
- if(any(users$Username==u)){
-  users[users$Username==u,"Organization"]<-org
- }
-}
-org<-"SMART"
-vec_u<-c("smrqx","smrpvr")
-for (u in vec_u){
- if(any(users$Username==u)){
-  users[users$Username==u,"Organization"]<-org
- }
-}
-org<-"TUM-CREATE"
-vec_u<-c("tumjiaj")
-for (u in vec_u){
- if(any(users$Username==u)){
-  users[users$Username==u,"Organization"]<-org
- }
-}
-if (any(users$Organization=="MIT")) {users[users$Organization=="MIT","Organization"]<-"SMART"}
-## cannot use the following line as it makes a new factor
-#if (any(users$Organization=="CREATE")) {users[users$Organization=="CREATE","Organization"]<-"CREATE-OTHERS"}
 
 cat("merge user information with job information\n")
 data<-merge(data,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
 
-# Categorize organizations
-cat("categorize organizations\n")
-data$Organization.HighLevel<-"Other"
-# NUS
-data[grepl("NUS",data$Organization),"Organization.HighLevel"]<-"NUS"
-# NTU
-data[data$Organization=="NTU","Organization.HighLevel"]<-"NTU"
-# A*STAR
-data[data$Organization=="GIS"|data$Organization=="IHPC"|data$Organization=="BII"|data$Organization=="IMCB"|data$Organization=="SCEI"|data$Organization=="I2R"|data$Organization=="BMSI"|data$Organization=="ICES"|data$Organization=="DSI"|data$Organization=="IMRE"|data$Organization=="IME"|data$Organization=="SIMT"|data$Organization=="IBN","Organization.HighLevel"]<-"A*STAR"
-# CREATE
-data[data$Organization=="CREATE"|data$Organization=="BEARS-BERKELEY"|data$Organization=="CARES"|data$Organization=="E2S2"|data$Organization=="ETHZ"|data$Organization=="NRD"|data$Organization=="SINBERBEST"|data$Organization=="SINBERISE"|data$Organization=="SMART"|data$Organization=="TUM-CREATE","Organization.HighLevel"]<-"CREATE"
-# SUTD
-data[data$Organization=="SUTD","Organization.HighLevel"]<-"SUTD"
-#
-# Convert to a factor and make sure all organizations are included
+# Convert high level orgs to a factor to make sure they are all included
 allorgs<-c("A*STAR","NUS","NTU","CREATE","SUTD","Other")
 data$Organization.HighLevel<-factor(data$Organization.HighLevel,allorgs)
 

@@ -1,0 +1,55 @@
+#!/bin/bash
+## set -x
+set -eu
+users=`getent passwd | awk -F: '{printf "%s ",$1}'`
+
+. ./config
+
+logdir=/app/nsccadmin/log/storage-statistics
+datestring="${ey}${em}${ed}-12:00"
+
+csv="storage.$suffix.csv"
+
+echo '"Username","home_gb","home_files","home1_gb","home1_files","secure_gb","secure_files","scratch_gb","scratch_files","seq_gb","seq_files"' > $csv
+
+users=`getent passwd | awk -F: '{printf "%s ",$1}'`
+for user in $users ; do
+
+fs=home
+f="$logdir/$fs.user.quota.$datestring"
+if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/$fs.user.quota".* | tail -1` ; fi
+home_gb=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$3;} END {printf "%d",sum;}'`
+home_files=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$9;} END {printf "%d",sum;}'`
+fs=home1
+f="$logdir/$fs.user.quota.$datestring"
+if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/$fs.user.quota".* | tail -1` ; fi
+home1_gb=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$4;} END {printf "%d",sum;}'`
+home1_files=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$10;} END {printf "%d",sum;}'`
+fs=secure
+f="$logdir/$fs.user.quota.$datestring"
+if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/$fs.user.quota".* | tail -1` ; fi
+secure_gb=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$3;} END {printf "%d",sum;}'`
+secure_files=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$9;} END {printf "%d",sum;}'`
+
+fs=scratch
+f="$logdir/$fs.user.quota.$datestring"
+if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/$fs.user.quota".* | tail -1` ; fi
+scratch_gb=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$4;} END {printf "%d",sum/1e6;}'`
+scratch_files=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$8;} END {printf "%d",sum;}'`
+fs=seq
+f="$logdir/$fs.user.quota.$datestring"
+if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/$fs.user.quota".* | tail -1` ; fi
+seq_gb=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$4;} END {printf "%d",sum/1e6;}'`
+seq_files=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$8;} END {printf "%d",sum;}'`
+
+## grep "^$user " $logdir/*.user.quota.$datestring || true
+## echo ${user},${home_gb},${home_files},${home1_gb},${home1_files},${secure_gb},${secure_files},${scratch_gb},${scratch_files},${seq_gb},${seq_files} | tee -a $csv
+##echo
+echo ${user},${home_gb},${home_files},${home1_gb},${home1_files},${secure_gb},${secure_files},${scratch_gb},${scratch_files},${seq_gb},${seq_files} >> $csv
+done
+
+# project filesets
+f="$logdir/home.fileset.quota.$datestring"
+if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/home.fileset.quota".* | tail -1` ; fi
+echo 'Project,home_gb' > storage-byproject."$suffix".csv
+getent group | grep ^1.0 | sed -e 's,:.*,,' | while read p  ; do s=`grep "^$p " "$f" | awk '{print $3}'` ; echo $p,$s ; done >> storage-byproject."$suffix".csv
