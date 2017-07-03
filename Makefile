@@ -1,5 +1,9 @@
 default_target: stats
 
+.PHONY: aggregate
+aggregate:
+	./aggregate ; $(MAKE) stats
+
 include config
 
 # convert config file into format to be read into R scripts
@@ -47,8 +51,3 @@ veryclean: clean
 .PHONY : distclean
 distclean: veryclean
 	rm -f pbs-report.raw.$(suffix).csv config
-
-.PHONY: aggregate
-aggregate:
-	./aggregate ; $(MAKE) stats
-
