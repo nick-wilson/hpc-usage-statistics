@@ -1,4 +1,6 @@
 #!/bin/bash
+ulimit -m 67108864
+ulimit -v 67108864
 
 . ./config
 
@@ -7,7 +9,7 @@ tmpfile="$rawfile".tmp
 
 if [ x$HOSTNAME$USER != xwlm01root ] ; then
  echo ssh to root@wlm01 to run pbs-report
- ssh root@wlm01 "pbs-report --verbose --csv \| --begin $sy$sm$sd --end $ey$em$ed --time full" > "$tmpfile" || rm -f "$tmpfile"
+ ssh root@wlm01 "ulimit -m 67108864 ; ulimit -v 67108864 ; pbs-report --verbose --csv \| --begin $sy$sm$sd --end $ey$em$ed --time full" > "$tmpfile" || rm -f "$tmpfile"
 else
  echo running pbs-report
  pbs-report --verbose --csv "|" --begin $sy$sm$sd --end $ey$em$ed --time full > "$tmpfile" || rm -f "$tmpfile"
