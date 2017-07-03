@@ -1,19 +1,15 @@
 #!/bin/bash
 set -x
 
-cat << EOF > config
-sy=2016
-sm=06
-sd=18
-ey=2017
-em=06
-ed=30
-monthly=1
-publish=0
-suffix=aggregate
-prefix=aggregate
-csvalljobs=/app/nsccadmin/log/printjob/alljobs.csv
-EOF
+if [ ! -f config ] ; then echo error: no config ; exit 1 ; fi
+
+sed -i \
+ -e 's/^sy=.*/sy=2016/' \
+ -e 's/^sm=.*/sm=06/' \
+ -e 's/^sd=.*/sd=18/' \
+ -e 's/^suffix=.*/suffix=aggregate/' \
+ -e 's/^prefix=.*/prefix=aggregate/' \
+ config
 
 . ./config
 make config.py
