@@ -1,12 +1,13 @@
-#!/bin/sh
+#!/bin/bash
+set -x
 
 cat << EOF > config
-sy=XXX
-sm=XXX
-sd=XXX
-ey=XXX
-em=XXX
-ed=XXX
+sy=2016
+sm=06
+sd=18
+ey=2017
+em=06
+ed=30
 monthly=1
 publish=0
 suffix=aggregate
@@ -17,50 +18,32 @@ EOF
 . ./config
 make config.py
 
-# Alpha Phase
-d=20160328-20160617
-echo $d
-head -n 7 ../$d/pbs-report.raw.$d.csv > pbs-report.raw.$suffix.csv
-n=`grep -n "PBS Pro Cluster Accounting Summary Statistics" ../$d/pbs-report.raw.$d.csv | sed -e 's,:.*,,'`
-((n=n-9))
-tail -n +8 ../$d/pbs-report.raw.$d.csv | head -n $n | sed -e 's,^,A,' >>  pbs-report.raw.$suffix.csv
+pbsreportrawalpha=pbs-report.raw.alpha.csv
+pbsreportrawproduction=pbs-report.raw.production.csv
+pbsreportrawaggregate=pbs-report.raw.$suffix.csv
+pbsreportcleanedalpha=pbs-report.cleaned.alpha.csv
+pbsreportcleanedproduction=pbs-report.cleaned.production.csv
+pbsreportcleanedaggregate=pbs-report.cleaned.$suffix.csv
 
-# Beta Phase
-for dd in 20160618-20160630 2016{07..12}01-* {2017..2020}{01..12}01-* ; do
- d=`cd .. ; echo $dd`
- if [ ! -d ../$d ] ; then continue ; fi
- echo $d
- n=`grep -n "PBS Pro Cluster Accounting Summary Statistics" ../$d/pbs-report.raw.$d.csv | sed -e 's,:.*,,'`
- ((n=n-9))
- tail -n +8 ../$d/pbs-report.raw.$d.csv | head -n $n >>  pbs-report.raw.$suffix.csv
-done
+make $pbsreportrawaggregate
+if [ $pbsreportrawaggregate -nt $pbsreportcleanedproduction ] ; then echo rm -f $pbsreportcleanedproduction ; fi
 
-# Generate the cleaned and core csv files
-d=20160328-20160617
-echo $d
-head -n 2 ../$d/pbs-report.cleaned.$d.csv > pbs-report.cleaned.$suffix.csv
-tail -n +3 ../$d/pbs-report.cleaned.$d.csv | sed -e 's,^,A,' >> pbs-report.cleaned.$suffix.csv
-head -n 1 ../$d/cores.$d.csv > cores.$suffix.csv
-tail -n +2 ../$d/cores.$d.csv | sed -e 's,^,A,' >> cores.$suffix.csv
-for dd in 20160618-20160630 2016{07..12}01-* {2017..2020}{01..12}01-* ; do
- d=`cd .. ; echo $dd`
- if [ ! -d ../$d ] ; then continue ; fi
- echo $d
- tail -n +3 ../$d/pbs-report.cleaned.$d.csv >> pbs-report.cleaned.$suffix.csv
- tail -n +2 ../$d/cores.$d.csv >> cores.$suffix.csv
-done
+if [ ! -f $pbsreportcleanedproduction ] ; then
+ rm -f $pbsreportcleanedaggregate && \
+  make $pbsreportcleanedaggregate && \
+  mv $pbsreportcleanedaggregate $pbsreportcleanedproduction || \
+  rm -f $pbsreportcleanedaggregate $pbsreportcleanedproduction
+fi
 
-## Copy in the last alljobs file
-#file=""
-#for dd in 20160618-20160630 2016{07..12}01-* {2017..2020}{01..12}01-* ; do
-# d=`cd .. ; echo $dd`
-# if [ ! -d ../$d ] ; then continue ; fi
-# tst="../$d/alljobs.$d.csv"
-# if [ -f $tst ] ; then file="$tst" ; fi
-#done
-#cp -v $file alljobs.$suffix.csv
-cp -v $csvalljobs alljobs.$suffix.csv
+if [ ! -f $pbsreportcleanedalpha ] ; then
+ # Alpha Phase
+ d=20160328-20160617
+ g=../$d/pbs-report.cleaned.$d.csv
+ head -n 2 $g > $pbsreportcleanedalpha && \
+  tail -n +3 $g | sed -e 's,^,A,' >> $pbsreportcleanedalpha || \
+  rm -f $pbsreportcleanedalpha
+fi
 
-# Accumulate all username information
-echo Username,Name,Organization > usernames.$suffix.csv
-cat ../20*/usernames.*.csv | grep -v ^Username | sort | uniq >> usernames.$suffix.csv
+cp $pbsreportcleanedalpha $pbsreportcleanedaggregate && \
+ tail -n +3 $pbsreportcleanedproduction >> $pbsreportcleanedaggregate || \
+ rm -f $pbsreportcleanedaggregate
