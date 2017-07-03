@@ -1,0 +1,20 @@
+#!/bin/bash
+
+. ./config
+
+./update-myusage
+
+if [ $monthly -eq 1 ] ; then
+# Copy NUS data to Junhong home directory
+yes | cp -ip *.NUS.$suffix.csv ~ccewjh/Monthly_Usage/
+chown ccewjh.nus ~ccewjh/Monthly_Usage/*.NUS.$suffix.csv
+chmod go-rwx ~ccewjh/Monthly_Usage/*.NUS.$suffix.csv
+# Copy NTU data to Melvin home directory
+yes | cp -ip *.NTU.$suffix.csv ~melvin/Monthly_Usage/
+chown melvin.ntu ~melvin/Monthly_Usage/*.NTU.$suffix.csv
+chmod go-rwx ~ccewjh/Monthly_Usage/*.NTU.$suffix.csv
+# Copy IHPC data to Al Davis home directory
+yes | cp -ip *.IHPC.$suffix.csv ~aldavis/Monthly_Usage/
+chown aldavis.ihpc ~aldavis/Monthly_Usage/*.IHPC.$suffix.csv
+chmod go-rwx ~aldavis/Monthly_Usage/*.IHPC.$suffix.csv
+fi

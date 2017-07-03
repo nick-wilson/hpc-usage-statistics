@@ -2,6 +2,12 @@
 
 . ./config
 
+if [ $publish -eq 1 ] ; then
+ echo Copy files to stakeholder home directories and update myusage command data
+ # requires root permission
+ su -c ./make-copyout
+fi
+
 # High level institutes
 orgs="ASTAR NUS NTU CREATE SUTD"
 # Individual organizations
@@ -11,32 +17,17 @@ orgs="$orgs GIS IHPC"
 # base directory
 base=/app/nsccadmin/log
 
-# Make zip file for each organisation
-makezip=${makezip:-0}
-if [ $makezip -eq 1 ] ; then
-for org in $orgs ; do
-  rm -rf ${prefix}-${org} && \
-  mkdir ${prefix}-${org} && \
-  cp -p *.${org}.${suffix}.csv ${prefix}-${org} && \
-  rm -f ${prefix}-${org}.zip && \
-  zip -r ${prefix}-${org}.zip ${prefix}-${org} && \
-  rm -rf ${prefix}-${org}
-done
-fi
-
-if [ $publish -eq 1 ] ; then
-# Copy NUS data to Junhong home directory
-cp -ip *.NUS.* ~ccewjh/Monthly_Usage/ < /dev/null
-chown ccewjh.nus ~ccewjh/Monthly_Usage/*
-# Copy NTU data to Melvin home directory
-cp -ip *.NTU* ~melvin/Monthly_Usage/ < /dev/null
-chown melvin.ntu ~melvin/Monthly_Usage/*
-fi
-
 # Copy data to log directory
 logdir=$base/usage-statistics
 outputfiles=`echo {active,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_}*.$suffix.csv`
-if [ $monthly -eq 1 ] ; then
+
+if [ x"$suffix" == xaggregate ] ; then
+ mv -v $outputfiles $logdir/aggregate/
+ mkdir -p $logdir/aggregate/by-org
+ for org in $orgs ; do
+  mv -v $logdir/aggregate/*.$org.$suffix.csv $logdir/aggregate/by-org/
+ done
+elif [ $monthly -eq 1 ] ; then
  mv -v $outputfiles $logdir/
  mkdir -p $logdir/by-org
  for org in $orgs ; do
@@ -51,7 +42,3 @@ fi
 for d in "$PWD" "$logdir" ; do
  setfacl -R -bk "$d" ;  chmod -R u+rwX,g-w,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
 done
-
-if [ $publish -eq 1 ] ; then
-./update-myusage
-fi
