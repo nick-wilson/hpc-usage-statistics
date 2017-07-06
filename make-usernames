@@ -9,6 +9,9 @@ usernames_raw_csv="usernames-raw.$suffix.csv"
 # Gather raw username information
 echo Username,Name,Organization,Organization.HighLevel,cn,sn,givenName,displayName > "$usernames_raw_csv"
 echo Username,Name,Organization,Organization.HighLevel > "$usernames_csv"
+#missing username
+echo nus.junhong,nus.junhong,NUS,NUS,,,, >> "$usernames_raw_csv"
+echo nus.junhong,nus.junhong,NUS,NUS >> "$usernames_csv"
 
 getent passwd | awk -F: '{print $1}' | while read username ; do
 
