@@ -26,8 +26,11 @@ cores.$(suffix).csv: pbs-report.cleaned.$(suffix).csv config.py
 storage.$(suffix).csv:
 	./make-storage
 
+storage-byproject.$(suffix).csv: storage.$(suffix).csv
+	./make-storage
+
 # Collect username information
-usernames.$(suffix).csv: pbs-report.cleaned.$(suffix).csv storage.$(suffix).csv
+usernames.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 	./make-usernames
 
 # Collect application information
@@ -39,7 +42,7 @@ project.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 	cp $(csvproject) $@
 
 # Generate statistics if any source files have been updated
-alldata.$(suffix).csv: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv config.R
+alldata.$(suffix).csv: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv config.R
 	./make-stats
 
 .PHONY : stats

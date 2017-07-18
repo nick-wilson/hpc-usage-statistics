@@ -14,6 +14,11 @@ em=${sm}
 # End day
 ed=30
 
+# Number of days
+days=30
+# Number of nodes reserved for production queue
+production_nodes=20
+
 # If monthly statistics then set monthly=1
 monthly=0
 
@@ -27,3 +32,7 @@ prefix=${ey}-${em}
 # Location of application information
 csvalljobs=/app/nsccadmin/log/printjob/alljobs.csv
 csvproject=/app/nsccadmin/log/printjob/project.csv
+
+# used to calculate unused production queue
+hours=`expr $days \* 24`
+production_cores=`expr $production_nodes \* 24`

@@ -10,6 +10,7 @@ datestring="${ey}${em}${ed}-12:00"
 
 csv="storage.$suffix.csv"
 
+if [ ! -f "$csv" ] ; then
 echo '"Username","home_gb","home_files","home1_gb","home1_files","secure_gb","secure_files","scratch_gb","scratch_files","seq_gb","seq_files"' > $csv
 
 users=`getent passwd | awk -F: '{printf "%s ",$1}'`
@@ -47,9 +48,13 @@ seq_files=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {su
 ##echo
 echo ${user},${home_gb},${home_files},${home1_gb},${home1_files},${secure_gb},${secure_files},${scratch_gb},${scratch_files},${seq_gb},${seq_files} >> $csv
 done
+fi
 
 # project filesets
+csvp="storage-byproject."$suffix".csv"
+if [ ! -f $csvp ] ; then
 f="$logdir/home.fileset.quota.$datestring"
 if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/home.fileset.quota".* | tail -1` ; fi
-echo 'Project,home_gb' > storage-byproject."$suffix".csv
-getent group | grep ^1.0 | sed -e 's,:.*,,' | while read p  ; do s=`grep "^$p " "$f" | awk '{print $3}'` ; echo $p,$s ; done >> storage-byproject."$suffix".csv
+echo 'Project,home_gb' > "$csvp"
+getent group | grep ^1.0 | sed -e 's,:.*,,' | while read p  ; do s=`grep "^$p " "$f" | awk '{print $3}'` ; echo $p,$s ; done >> "$csvp"
+fi

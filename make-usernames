@@ -14,6 +14,8 @@ echo nus.junhong,nus.junhong,NUS,NUS,,,, >> "$usernames_raw_csv"
 echo nus.junhong,nus.junhong,NUS,NUS >> "$usernames_csv"
 echo a0098651,Zhou Jun Zhou,NUS,NUS,,,, >> "$usernames_raw_csv"
 echo a0098651,Zhou Jun Zhou,NUS,NUS >> "$usernames_csv"
+echo gis_unused,Unused GIS Reservation,GIS-UNUSED,ASTAR,,,, >> "$usernames_raw_csv"
+echo gis_unused,Unused GIS Reservation,GIS-UNUSED,ASTAR >> "$usernames_csv"
 
 getent passwd | awk -F: '{print $1}' | while read username ; do
 
