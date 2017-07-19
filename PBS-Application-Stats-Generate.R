@@ -130,7 +130,7 @@ rm(tmpdata)
 
 cat("Corehours per organisation\n")
 data_cpu_org<-data_cpu%>%group_by(Organization)%>%summarize(Organization.HighLevel=unique(Organization.HighLevel),CoreHours=sum(CoreHours),NumJobs=length(Job.ID))
-data_cpu_org<-rbind(data_cpu_org,unused)
+#data_cpu_org<-rbind(data_cpu_org,unused)
 data_cpu_org$CoreHours<-as.numeric(data_cpu_org$CoreHours)
 data_cpu_org$NumJobs<-as.integer(data_cpu_org$NumJobs)
 data_gpu_org<-data_gpu%>%group_by(Organization)%>%summarize(Organization.HighLevel=unique(Organization.HighLevel),GPUHours=sum(CoreHours/24.0),NumJobs=length(Job.ID))
