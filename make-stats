@@ -8,12 +8,6 @@ for f in config.R ; do
  fi
 done
 
-# High level institutes
-orgs="ASTAR NUS NTU CREATE"
-# Individual organizations
-orgs="$orgs GIS IHPC"
-#orgs="$orgs BEARS-BERKELEY CARES E2S2 ETHZ NRD SINBERBEST SINBERISE SMART TUM-CREATE"
-
 # R script to merge output from pbs-report with job application statistics
 scripts="Storage.R PBS-Application-Stats-Clean.R PBS-Application-Stats-Combined.R"
 

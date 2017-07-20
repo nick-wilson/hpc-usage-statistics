@@ -73,7 +73,6 @@ cat("merge user information with job information\n")
 data<-merge(data,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
 
 # Convert high level orgs to a factor to make sure they are all included
-allorgs<-c("A*STAR","NUS","NTU","CREATE","SUTD","Other")
 data$Organization.HighLevel<-factor(data$Organization.HighLevel,allorgs)
 
 # write out data for use in other scripts

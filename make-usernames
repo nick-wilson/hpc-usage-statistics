@@ -101,6 +101,7 @@ if [ x"$ou" == xMIT ] ; then ou=SMART ; fi
 
 # Set high-level orgs
 ouh="Other"
+ldapsearch -x -LLL "(uid=$username)" | grep ^dn: | grep ,ou=industry, > /dev/null && ouh="Industry"
 echo $ou | grep NUS > /dev/null && ouh="NUS"
 case $ou in
  NTU) ouh='NTU' ;;
@@ -128,6 +129,7 @@ case $ou in
  SMART) ouh='CREATE' ;;
  TUM-CREATE) ouh='CREATE' ;;
  SUTD) ouh='SUTD' ;;
+ SMU) ouh='SMU' ;;
 esac
  echo ${username},${name},${ou},${ouh},${cn},${sn},${gn},${dn} >> "$usernames_raw_csv"
  echo ${username},${name},${ou},${ouh} >> "$usernames_csv"

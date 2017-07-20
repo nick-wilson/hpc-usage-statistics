@@ -31,7 +31,7 @@ unused<-ounused%>%filter(Organization.HighLevel==dfilter)
 filter<-"ASTAR."
 source("PBS-Application-Stats-Generate.R")
 
-for (filter in c("NUS","NTU","CREATE","SUTD")){
+for (filter in allorgs){
  data<-odata%>%filter(Organization.HighLevel==filter)
  unused<-ounused%>%filter(Organization.HighLevel==filter)
  filter<-paste0(filter,".")
