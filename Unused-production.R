@@ -33,6 +33,11 @@ unused<-data.frame()
 production_corehours<-as.numeric(data%>%summarise(sum(CoreHours)))
 production_available<-as.numeric(hours*production_cores)
 production_unused<-production_available-production_corehours
+
+if ( production_unused < 0 ) {
+ production_unused<-as.numeric(0.0)
+}
+
 cat("Production queue core hours used: ",production_corehours,"\nProduction queue reserved core hours: ",production_available,"\nProduction queue unused core hours: ",production_unused,"\n")
 unused<-rbind(unused,c("GIS-UNUSED","A*STAR",production_unused,0))
 colnames(unused)<-c("Organization","Organization.HighLevel","CoreHours","NumJobs")
