@@ -130,7 +130,7 @@ rm(tmpdata)
 
 cat("Corehours per organisation\n")
 data_cpu_org<-data_cpu%>%group_by(Organization)%>%summarize(Organization.HighLevel=unique(Organization.HighLevel),CoreHours=sum(CoreHours),NumJobs=length(Job.ID))
-#data_cpu_org<-rbind(data_cpu_org,unused)
+data_cpu_org<-rbind(data_cpu_org,unused)
 data_cpu_org$CoreHours<-as.numeric(data_cpu_org$CoreHours)
 data_cpu_org$NumJobs<-as.integer(data_cpu_org$NumJobs)
 data_gpu_org<-data_gpu%>%group_by(Organization)%>%summarize(Organization.HighLevel=unique(Organization.HighLevel),GPUHours=sum(CoreHours/24.0),NumJobs=length(Job.ID))
@@ -176,7 +176,7 @@ write.csv(tmpdata,file=stats_by_core_cpu,row.names=FALSE)
 rm(tmpdata)
 
 # Calculate GPU stats split by core
-tmpdata<-data_gpu%>%group_by(CoresGroup)%>%summarise(length(Job.ID),sum(GPUHours),median(Wait.Time.Hours),mean(Wait.Time.Hours))
+tmpdata<-data_gpu%>%group_by(CoresGroup)%>%summarise(length(Job.ID),sum(CoreHours)/24.0,median(Wait.Time.Hours),mean(Wait.Time.Hours))
 tmpdata<-tmpdata[match(coresgroup_sort,tmpdata$CoresGroup),]
 colnames(tmpdata)<-c("Cores","Number of Jobs","Total GPU Hours","Median Wait (Hours)","Mean Wait (Hours)")
 write.csv(tmpdata,file=stats_by_core_gpu,row.names=FALSE)
