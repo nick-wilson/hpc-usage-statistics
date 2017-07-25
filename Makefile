@@ -41,8 +41,12 @@ alljobs.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 project.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 	cp $(csvproject) $@
 
+#Calculate unused allocations
+unused.$(suffix).csv: config.R
+	./make-unused
+
 # Generate statistics if any source files have been updated
-alldata.$(suffix).csv: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv config.R
+alldata.$(suffix).csv: pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv config.R unused.$(suffix).csv
 	./make-stats
 
 .PHONY : stats
@@ -51,14 +55,14 @@ stats: alldata.$(suffix).csv
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-,project_}*.$(suffix).csv $(prefix)-*.zip *.$(suffix).png
+	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-,project_,unused}*.$(suffix).csv $(prefix)-*.zip *.$(suffix).png
 
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv project.$(suffix).csv usernames{,-raw}.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage.$(suffix).csv
+	rm -f alljobs.$(suffix).csv project.$(suffix).csv usernames{,-raw}.$(suffix).csv *pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage.$(suffix).csv
 
 # Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : distclean
 distclean: veryclean
-	rm -f pbs-report.raw.$(suffix).csv config
+	rm -f *pbs-report.raw.$(suffix).csv config

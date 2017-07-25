@@ -1,6 +1,7 @@
 
 alldata_R<-'data.Rdata'
 users_R<-'users.Rdata'
+unused_csv<-paste0("unused.",suffix,".csv")
 
 # vector to sort by core count
 # should be same as labels in cleaning script, used in generate script
