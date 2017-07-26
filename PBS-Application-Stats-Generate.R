@@ -153,7 +153,7 @@ write.csv(tmpdata,file=org2data_cpu)
 rm(tmpdata)
 
 # Calculate GPU corehours per high-level organisation
-tmpdata<-data_gpu_org%>%group_by(Organization.HighLevel)%>%summarise(GPUHours=sum(GPUHours),NumJobs=length(NumJobs))%>%arrange(desc(GPUHours))
+tmpdata<-data_gpu_org%>%group_by(Organization.HighLevel)%>%summarise(GPUHours=sum(GPUHours),NumJobs=sum(NumJobs))%>%arrange(desc(GPUHours))
 for (org in levels(tmpdata$Organization.HighLevel)){if(!any(tmpdata$Organization.HighLevel==org)){tmpdata<-rbind(tmpdata,c(org,"0","0"))}}
 write.csv(tmpdata,file=org2data_gpu)
 rm(tmpdata)
