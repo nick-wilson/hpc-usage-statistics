@@ -17,12 +17,12 @@ source("PBS-Application-Stats-Unused.R")
 filter<-""
 source("PBS-Application-Stats-Generate.R")
 
-if ( monthly==1) {
 #copy data for reuse by each filtered pass through the statistics generation
 #could be refactored to avoid this copy if required
 odata<-data
 ounused<-unused
 
+if ( monthly==1) {
 # Stats for High-Level Institutions
 # These are defined in the R script which cleans the data
 dfilter<-"A*STAR"
@@ -55,3 +55,11 @@ for (filter in c("GIS","IHPC")) {
 ## }
 
 } # monthly=1
+
+machinelearning<-0
+ if (machinelearning==1){
+ data<-odata%>%filter(Application.Name=="keras"|Application.Name=="Caffe"|Application.Name=="Torch"|Application.Name=="Theano"|Application.Name=="darknet"|Application.Name=="TensorFlow")
+ unused<-ounused%>%filter(Organization=="XXXX")
+ filter<-"MACHINELEARNING."
+ source("PBS-Application-Stats-Generate.R")
+}
