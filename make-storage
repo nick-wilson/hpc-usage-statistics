@@ -57,4 +57,10 @@ f="$logdir/home.fileset.quota.$datestring"
 if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/home.fileset.quota".* | tail -1` ; fi
 echo 'Project,home_gb' > "$csvp"
 getent group | grep ^1.0 | sed -e 's,:.*,,' | while read p  ; do s=`grep "^$p " "$f" | awk '{print $3}'` ; echo $p,$s ; done >> "$csvp"
+sed -i \
+ -e 's/^1100/NUS-1100/' \
+ -e 's/^1200/NTU-1200/' \
+ -e 's/^1300/A*STAR-1300/' \
+ -e 's/^1400/Industry-1400/' \
+ "$csvp"
 fi
