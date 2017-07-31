@@ -14,20 +14,16 @@ echo nus.junhong,nus.junhong,NUS,NUS,,,, >> "$usernames_raw_csv"
 echo nus.junhong,nus.junhong,NUS,NUS >> "$usernames_csv"
 echo a0098651,Zhou Jun Zhou,NUS,NUS,,,, >> "$usernames_raw_csv"
 echo a0098651,Zhou Jun Zhou,NUS,NUS >> "$usernames_csv"
-echo gis_unused,Unused GIS Reservation,GIS-UNUSED,ASTAR,,,, >> "$usernames_raw_csv"
-echo gis_unused,Unused GIS Reservation,GIS-UNUSED,ASTAR >> "$usernames_csv"
 
 getent passwd | awk -F: '{print $1}' | while read username ; do
 
 _x=`ldapsearch -x -LLL "(uid=$username)"`
 if [ x"$_x" != x ] ; then
- cn=`ldapsearch -x -LLL "(uid=$username)" | grep ^cn: | sed -e "s,^cn. ,," -e 's/,/ /g' -e 's/  */ /g' -e 's/#//g' -e 's/([^)]*)//' -e 's/ *$//' -e 's/^ *//'`
- echo $cn | grep '[a-z]' > /dev/null || cn=`echo $cn | tr '[A-Z]' '[a-z]' | perl -ane ' foreach $wrd ( @F ) { print ucfirst($wrd)." "; } print "\n" ; ' | sed -e 's/ *$//' -e 's/^ *//'`
- sn=`ldapsearch -x -LLL "(uid=$username)" | grep ^sn: | sed -e "s,^sn. ,," -e 's/,/ /g' -e 's/  */ /g' -e 's/#//g' -e 's/([^)]*)//' -e's/ *$//' -e 's/^ *//'`
- gn=`ldapsearch -x -LLL "(uid=$username)" | grep ^givenName: | sed -e "s,^givenName. ,," -e 's/,/ /g' -e 's/  */ /g' -e 's/#//g' -e 's/([^)]*)//' -e's/ *$//' -e 's/^ *//'`
- dn=`ldapsearch -x -LLL "(uid=$username)" | grep ^displayName: | sed -e "s,^displayName. ,," -e 's/,/ /g' -e 's/  */ /g' -e 's/#//g' -e 's/([^)]*)//' -e's/ *$//' -e 's/^ *//'`
+ cn=`ldapsearch -x -LLL "(uid=$username)" | grep ^cn: | sed -e "s,^cn. ,," -e 's/,/ /g' -e 's/  */ /g' -e 's/#//g' -e 's/([^)]*)//' -e 's/ *$//' -e 's/^ *//' | tr '[A-Z]' '[a-z]' | perl -ane ' foreach $wrd ( @F ) { print ucfirst($wrd)." "; } print "\n" ; ' | sed -e 's/ *$//' -e 's/^ *//'`
+ sn=`ldapsearch -x -LLL "(uid=$username)" | grep ^sn: | sed -e "s,^sn. ,," -e 's/,/ /g' -e 's/  */ /g' -e 's/#//g' -e 's/([^)]*)//' -e's/ *$//' -e 's/^ *//' | tr '[A-Z]' '[a-z]' | perl -ane ' foreach $wrd ( @F ) { print ucfirst($wrd)." "; } print "\n" ; ' | sed -e 's/ *$//' -e 's/^ *//'`
+ gn=`ldapsearch -x -LLL "(uid=$username)" | grep ^givenName: | sed -e "s,^givenName. ,," -e 's/,/ /g' -e 's/  */ /g' -e 's/#//g' -e 's/([^)]*)//' -e's/ *$//' -e 's/^ *//' | tr '[A-Z]' '[a-z]' | perl -ane ' foreach $wrd ( @F ) { print ucfirst($wrd)." "; } print "\n" ; ' | sed -e 's/ *$//' -e 's/^ *//'`
+ dn=`ldapsearch -x -LLL "(uid=$username)" | grep ^displayName: | sed -e "s,^displayName. ,," -e 's/,/ /g' -e 's/  */ /g' -e 's/#//g' -e 's/([^)]*)//' -e's/ *$//' -e 's/^ *//' | tr '[A-Z]' '[a-z]' | perl -ane ' foreach $wrd ( @F ) { print ucfirst($wrd)." "; } print "\n" ; ' | sed -e 's/ *$//' -e 's/^ *//'`
  ou=`ldapsearch -x -LLL "(uid=$username)" | grep ^dn: | sed -e "s/^dn. uid=${username},ou=//" -e "s/,.*//" -e's/ *$//' -e 's/^ *//' | tr '[a-z]' '[A-Z]' | sed -e 's/ *$//' -e 's/^ *//'`
-# | tr '[A-Z]' '[a-z]' | perl -ane ' foreach $wrd ( @F ) { print ucfirst($wrd)." "; } print "\n" ; ' | sed -e 's/ *$//' -e 's/^ *//'`
 else
  cn="System"
  sn="System"
@@ -39,13 +35,18 @@ fi
 name="$cn"
 if [ x"$ou" == xSMART ] ; then name="$gn" ; fi
 if [ x"$ou" == xCADIT ] ; then name="$gn" ; fi
-echo $cn | grep '^cn::' > /dev/null && name="$gn"
+echo $cn | grep '^Cn::' > /dev/null && name="$gn"
 if [ x"$gn" != x. ] ; then echo $cn | grep ' ' > /dev/null || name="$gn" ; fi
 
 case $username in
  fsg1) name="Srikanth Gumma" ;;
  fsg3) name="Nick Wilson" ;;
  fsg5) name="Hirwan Mohamad" ;;
+ gokej) name="Jonathan Göke" ;;
+ arie) name="Arié Benhamou" ;;
+ eloi) name="Éloi Fontaine" ;;
+ zhouli) name="Zhou Li" ;;
+ prakkisr) name="Prakki Sai Rama Sridatta" ;;
  altairsup) name="Altair Suppport" ;;
  altairsup2) name="Altair Support" ;;
  tmsndte) name="Ethan Nguyen" ;;
