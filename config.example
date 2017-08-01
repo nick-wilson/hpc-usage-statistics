@@ -22,7 +22,13 @@ production_nodes=20
 # If monthly statistics then set monthly=1
 monthly=0
 
-# To copy files out to stakeholders set publish=1
+# Organization reports
+report_org=0
+
+# Deep learning report
+report_dl=0
+
+# To automatically copy files out to stakeholders set publish=1
 publish=0
 
 # Do not modify the next 2 lines

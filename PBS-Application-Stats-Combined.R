@@ -22,44 +22,37 @@ source("PBS-Application-Stats-Generate.R")
 odata<-data
 ounused<-unused
 
-if ( monthly==1) {
-# Stats for High-Level Institutions
-# These are defined in the R script which cleans the data
-dfilter<-"A*STAR"
-data<-odata%>%filter(Organization.HighLevel==dfilter)
-unused<-ounused%>%filter(Organization.HighLevel==dfilter)
-filter<-"ASTAR."
-source("PBS-Application-Stats-Generate.R")
+if (report_org==1) {
 
-for (filter in allorgs){
- data<-odata%>%filter(Organization.HighLevel==filter)
- unused<-ounused%>%filter(Organization.HighLevel==filter)
- filter<-paste0(filter,".")
- source("PBS-Application-Stats-Generate.R")
-}
+ # Stats by stakeholder
+ for (dfilter in allorgs){
+  cat("\nStats for ",dfilter,"\n")
+  filter<-dfilter
+  if (dfilter=="A*STAR") {
+   filter<-"ASTAR"
+  }
+  data<-odata%>%filter(Organization.HighLevel==dfilter)
+  unused<-ounused%>%filter(Organization.HighLevel==dfilter)
+  filter<-paste0(filter,".")
+  source("PBS-Application-Stats-Generate.R")
+ }
 
-# Stats for Individual Organizations
-for (filter in c("GIS","IHPC")) {
- data<-odata%>%filter(Organization==filter)
- unused<-ounused%>%filter(Organization==filter)
- filter<-paste0(filter,".")
- source("PBS-Application-Stats-Generate.R")
-}
+ # Stats for selected organizations
+ for (filter in c("GIS","IHPC")) {
+  cat("\nStats for ",filter,"\n")
+  data<-odata%>%filter(Organization==filter)
+  unused<-ounused%>%filter(Organization==filter)
+  filter<-paste0(filter,".")
+  source("PBS-Application-Stats-Generate.R")
+ }
 
-## ## CREATE
-## ## BEARS-BERKELEY CARES E2S2 ETHZ NRD SinBerBEST SinBeRISE SMART TUM-CREATE
-## for (filter in c("BEARS-BERKELEY","CARES","E2S2","ETHZ","NRD","SINBERBEST","SINBERISE","SMART","TUM-CREATE")) {
-##  data<-odata%>%filter(Organization==filter)
-##  filter<-paste0(filter,".")
-##  source("PBS-Application-Stats-Generate.R")
-## }
+} # report_org==1
 
-} # monthly=1
-
-machinelearning<-0
- if (machinelearning==1){
+# Stats for Deep Learning applications
+if (report_dl==1){
+ cat("\nStats for DL\n")
  data<-odata%>%filter(Application.Name=="keras"|Application.Name=="Caffe"|Application.Name=="Torch"|Application.Name=="Theano"|Application.Name=="darknet"|Application.Name=="TensorFlow")
  unused<-ounused%>%filter(Organization=="XXXX")
  filter<-"MACHINELEARNING."
  source("PBS-Application-Stats-Generate.R")
-}
+} # report_dl==1

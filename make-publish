@@ -12,6 +12,7 @@ fi
 orgs="ASTAR NUS NTU CREATE SUTD SMU Industry Other"
 # Individual organizations
 orgs="$orgs GIS IHPC"
+orgs="$orgs MACHINELEARNING"
 #orgs="$orgs BEARS-BERKELEY CARES E2S2 ETHZ NRD SINBERBEST SINBERISE SMART TUM-CREATE"
 
 # base directory
