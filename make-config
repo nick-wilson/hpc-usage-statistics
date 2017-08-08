@@ -11,6 +11,7 @@ days<-$days
 hours<-$hours
 production_nodes<-$production_nodes
 production_cores<-$production_cores
+filter_dependent_jobs<-$filter_dependent_jobs
 EOF
 
 cat << EOF > config.py
