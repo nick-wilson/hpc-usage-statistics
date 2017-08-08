@@ -187,9 +187,12 @@ cat("Project core hours\n")
 tmpdata<-data%>%group_by(Project)%>%summarise(CoreHours=sum(CoreHours),length(Job.ID))
 colnames(tmpdata)<-c("Project","CoreHours","NumJobs")
 s<-read.csv(project_storage)
-tmpdata<-merge(tmpdata,s,all.x=TRUE,all.y=FALSE,sort=FALSE)
-levels(tmpdata$home_gb)<-c(levels(tmpdata$home_gb),"-1")
+tmpdata<-merge(tmpdata,s,all.x=TRUE,all.y=TRUE,sort=FALSE)
+tmpdata$CoreHours[is.na(tmpdata$CoreHours)] <- 0.0
+tmpdata$NumJobs[is.na(tmpdata$NumJobs)] <- 0
+#levels(tmpdata$home_gb)<-c(levels(tmpdata$home_gb),"-1")
+tmpdata$home_gb<-as.integer(tmpdata$home_gb)
 tmpdata$home_gb[is.na(tmpdata$home_gb)] <- -1
-tmpdata<-tmpdata%>%arrange(desc(CoreHours))
+tmpdata<-tmpdata%>%arrange(desc(CoreHours),desc(home_gb))
 write.csv(tmpdata,file=project_walltime)
 rm(tmpdata)
