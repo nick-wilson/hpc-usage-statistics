@@ -1,0 +1,15 @@
+#!/bin/bash
+cd `dirname "$0"` || exit $?
+
+# base directory
+base=/app/nsccadmin/log
+
+# Copy data to log directory
+logdir=$base/usage-statistics
+
+# Turn off execute bit on log files (fixes files copied in from Windows)
+find "$logdir" -type f -a -perm /0111 -exec chmod a-x {} \;
+# Set appropriate file permissions on data
+for d in "$PWD" "$logdir" ; do
+ setfacl -R -bk "$d" ; chmod -R u+rwX,g-w,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
+done
