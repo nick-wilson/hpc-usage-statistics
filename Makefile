@@ -64,7 +64,7 @@ clean:
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv project.$(suffix).csv usernames{,-raw}.$(suffix).csv *pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage.$(suffix).csv
+	rm -f alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames{,-raw}.$(suffix).csv *pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage.$(suffix).csv
 
 # Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : distclean
