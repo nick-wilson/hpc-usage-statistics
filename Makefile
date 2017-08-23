@@ -41,12 +41,16 @@ alljobs.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 project.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 	cp $(csvproject) $@
 
+# Collect project information
+project-info.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
+	cp $(csvprojectinfo) $@
+
 #Calculate unused allocations
 unused.$(suffix).csv: config.R
 	./make-unused
 
 # Generate statistics if any source files have been updated
-alldata.$(suffix).csv: unused.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv config.R
+alldata.$(suffix).csv: unused.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv config.R
 	./make-stats
 
 .PHONY : stats
