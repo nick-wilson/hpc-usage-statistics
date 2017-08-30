@@ -14,6 +14,15 @@ echo nus.junhong,nus.junhong,NUS,NUS,,,, >> "$usernames_raw_csv"
 echo nus.junhong,nus.junhong,NUS,NUS >> "$usernames_csv"
 echo a0098651,Zhou Jun Zhou,NUS,NUS,,,, >> "$usernames_raw_csv"
 echo a0098651,Zhou Jun Zhou,NUS,NUS >> "$usernames_csv"
+# users to simulate system activity
+for u in  marzinek1 lijg1 ngmf1 markovav1 yeojj1 minh00061 chinmayi1 ngtz00131 chan07261 amirzoev1 ceeao2 dbsmjk1 e00958601 gmsliji1 smrmom1 hsianghe1 smrlxu1 s1002620 lunna_li1 s1002631 tb1 s1002535 helenzh11 ; do
+ ou="NSCC"
+ ouh="Other"
+ name="NSCC User"
+ mail="help@nscc.sg"
+ echo ${u},${name},${ou},${ouh} >>  "$usernames_csv"
+ echo ${u},${name},${ou},${ouh},,,, >> "$usernames_raw_csv"
+done
 
 getent passwd | awk -F: '{print $1}' | while read username ; do
 
