@@ -41,6 +41,7 @@ prefix=${ey}-${em}
 # Location of application information
 csvalljobs=/app/nsccadmin/log/printjob/alljobs.csv
 csvproject=/app/nsccadmin/log/printjob/project.csv
+csvprojectinfo=/app/nsccadmin/log/printjob/project-info.csv
 
 # used to calculate unused production queue
 hours=`expr $days \* 24`
