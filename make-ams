@@ -34,9 +34,9 @@ if [ $ed -lt 10 ] ; then ed=0$ed ; fi
 if [ $em -lt 10 ] ; then em=0$em ; fi
 
 for base in personal projects ; do
- file=`ls -1t $amslogdir/$base.${ey}${em}${ed}*.csv | tail -1`
+ file=`ls -1t $amslogdir/$base.${ey}${em}${ed}*.csv 2>/dev/null | head -n 1`
  if [ x"$file" == x ] ; then
-  file=`ls -1t $amslogdir/$base.*.csv | tail -1`
+  file=`ls -1t $amslogdir/$base.*.csv | head -n 1`
  fi
  cp -v $file ams-$base.$suffix.csv
 done
