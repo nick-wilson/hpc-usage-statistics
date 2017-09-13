@@ -1,0 +1,44 @@
+#!/bin/bash
+. ./config
+
+dotm=31
+# won't work in leap year
+if [ $em == "02" ] ; then
+ ((ly=ey%4))
+ if [ $ly -eq 0 ] ; then
+  dotm=29
+ else
+  dotm=28
+ fi
+elif [ $em == "04" ] ; then
+  dotm=30
+elif [ $em == "06" ] ; then
+  dotm=30
+elif [ $em == "09" ] ; then
+  dotm=30
+fi
+
+ed=${ed#0}
+em=${em#0}
+((ed=ed+1))
+if [ $ed -gt $dotm ] ; then
+ ((ed=1))
+ ((em=em+1))
+fi
+if [ $em -eq 13 ] ; then
+ ((em=1))
+ ((ey=ey+1))
+fi
+
+if [ $ed -lt 10 ] ; then ed=0$ed ; fi
+if [ $em -lt 10 ] ; then em=0$em ; fi
+
+logdir=/app/nsccadmin/log/ams
+
+for base in personal projects ; do
+ file=`ls -1t $logdir/$base.${ey}${em}${ed}*.csv | tail -1`
+ if [ x"$file" == x ] ; then
+  file=`ls -1t $logdir/$base.*.csv | tail -1`
+ fi
+ cp -v $file ams-$base.$suffix.csv
+done
