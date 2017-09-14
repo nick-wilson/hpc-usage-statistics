@@ -8,24 +8,24 @@
 
 
 cd `dirname $0`
+. ./config
+monthlydir=`echo /app/nsccadmin/apps/usage-statistics/reports/${ey}${em}*`
 
 export PATH="/app/pbs/bin:$PATH:/opt/pbs/default/bin:/opt/pbs/default/sbin"
-
 . /etc/profile.d/modules.sh
 . /app/modules/modules.sh
 module load R
 which Rscript
 
-if [ 0 -eq 1 ] ; then
-x=`ps -ef | grep appstats-archive-cron | grep -v grep`
-while [ x"$x" != x ] ; do
- sleep 60
- x=`ps -ef | grep appstats-archive-cron | grep -v grep`
-done
-fi
-
 echo first make, only interested in pbs-report data
 make
+
+if [ $monthly -eq 0 ] ; then
+ if [ -d "$monthlydir" ] ; then
+  echo same for partial monthly report
+  (cd "$monthlydir" && rm -f *pbs-report.raw.*.csv && make)
+ fi
+fi
 
 echo get latest application and project data
 if [ -x ./tmp.get-qstat ] ; then ./tmp.get-qstat ; fi
@@ -42,14 +42,16 @@ echo Update myusage data
 
 echo Copy out output files
 chown -R fsg3.nscc-proj .
-. ./config
-base=/app/nsccadmin/log
-logdir=$base/usage-statistics
-outputfiles=`echo {active,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_}*.$suffix.csv`
-if [ x"$suffix" == xaggregate ] ; then
- cp -p $outputfiles $logdir/aggregate/
-elif [ $monthly -eq 1 ] ; then
- cp -p $outputfiles $logdir/
-else
- cp -p $outputfiles $logdir/weekly/
+./make-publish
+make clean
+
+if [ $monthly -eq 0 ] ; then
+ if [ -d "$monthlydir" ] ; then
+  echo partial monthly report
+  cd "$monthlydir" && \
+   make veryclean stats && \
+   chown -R fsg3.nscc-proj . || exit $?
+  ./make-publish
+  make clean
+ fi
 fi
