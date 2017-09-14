@@ -9,7 +9,7 @@
 
 cd `dirname $0`
 
-export PATH="$PATH":/opt/pbs/default/sbin
+export PATH="/app/pbs/bin:$PATH:/opt/pbs/default/bin:/opt/pbs/default/sbin"
 
 . /etc/profile.d/modules.sh
 . /app/modules/modules.sh
