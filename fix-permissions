@@ -1,15 +1,18 @@
 #!/bin/bash
 cd `dirname "$0"` || exit $?
 
-# base directory
-base=/app/nsccadmin/log
-
-# Copy data to log directory
-logdir=$base/usage-statistics
+. ./config
+if [ x"$statsuser" == x ] ; then statsuser="${LOGNAME}" ; fi
+if [ x"$statsgroup" == x ] ; then statsgroup="root" ; fi
 
 # Turn off execute bit on log files (fixes files copied in from Windows)
-find "$logdir" -type f -a -perm /0111 -exec chmod a-x {} \;
-# Set appropriate file permissions on data
+ if [ -d "$logdir" ] ; then
+ find "$logdir" -type f -a -perm /0111 -exec chmod a-x {} \;
+fi
+
 for d in "$PWD" "$logdir" ; do
- setfacl -R -bk "$d" ; chmod -R u+rwX,g-w,g+rX,o-rwx "$d" ; chown -R ${LOGNAME}.nscc-proj "$d"
+ if [ -d "$d" ] ; then
+  # Set appropriate file permissions on data
+  setfacl -R -bk "$d" ; chmod -R u+rwX,g-w,g+rX,o-rwx "$d" ; chown -R ${statsuser}.${statsgroup} "$d"
+ fi
 done
