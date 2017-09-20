@@ -43,6 +43,9 @@ csvalljobs=/app/nsccadmin/log/printjob/alljobs.csv
 csvproject=/app/nsccadmin/log/printjob/project.csv
 csvprojectinfo=/app/nsccadmin/log/printjob/project-info.csv
 amslogdir=/app/nsccadmin/log/ams
+
+# Location of output directory
+logdir=/app/nsccadmin/log/usage-statistics
 statsuser=fsg3
 statsgroup=nscc-proj
 
