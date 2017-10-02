@@ -30,6 +30,7 @@ if [ x"$suffix" == xaggregate ] ; then
   mv -v $logdir/aggregate/*.$org.$suffix.csv $logdir/aggregate/by-org/
  done
 elif [ $monthly -eq 1 ] ; then
+ rm -f $logdir/partial/*.$suffix.csv
  mv -v $outputfiles $logdir/
  mkdir -p $logdir/by-org
  for org in $orgs ; do
