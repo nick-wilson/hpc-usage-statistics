@@ -30,28 +30,28 @@ fi
 echo get latest application and project data
 if [ -x ./tmp.get-qstat ] ; then ./tmp.get-qstat ; fi
 echo redo alljobs
-if [ -x ./tmp.redo-alljobs ] ; then su fsg3 -c ./tmp.redo-alljobs ; fi
+if [ -x ./tmp.redo-alljobs ] ; then su $statsuser -c ./tmp.redo-alljobs ; fi
 
 echo second pass of statistics
-. ./config
-rm -f alljobs.$suffix.csv project.$suffix.csv
-make
+make veryclean stats
 
 echo Update myusage data
 ./update-myusage
 
 echo Copy out output files
-chown -R fsg3.nscc-proj .
 ./make-publish
+./fix-permissions
 make clean
 
 if [ $monthly -eq 0 ] ; then
  if [ -d "$monthlydir" ] ; then
   echo partial monthly report
   cd "$monthlydir" && \
+   . ./config && \
    make veryclean stats && \
-   chown -R fsg3.nscc-proj . || exit $?
-  ./make-publish
+  ./make-publish && \
+  mv -v $logdir/*.$suffix.csv $logdir/partial/ && \
+  ./fix-permissions || exit $?
   make clean
  fi
 fi
