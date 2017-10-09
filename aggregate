@@ -33,11 +33,13 @@ fi
 
 if [ ! -f $pbsreportcleanedalpha ] ; then
  # Alpha Phase
- d=20160328-20160617
- g=../$d/pbs-report.cleaned.$d.csv
- head -n 2 $g > $pbsreportcleanedalpha && \
-  tail -n +3 $g | sed -e 's,^,A,' >> $pbsreportcleanedalpha || \
+ gzip -dc archive/alpha/pbs-report.cleaned.alpha.csv.gz > $pbsreportcleanedalpha || \
   rm -f $pbsreportcleanedalpha
+ ## d=20160328-20160617
+ ## g=../$d/pbs-report.cleaned.$d.csv
+ ## head -n 2 $g > $pbsreportcleanedalpha && \
+ ##  tail -n +3 $g | sed -e 's,^,A,' >> $pbsreportcleanedalpha || \
+ ##  rm -f $pbsreportcleanedalpha
 fi
 
 cp $pbsreportcleanedalpha $pbsreportcleanedaggregate && \
