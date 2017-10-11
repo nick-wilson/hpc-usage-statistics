@@ -53,9 +53,10 @@ if [ $monthly -eq 0 ] ; then
   cd "$monthlydir" && \
    . ./config && \
    make veryclean stats && \
-  ./make-publish && \
-  mv -v $logdir/*.$suffix.csv $logdir/partial/ && \
-  ./fix-permissions || exit $?
+  ./make-publish || exit $?
+  rm -f $logdir/partial/* && \
+  mv -v $logdir/*.$suffix.csv $logdir/weekly/*.$suffix.csv $logdir/partial/
+  ./fix-permissions
   make clean
  fi
 fi
