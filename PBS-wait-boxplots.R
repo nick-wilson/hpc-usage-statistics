@@ -26,7 +26,7 @@ load(file=users_R)
 bkupdata<-data
 
 if (filter_dependent_jobs==1) {
-depend<-read.csv(file="depend.csv",header=FALSE,col.names=c("Job.ID.NoIndex","Dependency"),colClasses=c("character","logical"))
+depend<-read.csv(file="depend.csv",header=TRUE,col.names=c("Job.ID.NoIndex","Dependency"),colClasses=c("character","logical"))
 data<-merge(data,depend,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Dependency[is.na(data$Dependency)]<-FALSE
 data<-data%>%filter(Dependency==FALSE)
