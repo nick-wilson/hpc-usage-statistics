@@ -23,14 +23,15 @@ makeboxplot_byqueue<-function(data,main,outline) {
 # Load cleaned data
 load(file=alldata_R)
 load(file=users_R)
-bkupdata<-data
 
 if (filter_dependent_jobs==1) {
+bkupdata_prefilter<-data
 depend<-read.csv(file="depend.csv",header=TRUE,col.names=c("Job.ID.NoIndex","Dependency"),colClasses=c("character","logical"))
 data<-merge(data,depend,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Dependency[is.na(data$Dependency)]<-FALSE
 data<-data%>%filter(Dependency==FALSE)
 }
+bkupdata<-data
 
 data<-data%>%filter(Queue=="dev"|Queue=="small"|Queue=="medium"|Queue=="normal"|Queue=="long"|Queue=="q1"|Queue=="q4"|Queue=="largemem"|Queue=="production"|Queue=="paidq"|Queue=="vis"|Queue=="iworkq"|Queue=="gpunormal"|Queue=="gpulong")
 data$Queue<-factor(data$Queue)
