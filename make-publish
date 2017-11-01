@@ -32,6 +32,7 @@ if [ x"$suffix" == xaggregate ] ; then
 elif [ $monthly -eq 1 ] ; then
  rm -f $logdir/partial/*.$suffix.csv
  mv -v $outputfiles $logdir/
+ cp -p $logdir/storage.$suffix.csv $logdir/storage-byproject.$suffix.csv .
  mkdir -p $logdir/by-org
  for org in $orgs ; do
   mv -v $logdir/*.$org.$suffix.csv $logdir/by-org/
@@ -39,6 +40,7 @@ elif [ $monthly -eq 1 ] ; then
 else
  mkdir -p $logdir/weekly
  mv -v $outputfiles $logdir/weekly/
+ cp -p $logdir/weekly/storage.$suffix.csv $logdir/weekly/storage-byproject.$suffix.csv .
 fi
 
 # Set appropriate file permissions on data
