@@ -195,7 +195,7 @@ tmpdata$NumJobs[is.na(tmpdata$NumJobs)] <- 0
 tmpdata$home_gb<-as.integer(tmpdata$home_gb)
 tmpdata$home_gb[is.na(tmpdata$home_gb)] <- -1
 tmpdata<-tmpdata%>%arrange(desc(CoreHours),desc(home_gb))
-tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-)','',tmpdata$Project)
+tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_walltime)
 rm(tmpdata)
 
@@ -204,6 +204,6 @@ cat("Project core hours\n")
 tmpdata<-data%>%group_by(Username,Project)%>%summarise(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))
 tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
 tmpdata<-tmpdata%>%select(Username,Organization,Project,CoreHours,NumJobs,Name,Organization.HighLevel)%>%arrange(desc(CoreHours))
-tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-)','',tmpdata$Project)
+tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_by_user)
 rm(tmpdata)
