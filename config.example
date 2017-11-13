@@ -19,6 +19,9 @@ days=30
 # Number of nodes reserved for production queue
 production_nodes=20
 
+# Type of report, monthly, weekly, aggregate, partial
+type=partial
+
 # If monthly statistics then set monthly=1
 monthly=0
 
