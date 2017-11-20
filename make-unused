@@ -21,12 +21,14 @@ fi
 mv "$tmpfile" "$rawfile"
 fi
 
-./pbsreport-clean-$q.py
-n=`cat production.pbs-report.cleaned.$suffix.csv | wc -l`
-if [ $n -eq 2 ] ; then
-cat << EOF >> production.pbs-report.cleaned.$suffix.csv
+if grep 'No results matched your query' production.pbs-report.raw.$suffix.csv ; then
+cat << EOF > production.pbs-report.cleaned.$suffix.csv
+||||Date/Time||Execution||Core|Virtual|Used|Used|Queue|Suspend
+Job ID|Username|Queue|Job Name|Created|Package|Host(s)|Nodes|Memory|Memory|CPU Time|Wall Time|Wait Time|Time|Exit 
 1|joebloggs|production|jobname|2017/10/16 12:08|None|std0101/0*23|1|0kb|0kb|0|14|2686181|0|-2
 EOF
+else
+./pbsreport-clean-$q.py
 fi
 ./pbsreport-count-cores-$q.py
 type Rscript > /dev/null 2>&1 || module load R
