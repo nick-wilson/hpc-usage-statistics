@@ -140,6 +140,7 @@ case $ou in
  TUM-CREATE) ouh='CREATE' ;;
  SUTD) ouh='SUTD' ;;
  SMU) ouh='SMU' ;;
+ SERI) ouh='Industry' ;;
 esac
  echo ${username},${name},${ou},${ouh},${cn},${sn},${gn},${dn} >> "$usernames_raw_csv"
  echo ${username},${name},${ou},${ouh} >> "$usernames_csv"
