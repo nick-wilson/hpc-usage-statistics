@@ -11,7 +11,7 @@ cd `dirname $0`
 . ./config
 monthlydir=`echo /app/nsccadmin/apps/usage-statistics/reports/${ey}${em}*`
 
-export PATH="/app/pbs/bin:$PATH:/opt/pbs/default/bin:/opt/pbs/default/sbin"
+export PATH="/app/pbs/bin:$PATH:/opt/pbs/bin:/opt/pbs/sbin"
 . /etc/profile.d/modules.sh
 . /app/modules/modules.sh
 module load R
