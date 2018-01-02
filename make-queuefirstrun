@@ -5,5 +5,19 @@
 today=`date +%Y%m%d`
 end=$ey$em$ed
 if [ $today -lt $end ] ; then end=$today ; fi
-/app/nsccadmin/apps/queue-firstrun/qacct -wait -c ${sy}${sm}${sd},${end} > queue_firstrun.$suffix.stdout
-/app/nsccadmin/apps/queue-firstrun/convert-to-csv queue_firstrun.$suffix.stdout
+
+
+tmpfile=queue_firstrun.$suffix.stdout
+csvfile=queue_firstrun.$suffix.csv
+
+if [ x${HOSTNAME:0:3}$USER != xwlmroot ] ; then
+ echo ssh to root@wlm01 to run qacct
+ ssh root@wlm01 /app/nsccadmin/apps/queue-firstrun/qacct -wait -c ${sy}${sm}${sd},${end} > "$tmpfile" || rm -f "$tmpfile" "$csvfile"
+else
+ echo running qacct
+ /app/nsccadmin/apps/queue-firstrun/qacct -wait -c ${sy}${sm}${sd},${end} > "$tmpfile" || rm -f "$tmpfile" "$csvfile"
+fi
+
+if [ -f "$tmpfile" ] ; then
+ /app/nsccadmin/apps/queue-firstrun/convert-to-csv "$tmpfile" || rm -f "$tmpfile" "$csvfile"
+fi

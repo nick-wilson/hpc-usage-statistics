@@ -11,3 +11,4 @@ usernames.*.csv
 *.Rdata
 tmp.*
 archive
+queue_firstrun.*.stdout

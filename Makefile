@@ -55,6 +55,9 @@ ams-personal.$(suffix).csv: config
 ams-projects.$(suffix).csv: config
 	./make-ams
 
+queue_firstrun.$(suffix).csv: config
+	./make-queuefirstrun
+
 # Generate statistics if any source files have been updated
 alldata.$(suffix).csv: unused.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv ams-personal.$(suffix).csv ams-projects.$(suffix).csv config.R
 	./make-stats
@@ -75,4 +78,4 @@ veryclean: clean
 # Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : distclean
 distclean: veryclean
-	rm -f *pbs-report.raw.$(suffix).csv config
+	rm -f *pbs-report.raw.$(suffix).csv queue_firstrun.$(suffix).stdout queue_firstrun.$(suffix).csv config
