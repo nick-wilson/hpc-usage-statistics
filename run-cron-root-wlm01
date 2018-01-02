@@ -42,6 +42,9 @@ make veryclean stats
 echo Update myusage data
 ./update-myusage
 
+echo get queue first run data
+./make-queuefirstrun
+
 echo Copy out output files
 ./make-publish
 ./fix-permissions
