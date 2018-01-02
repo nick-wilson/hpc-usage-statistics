@@ -2,7 +2,8 @@
 
 . ./config
 
-today=`date +%d`
-if [ $today -lt $ed ] ; then ed=$today ; fi
-/app/nsccadmin/apps/queue-firstrun/qacct -wait -c ${sy}${sm}${sd},${ey}${em}${ed} > queue_firstrun.$suffix.stdout
+today=`date +%Y%m%d`
+end=$ey$em$ed
+if [ $today -lt $end ] ; then end=$today ; fi
+/app/nsccadmin/apps/queue-firstrun/qacct -wait -c ${sy}${sm}${sd},${end} > queue_firstrun.$suffix.stdout
 /app/nsccadmin/apps/queue-firstrun/convert-to-csv queue_firstrun.$suffix.stdout
