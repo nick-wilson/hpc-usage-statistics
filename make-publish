@@ -30,6 +30,18 @@ if [ x"$type" == xpartial ] ; then
  for org in $orgs ; do
   mv -v $logdir/partial/*.$org.$suffix.csv $logdir/partial/by-org/
  done
+elif [ x"$type" == xyearly ] ; then
+ mkdir -p $logdir/yearly/by-org && \
+ cp -pv $outputfiles $logdir/yearly/ && \
+ for org in $orgs ; do
+  mv -v $logdir/yearly/*.$org.$suffix.csv $logdir/yearly/by-org/
+ done
+elif [ x"$type" == xannual ] ; then
+ mkdir -p $logdir/annual/by-org && \
+ cp -pv $outputfiles $logdir/annual/ && \
+ for org in $orgs ; do
+  mv -v $logdir/annual/*.$org.$suffix.csv $logdir/annual/by-org/
+ done
 elif [ x"$suffix" == xaggregate ] ; then
  mkdir -p $logdir/aggregate/by-org && \
  cp -pv $outputfiles $logdir/aggregate/ && \
