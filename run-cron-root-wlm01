@@ -60,3 +60,13 @@ if [ $monthly -eq 0 ] ; then
   make veryclean
  fi
 fi
+
+echo update aggregate statistics with monthly report
+if [ $monthly -eq 1 ] ; then
+ cd /app/nsccadmin/apps/usage-statistics/reports/aggregate && \
+   ./aggregate && \
+   make && \
+   ./make-publish && \
+   ./fix-permissions && \
+   make clean
+fi
