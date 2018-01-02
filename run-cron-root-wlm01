@@ -18,15 +18,13 @@ module load R
 which Rscript
 
 echo first make, only interested in pbs-report data
-rm -f *pbs-report.raw.$suffix.csv queue_firstrun.$suffix.csv queue_firstrun.$suffix.stdout && \
- make pbs-report.raw.$suffix.csv && \
- ./make-unused
+make veryveryclean pbs-report.raw.$suffix.csv && ./make-unused
 make veryclean
 
 if [ $monthly -eq 0 ] ; then
  if [ -d "$monthlydir" ] ; then
   echo same for partial monthly report
-  (cd "$monthlydir" && . ./config && rm -f *pbs-report.raw.$suffix.csv queue_firstrun.$suffix.csv queue_firstrun.$suffix.stdout && make pbs-report.raw.$suffix.csv && ./make-unused)
+  (cd "$monthlydir" && . ./config && make veryveryclean pbs-report.raw.$suffix.csv && ./make-unused)
   (cd "$monthlydir" && make veryclean)
  fi
 fi

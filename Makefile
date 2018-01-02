@@ -75,7 +75,12 @@ clean:
 veryclean: clean
 	rm -f alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames{,-raw}.$(suffix).csv ams-*.$(suffix).csv *pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv
 
+# Remove data which requires root access
+.PHONY : veryveryclean
+veryveryclean: veryclean
+	rm -f *pbs-report.raw.$(suffix).csv queue_firstrun.$(suffix).stdout queue_firstrun.$(suffix).csv
+
 # Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : distclean
-distclean: veryclean
-	rm -f *pbs-report.raw.$(suffix).csv queue_firstrun.$(suffix).stdout queue_firstrun.$(suffix).csv config
+distclean: veryveryclean
+	rm -f config
