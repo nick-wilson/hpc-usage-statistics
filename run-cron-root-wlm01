@@ -35,6 +35,7 @@ echo get latest application and project data
 if [ -x ./tmp.get-qstat ] ; then ./tmp.get-qstat ; fi
 echo redo alljobs
 if [ -x ./tmp.redo-alljobs ] ; then su $statsuser -c ./tmp.redo-alljobs ; fi
+cp -p /app/nsccadmin/log/printjob/depend.csv .
 
 echo second pass of statistics
 make veryclean stats
