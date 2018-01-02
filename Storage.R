@@ -39,7 +39,7 @@ if (report_org==1) {
  }
 
  # Stats for selected organizations
- for (dfilter in c("GIS","IHPC")){
+ for (dfilter in c("GIS","IHPC","KOMTECH")){
   filter<-dfilter
   filter<-paste0(filter,".")
   storage<-ostorage%>%filter(Organization==dfilter)

@@ -38,7 +38,7 @@ if (report_org==1) {
  }
 
  # Stats for selected organizations
- for (filter in c("GIS","IHPC")) {
+ for (filter in c("GIS","IHPC","KOMTECH")) {
   cat("\nStats for ",filter,"\n")
   data<-odata%>%filter(Organization==filter)
   unused<-ounused%>%filter(Organization==filter)
