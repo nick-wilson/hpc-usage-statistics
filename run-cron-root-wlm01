@@ -18,16 +18,16 @@ module load R
 which Rscript
 
 echo first make, only interested in pbs-report data
-make veryclean
-rm -f *pbs-report.raw.$suffix.csv
-make pbs-report.raw.$suffix.csv
-./make-unused
+rm -f *pbs-report.raw.$suffix.csv && \
+ make pbs-report.raw.$suffix.csv && \
+ ./make-unused
 make veryclean
 
 if [ $monthly -eq 0 ] ; then
  if [ -d "$monthlydir" ] ; then
   echo same for partial monthly report
-  (cd "$monthlydir" && . ./config && rm -f *pbs-report.raw.$suffix.csv && make pbs-report.raw.$suffix.csv && ./make-unused && make veryclean)
+  (cd "$monthlydir" && . ./config && rm -f *pbs-report.raw.$suffix.csv && make pbs-report.raw.$suffix.csv && ./make-unused)
+  (cd "$monthlydir" && make veryclean)
  fi
 fi
 
@@ -43,9 +43,6 @@ make veryclean stats
 echo Update myusage data
 ./update-myusage
 
-echo get queue first run data
-./make-queuefirstrun
-
 echo Copy out output files
 ./make-publish
 ./fix-permissions
@@ -60,6 +57,6 @@ if [ $monthly -eq 0 ] ; then
   ./make-publish || rm -f $logdir/partial/*.$suffix.csv $logdir/partial/by-org/*.$suffix.csv
   mv -v $logdir/*.$suffix.csv $logdir/weekly/*.$suffix.csv $logdir/partial/
   ./fix-permissions
-  make clean
+  make veryclean
  fi
 fi
