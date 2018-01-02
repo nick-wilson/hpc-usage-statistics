@@ -173,13 +173,17 @@ cat("Stats by core count\n")
 tmpdata<-data_cpu%>%group_by(CoresGroup)%>%summarise(length(Job.ID),sum(CoreHours),median(Wait.Time.Hours),mean(Wait.Time.Hours))
 tmpdata<-tmpdata[match(coresgroup_sort,tmpdata$CoresGroup),]
 colnames(tmpdata)<-c("Cores","Number of Jobs","Total Core Hours","Median Wait (Hours)","Mean Wait (Hours)")
+tmpdata[is.na(tmpdata)] <- 0
 write.csv(tmpdata,file=stats_by_core_cpu,row.names=FALSE)
 rm(tmpdata)
 
 # Calculate GPU stats split by core
 tmpdata<-data_gpu%>%group_by(CoresGroup)%>%summarise(length(Job.ID),sum(CoreHours)/24.0,median(Wait.Time.Hours),mean(Wait.Time.Hours))
-tmpdata<-tmpdata[match(coresgroup_sort,tmpdata$CoresGroup),]
-colnames(tmpdata)<-c("Cores","Number of Jobs","Total GPU Hours","Median Wait (Hours)","Mean Wait (Hours)")
+coresgroup_sort_gpu<-c("24","25-96","97-240","241-960",">960")
+tmpdata<-tmpdata[match(coresgroup_sort_gpu,tmpdata$CoresGroup),]
+colnames(tmpdata)<-c("GPUs","Number of Jobs","Total GPU Hours","Median Wait (Hours)","Mean Wait (Hours)")
+tmpdata$GPUs<-c("1","2-4","5-10","11-40",">40")
+tmpdata[is.na(tmpdata)] <- 0
 write.csv(tmpdata,file=stats_by_core_gpu,row.names=FALSE)
 rm(tmpdata)
 

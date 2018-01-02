@@ -17,7 +17,9 @@ q$PI<-as.character(q$PI)
 q$PI[is.na(q$PI)]<-""
 
 r<-q%>%arrange(desc(CoreHours),desc(home_gb))
-r$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-)','',r$Project)
+#r$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-)','',r$Project)
+r<-r%>%select(-Project_Short)
+r$home_gb[r$home_gb==-1]<-""
 
 ofile<-paste0('project_walltime_info.',suffix,'.csv')
 write.csv(r,file=ofile)

@@ -38,5 +38,7 @@ for base in personal projects ; do
  if [ x"$file" == x ] ; then
   file=`ls -1t $amslogdir/$base.*.csv | head -n 1`
  fi
- cp -v $file ams-$base.$suffix.csv
+# cp -v $file ams-$base.$suffix.csv
+ head -1 $file > ams-$base.$suffix.csv
+ tail -n +2 $file | sort -t, -rnk 6,6 >> ams-$base.$suffix.csv
 done
