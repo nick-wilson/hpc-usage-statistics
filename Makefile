@@ -59,11 +59,11 @@ queue_firstrun.$(suffix).csv: config
 	./make-queuefirstrun
 
 # Generate statistics if any source files have been updated
-alldata.$(suffix).csv: unused.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv ams-personal.$(suffix).csv ams-projects.$(suffix).csv queue_firstrun.$(suffix).csv config.R
+alldata.$(suffix).csv: unused.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv config.R
 	./make-stats
 
 .PHONY : stats
-stats: alldata.$(suffix).csv
+stats: alldata.$(suffix).csv ams-personal.$(suffix).csv ams-projects.$(suffix).csv queue_firstrun.$(suffix).csv
 
 # Clean up data generated from R scripts
 .PHONY : clean
