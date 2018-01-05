@@ -34,6 +34,8 @@ make veryclean stats
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  echo Update myusage data
  ./update-myusage
+ echo make boxplots
+ ssh nscc01 $PWD/make-boxplots
 fi
 
 echo fix file ownership
