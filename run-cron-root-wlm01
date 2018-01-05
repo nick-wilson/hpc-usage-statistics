@@ -18,21 +18,13 @@ module load R
 which Rscript
 
 echo first make, only interested in pbs-report data
-make veryveryclean pbs-report.raw.$suffix.csv && ./make-unused
+make veryveryclean pbs-report.raw.$suffix.csv unused.$suffix.csv
 make veryclean
 
-if [ $monthly -eq 0 ] ; then
- if [ -d "$monthlydir" ] ; then
-  echo same for partial monthly report
-  (cd "$monthlydir" && . ./config && make veryveryclean pbs-report.raw.$suffix.csv && ./make-unused)
-  (cd "$monthlydir" && make veryclean)
- fi
-fi
-
 echo get latest application and project data
-if [ -x ./tmp.get-qstat ] ; then ./tmp.get-qstat ; fi
-echo redo alljobs
-if [ -x ./tmp.redo-alljobs ] ; then su $statsuser -c ./tmp.redo-alljobs ; fi
+if [ -x /app/nsccadmin/log/printjob/get-latest ] ; then /app/nsccadmin/log/printjob/get-latest ; fi
+
+echo copy in job dependency data
 cp -p /app/nsccadmin/log/printjob/depend.csv .
 
 echo second pass of statistics
@@ -41,11 +33,10 @@ make veryclean stats
 echo Update myusage data
 ./update-myusage
 
-echo Copy out output files
-./make-publish
+echo fix file ownership
 ./fix-permissions
 
-if [ $monthly -eq 1 ] ; then
+if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
  echo update aggregate statistics when running monthly report
  cd /app/nsccadmin/apps/usage-statistics/reports/aggregate && \
    ./aggregate && \
@@ -53,15 +44,4 @@ if [ $monthly -eq 1 ] ; then
    ./make-publish && \
    ./fix-permissions && \
    make clean
-else
- if [ -d "$monthlydir" ] ; then
-  echo partial monthly report
-  cd "$monthlydir" && \
-   . ./config && \
-   make veryclean stats && \
-  ./make-publish || rm -f $logdir/partial/*.$suffix.csv $logdir/partial/by-org/*.$suffix.csv
-  mv -v $logdir/*.$suffix.csv $logdir/weekly/*.$suffix.csv $logdir/partial/
-  ./fix-permissions
-  make veryclean
- fi
 fi

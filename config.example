@@ -2,9 +2,9 @@
 # Do not use " and use ${....} format so that file can be included into both shell scripts and Makefile
 
 # Start year
-sy=2017
+sy=2018
 # Start month
-sm=06
+sm=01
 # Start day
 sd=01
 # End year
@@ -12,30 +12,30 @@ ey=${sy}
 # End month
 em=${sm}
 # End day
-ed=30
+ed=31
 
 # Number of days
-days=30
+days=31
 # Number of nodes reserved for production queue
-production_nodes=20
+production_nodes=60
 
-# Type of report, monthly, weekly, aggregate, partial
-type=partial
+# Type of report: monthly, weekly, aggregate
+type=monthly
 
 # If monthly statistics then set monthly=1
-monthly=0
+monthly=1
 
 # Organization reports
-report_org=0
+report_org=1
 
 # Deep learning report
-report_dl=0
+report_dl=1
 
 # To automatically copy files out to stakeholders set publish=1
 publish=0
 
 # To remove dependent jobs from graphs of wait statistics set filter_dependent_jobs=1
-filter_dependent_jobs=0
+filter_dependent_jobs=1
 
 # Do not modify the next 2 lines
 suffix=${sy}${sm}${sd}-${ey}${em}${ed}

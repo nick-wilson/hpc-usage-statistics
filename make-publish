@@ -23,40 +23,29 @@ base=/app/nsccadmin/log
 logdir=$base/usage-statistics
 outputfiles=`echo {active,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_,ams-,queue_firstrun}*.$suffix.csv`
 
-rm -f $logdir/partial/*.$suffix.csv  $logdir/partial/by-org/*.$suffix.csv
+copy_to_logdir () {
+ mkdir -p $logdir/$1/by-org && \
+ cp -pv $outputfiles $logdir/$1/
+ for org in $orgs ; do
+  mv -v $logdir/$1/*.$org.$suffix.csv $logdir/$1/by-org/ 2>/dev/null
+ done
+ rmdir $logdir/$1/by-org 2>/dev/null
+}
+
 if [ x"$type" == xpartial ] ; then
- mkdir -p $logdir/partial/by-org && \
- cp -pv $outputfiles $logdir/partial/ && \
- for org in $orgs ; do
-  mv -v $logdir/partial/*.$org.$suffix.csv $logdir/partial/by-org/
- done
+ echo partial report, not copying output to log directory
+elif [ x"$type" == xstage ] ; then
+ copy_to_logdir stage
 elif [ x"$type" == xyearly ] ; then
- mkdir -p $logdir/yearly/by-org && \
- cp -pv $outputfiles $logdir/yearly/ && \
- for org in $orgs ; do
-  mv -v $logdir/yearly/*.$org.$suffix.csv $logdir/yearly/by-org/
- done
+ copy_to_logdir yearly
 elif [ x"$type" == xannual ] ; then
- mkdir -p $logdir/annual/by-org && \
- cp -pv $outputfiles $logdir/annual/ && \
- for org in $orgs ; do
-  mv -v $logdir/annual/*.$org.$suffix.csv $logdir/annual/by-org/
- done
-elif [ x"$suffix" == xaggregate ] ; then
- mkdir -p $logdir/aggregate/by-org && \
- cp -pv $outputfiles $logdir/aggregate/ && \
- for org in $orgs ; do
-  mv -v $logdir/aggregate/*.$org.$suffix.csv $logdir/aggregate/by-org/
- done
-elif [ $monthly -eq 1 ] ; then
- mkdir -p $logdir/by-org && \
- cp -pv $outputfiles $logdir/ && \
- for org in $orgs ; do
-  mv -v $logdir/*.$org.$suffix.csv $logdir/by-org/
- done
+ copy_to_logdir annual
+elif [ x"$type" == xaggregate ] ; then
+ copy_to_logdir aggregate
+elif [ x"$type" == xweekly ] ; then
+ copy_to_logdir weekly
 else
- mkdir -p $logdir/weekly && \
- cp -pv $outputfiles $logdir/weekly/
+ copy_to_logdir
 fi
 
 # Set appropriate file permissions on data
