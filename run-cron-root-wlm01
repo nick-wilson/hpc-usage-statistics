@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# This script has settings required to run statistics in cron as root on wlm01
-# crontab setting:
-# 00 08 29 * * d=/app/nsccadmin/apps/usage-statistics/reports/weekly/20170802-20170808 ; s=run-cron-root-wlm01 ; $d/$s > $d/$s.stdout 2>&1
-#
-# TODO: replace manual second pass with: run pbsreport, update qstat and job information, generate statistics
-
+# This script has settings required to run statistics in cron as root on either wlm01 or wlm02
+# 
+# For weekly report:        GET_LATEST=1 UPDATE_MYUSAGE=1 MAKE_AGGREGATE=0
+# For monthly report:       GET_LATEST=1 UPDATE_MYUSAGE=1 MAKE_AGGREGATE=1
+# For pre-publication runs: GET_LATEST=0 UPDATE_MYUSAGE=0 MAKE_AGGREGATE=0
 
 cd `dirname $0`
 . ./config
