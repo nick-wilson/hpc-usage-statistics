@@ -63,7 +63,7 @@ alldata.$(suffix).csv: unused.$(suffix).csv pbs-report.cleaned.$(suffix).csv cor
 	./make-stats
 
 .PHONY : stats
-stats: alldata.$(suffix).csv ams-personal.$(suffix).csv ams-projects.$(suffix).csv queue_firstrun.$(suffix).csv
+stats: queue_firstrun.$(suffix).csv alldata.$(suffix).csv ams-personal.$(suffix).csv ams-projects.$(suffix).csv
 
 # Clean up data generated from R scripts
 .PHONY : clean
