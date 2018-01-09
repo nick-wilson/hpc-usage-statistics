@@ -13,7 +13,7 @@ rawfile="$q.pbs-report.raw.$suffix.csv"
 if [ ! -f "$rawfile" ] ; then
 tmpfile="$rawfile".tmp
 
-if [ x$HOSTNAME$USER != xwlm01root ] ; then
+if [ x${HOSTNAME:0:3}$USER != xwlmroot ] ; then
  echo ssh to root@wlm01 to run $pbs_report
  ssh root@wlm01 "ulimit -m 67108864 ; ulimit -v 67108864 ; $pbs_report --verbose --csv \| --begin $sy$sm$sd --end $ey$em$ed --time partial -q $q" > "$tmpfile" || rm -f "$tmpfile"
 else
