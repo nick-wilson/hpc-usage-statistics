@@ -40,6 +40,8 @@ elif [ x"$type" == xyearly ] ; then
  copy_to_logdir yearly
 elif [ x"$type" == xannual ] ; then
  copy_to_logdir annual
+elif [ x"$type" == xhalf ] ; then
+ copy_to_logdir half
 elif [ x"$type" == xaggregate ] ; then
  copy_to_logdir aggregate
 elif [ x"$type" == xweekly ] ; then
