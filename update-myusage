@@ -4,12 +4,15 @@ umask 077
 
 . ./config
 
-if [ x"$suffix" == xaggregate ] ; then
+if [ x"$type" == xaggregate ] ; then
  p=aggregate
-elif [ $monthly -eq 1 ] ; then
+elif [ x"$type" == xmonthly ] ; then
  p=month
-else
+elif [ x"$type" == xweekly ] ; then
  p=week
+else
+ echo updating myusage for this report type \(${type}\) is not required
+ exit
 fi
 
 logdir=/app/nsccadmin/log/user_usage

@@ -4,7 +4,7 @@
 
 ./update-myusage
 
-if [ $monthly -eq 1 ] ; then
+if [ $publish -eq 1 ] ; then
 # Copy NUS data to Junhong home directory
 yes | cp -ip *.NUS.$suffix.csv ~ccewjh/Monthly_Usage/
 chown ccewjh.nus ~ccewjh/Monthly_Usage/*.NUS.$suffix.csv

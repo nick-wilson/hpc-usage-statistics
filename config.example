@@ -22,9 +22,6 @@ production_nodes=60
 # Type of report: monthly, weekly, aggregate
 type=monthly
 
-# If monthly statistics then set monthly=1
-monthly=1
-
 # Organization reports
 report_org=1
 
