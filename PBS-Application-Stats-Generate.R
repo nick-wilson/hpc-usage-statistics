@@ -162,17 +162,15 @@ rm(tmpdata)
 
 # Calculate CPU corehours on CPU and GPU nodes per high-level organisation
 tmpdata<-data%>%group_by(Organization.HighLevel)%>%summarize(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))%>%arrange(desc(CoreHours))
-for (org in levels(tmpdata$Organization.HighLevel)){if(!any(tmpdata$Organization.HighLevel==org)){tmpdata<-rbind(tmpdata,c(org,"0","0"))}}
+for (org in levels(tmpdata$Organization.HighLevel)){if(!any(tmpdata$Organization.HighLevel==org)){tmpdata<-rbind(tmpdata,data.frame(Organization.HighLevel=org,CoreHours=0.0,NumJobs=0))}}
 tmpdatac<-data_cpu%>%group_by(Organization.HighLevel)%>%summarize(CoreHours.CPU=sum(CoreHours),NumJobs.CPU=length(Job.ID))
-for (org in levels(tmpdatac$Organization.HighLevel)){if(!any(tmpdatac$Organization.HighLevel==org)){tmpdatac<-rbind(tmpdatac,c(org,"0","0"))}}
+for (org in levels(tmpdatac$Organization.HighLevel)){if(!any(tmpdatac$Organization.HighLevel==org)){tmpdatac<-rbind(tmpdatac,data.frame(Organization.HighLevel=org,CoreHours.CPU=0.0,NumJobs.CPU=0))}}
 tmpdatag<-data_gpu%>%group_by(Organization.HighLevel)%>%summarize(CoreHours.GPU=sum(CoreHours),NumJobs.GPU=length(Job.ID))
-for (org in levels(tmpdatag$Organization.HighLevel)){if(!any(tmpdatag$Organization.HighLevel==org)){tmpdatag<-rbind(tmpdatag,c(org,"0","0"))}}
-tmpdata<-merge(tmpdata,tmpdatac,all.x=TRUE,all.y=TRUE,sort=FALSE)
-tmpdata<-merge(tmpdata,tmpdatag,all.x=TRUE,all.y=TRUE,sort=FALSE)
+for (org in levels(tmpdatag$Organization.HighLevel)){if(!any(tmpdatag$Organization.HighLevel==org)){tmpdatag<-rbind(tmpdatag,data.frame(Organization.HighLevel=org,CoreHours.GPU=0.0,NumJobs.GPU=0))}}
+tmpdata<-merge(tmpdata,tmpdatac,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdata<-merge(tmpdata,tmpdatag,all.x=TRUE,all.y=FALSE,sort=FALSE)
 write.csv(tmpdata,file=org2data)
-rm(tmpdata)
-rm(tmpdatac)
-rm(tmpdatag)
+rm(tmpdata,tmpdatac,tmpdatag)
 
 # Total core hours
 cat("Total core hours\n")
