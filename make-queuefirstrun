@@ -10,6 +10,8 @@ if [ $today -lt $end ] ; then end=$today ; fi
 tmpfile=queue_firstrun.$suffix.stdout
 csvfile=queue_firstrun.$suffix.csv
 
+if [ ${qfirstrun:-1} -eq 0 ] ; then touch $csvfile ; exit ; fi
+
 if [ x${HOSTNAME:0:3}$USER != xwlmroot ] ; then
  echo ssh to root@wlm01 to run qacct
  ssh root@wlm01 /app/nsccadmin/apps/queue-firstrun/qacct -wait -c ${sy}${sm}${sd},${end} > "$tmpfile" || rm -f "$tmpfile" "$csvfile"

@@ -31,6 +31,9 @@ report_org=1
 # Deep learning report
 report_dl=1
 
+# Queue first run statistics
+qfirstrun=1
+
 # To automatically copy files out to stakeholders set publish=1
 publish=0
 
