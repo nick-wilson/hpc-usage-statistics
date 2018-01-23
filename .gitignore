@@ -12,3 +12,5 @@ usernames.*.csv
 tmp.*
 archive
 queue_firstrun.*.stdout
+*.stdout
+*.stderr
