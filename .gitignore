@@ -3,11 +3,7 @@ config.R
 config.py
 config.pyc
 config.aggregate
-[a-t,v-z]*.csv
-un*.csv
-user_*.csv
-usernames-raw.*.csv
-usernames.*.csv
+*.csv
 *.Rdata
 tmp.*
 archive
