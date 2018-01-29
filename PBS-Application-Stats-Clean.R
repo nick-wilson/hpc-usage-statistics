@@ -63,8 +63,8 @@ colnames(projects)<-c("Job.ID.NoIndex","Project")
 projects$Project<-as.factor(projects$Project)
 levels(projects$Project)<-c(levels(projects$Project),"Unknown")
 data<-merge(data,projects,all.x=TRUE,all.y=FALSE,sort=FALSE)
-#data$Project[is.na(data$Project)]<-"Unknown"
-data$Project[is.na(data$Project)]<-"Personal"
+data$Project[is.na(data$Project)]<-"Unknown"
+#data$Project[is.na(data$Project)]<-"Personal"
 
 # merge in names of users
 cat("read in user information\n")
