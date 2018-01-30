@@ -4,7 +4,10 @@
 
 usernames_csv="usernames.$suffix.csv"
 usernames_raw_csv="usernames-raw.$suffix.csv"
+rm -f "$usernames_csv" "$usernames_raw_csv"
 
+# Get cached version if available
+if [ -f "$csvusernames" ] ; then cp -p "$csvusernames" "$usernames_csv" && exit ; fi
 
 # Gather raw username information
 echo Username,Name,Organization,Organization.HighLevel,cn,sn,givenName,displayName > "$usernames_raw_csv"
@@ -145,7 +148,3 @@ esac
  echo ${username},${name},${ou},${ouh},${cn},${sn},${gn},${dn} >> "$usernames_raw_csv"
  echo ${username},${name},${ou},${ouh} >> "$usernames_csv"
 done
-
-## # Merge raw usernames with formatted replacements
-## type Rscript > /dev/null 2>&1 || module load R
-## ./combine-users.R || mv "$usernames_csv" "$usernames_csv"~
