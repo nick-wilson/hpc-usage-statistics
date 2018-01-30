@@ -31,7 +31,7 @@ storage-byproject.$(suffix).csv: storage.$(suffix).csv
 
 # Collect username information
 usernames.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	./make-usernames
+	cp $(csvusernames) $@
 
 # Collect application information
 alljobs.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
@@ -73,7 +73,7 @@ clean:
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames{,-raw}.$(suffix).csv ams-*.$(suffix).csv *pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv
+	rm -f alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-*.$(suffix).csv *pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv
 
 # Remove data which requires root access
 .PHONY : veryveryclean
