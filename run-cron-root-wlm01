@@ -46,5 +46,6 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
  cd /app/nsccadmin/apps/usage-statistics/reports/aggregate && \
    ./aggregate && \
    make && \
+   ./update-myusage && \
    ./fix-permissions
 fi
