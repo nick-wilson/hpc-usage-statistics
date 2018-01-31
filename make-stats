@@ -22,6 +22,3 @@ for script in $scripts ; do
 done
 
 if [  ${publish:-0} -eq 1 ] ; then ./make-publish ; fi
-
-# Temporary hack to get active users, to be integrated into main R scripts
-./active.sh
