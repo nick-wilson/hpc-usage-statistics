@@ -45,3 +45,5 @@ fi
 cp $pbsreportcleanedalpha $pbsreportcleanedaggregate && \
  tail -n +3 $pbsreportcleanedproduction >> $pbsreportcleanedaggregate || \
  rm -f $pbsreportcleanedaggregate
+
+./make-unused
