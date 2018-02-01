@@ -2,9 +2,6 @@
 
 . ./config
 
-./update-myusage
-
-if [ $publish -eq 1 ] ; then
 # Copy NUS data to Junhong home directory
 yes | cp -ip *.NUS.$suffix.csv ~ccewjh/Monthly_Usage/
 chown ccewjh.nus ~ccewjh/Monthly_Usage/*.NUS.$suffix.csv
@@ -17,4 +14,3 @@ chmod go-rwx ~melvin/Monthly_Usage/*.NTU.$suffix.csv
 yes | cp -ip *.IHPC.$suffix.csv ~aldavis/Monthly_Usage/
 chown aldavis.ihpc ~aldavis/Monthly_Usage/*.IHPC.$suffix.csv
 chmod go-rwx ~aldavis/Monthly_Usage/*.IHPC.$suffix.csv
-fi

@@ -6,7 +6,7 @@ cd `dirname "$0"` || exit $?
 if [ $publish -eq 1 ] ; then
  echo Copy files to stakeholder home directories and update myusage command data
  # requires root permission
- su -c ./make-copyout
+ su -c "./update-myusage ; ./make-copyout"
 fi
 
 # High level institutes
