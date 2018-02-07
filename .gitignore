@@ -5,8 +5,9 @@ config.pyc
 config.aggregate
 *.csv
 *.Rdata
-tmp.*
-archive
+*.png
 queue_firstrun.*.stdout
+tmp.*
 *.stdout
 *.stderr
+archive
