@@ -15,7 +15,7 @@ else
  exit
 fi
 
-logdir=/app/nsccadmin/log/user_usage
+logdir=/app/nscc/log/user_usage
 chown root.nscc-proj "$logdir"
 chmod 0751 "$logdir"
 for cpu in cpu gpu ; do
