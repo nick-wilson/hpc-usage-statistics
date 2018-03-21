@@ -28,8 +28,8 @@ with open(csvfile, 'rb') as csvfile_in:
     else:
      parsed=re.sub("gpu[0-9]+(|-ib0)/[0-9]+\*","",parsed)
      parsed=re.sub("gpu[0-9]+(|-ib0)/[0-9]+","1",parsed)
-    parsed=re.sub("(std|lmn|vis|wlm)[0-9]+(|-ib0)/[0-9]+\*","",parsed)
-    parsed=re.sub("(std|lmn|vis|wlm)[0-9]+(|-ib0)/[0-9]+","1",parsed)
+    parsed=re.sub("(dgx|std|lmn|vis|wlm)[0-9]+(|-ib0)/[0-9]+\*","",parsed)
+    parsed=re.sub("(dgx|std|lmn|vis|wlm)[0-9]+(|-ib0)/[0-9]+","1",parsed)
     #print parsed
     cores=parsed.split('+')
     totalcores=0
