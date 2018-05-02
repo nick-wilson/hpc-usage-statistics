@@ -67,5 +67,6 @@ sed -i \
  -e 's/^15/SUTD-15/' \
  -e 's/^16/NIS-16/' \
  -e 's/^2/Industry-2/' \
+ -e 's/^41/DGX-41/' \
  "$csvp"
 fi
