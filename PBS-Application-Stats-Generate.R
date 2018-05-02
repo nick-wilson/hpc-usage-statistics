@@ -24,6 +24,7 @@ cpuwall_cpu<-paste0("cpu_walltime_by_user_by_application_cpu.",filter,suffix,".c
 cpuwall_gpu<-paste0("cpu_walltime_by_user_by_application_gpu.",filter,suffix,".csv")
 project_walltime<-paste0("project_walltime.",filter,suffix,".csv")
 project_by_user<-paste0("project_by_user.",filter,suffix,".csv")
+project_by_stakeholder<-paste0("project_by_stakeholder.",filter,suffix,".csv")
 project_storage<-paste0("storage-byproject.",suffix,".csv")
 
 data_cpu<-data%>%filter(Node.Type=="CPU")
@@ -214,6 +215,24 @@ tmpdata$home_gb[is.na(tmpdata$home_gb)] <- -1
 tmpdata<-tmpdata%>%arrange(desc(CoreHours),desc(home_gb))
 tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_walltime)
+#
+tmpdata$Project.Stakeholder<-tmpdata$Project
+tmpdata$Project.Stakeholder<-gsub(     'NUS-11......',     'NUS-11xxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(     'NTU-12......',     'NTU-12xxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(  'A.STAR-13......',  'A*STAR-13xxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('Industry-14......','Industry-14xxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(    'SUTD-15......',    'SUTD-15xxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(     'NIS-16......',     'NIS-16xxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('Industry-20......','Industry-20xxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('Industry-21......','Industry-21xxxxxx',tmpdata$Project.Stakeholder)
+#
+tmpdata$Project.Stakeholder<-gsub('personal-.*','Personal',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('Unknown','Personal',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('resv','Personal',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('30003671','Personal',tmpdata$Project.Stakeholder)
+tmpdata[tmpdata$home_gb==-1,"home_gb"]<-0
+tmpdata<-tmpdata%>%group_by(Project.Stakeholder)%>%summarise(CoreHours=sum(CoreHours),NumJobs=sum(NumJobs),Storage.GB=sum(home_gb))%>%arrange(desc(CoreHours),desc(Storage.GB))
+write.csv(tmpdata,file=project_by_stakeholder)
 rm(tmpdata)
 
 # Corehours per user per project
