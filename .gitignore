@@ -2,7 +2,6 @@ config
 config.R
 config.py
 config.pyc
-config.aggregate
 *.csv
 *.Rdata
 *.png
