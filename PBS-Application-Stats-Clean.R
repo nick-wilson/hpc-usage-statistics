@@ -28,6 +28,7 @@ cat("classify as CPU or GPU\n")
 data$Node.Type<-"CPU"
 data[grepl("^gpu",data$Queue),"Node.Type"]<-"GPU"
 data[grepl("gpu",data$Execution.Hosts)&grepl("^R[0-9]",data$Queue),"Node.Type"]<-"GPU"
+data[grepl("dgx",data$Execution.Hosts),"Node.Type"]<-"DGX"
 
 # Merge in separately calculated data on cores per job
 cat("merge in cores per job\n")

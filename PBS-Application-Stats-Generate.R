@@ -27,6 +27,7 @@ project_by_user<-paste0("project_by_user.",filter,suffix,".csv")
 project_by_stakeholder<-paste0("project_by_stakeholder.",filter,suffix,".csv")
 project_storage<-paste0("storage-byproject.",suffix,".csv")
 
+data<-data%>%filter(Node.Type!="DGX")
 data_cpu<-data%>%filter(Node.Type=="CPU")
 data_gpu<-data%>%filter(Node.Type=="GPU")
 
