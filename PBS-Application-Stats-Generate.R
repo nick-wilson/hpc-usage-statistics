@@ -163,14 +163,14 @@ write.csv(tmpdata,file=org2data_gpu)
 rm(tmpdata)
 
 # Calculate CPU corehours on CPU and GPU nodes per high-level organisation
-tmpdata<-data%>%group_by(Organization.HighLevel)%>%summarize(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))%>%arrange(desc(CoreHours))
-for (org in levels(tmpdata$Organization.HighLevel)){if(!any(tmpdata$Organization.HighLevel==org)){tmpdata<-rbind(tmpdata,data.frame(Organization.HighLevel=org,CoreHours=0.0,NumJobs=0))}}
-tmpdatac<-data_cpu%>%group_by(Organization.HighLevel)%>%summarize(CoreHours.CPU=sum(CoreHours),NumJobs.CPU=length(Job.ID))
-for (org in levels(tmpdatac$Organization.HighLevel)){if(!any(tmpdatac$Organization.HighLevel==org)){tmpdatac<-rbind(tmpdatac,data.frame(Organization.HighLevel=org,CoreHours.CPU=0.0,NumJobs.CPU=0))}}
-tmpdatag<-data_gpu%>%group_by(Organization.HighLevel)%>%summarize(CoreHours.GPU=sum(CoreHours),NumJobs.GPU=length(Job.ID))
-for (org in levels(tmpdatag$Organization.HighLevel)){if(!any(tmpdatag$Organization.HighLevel==org)){tmpdatag<-rbind(tmpdatag,data.frame(Organization.HighLevel=org,CoreHours.GPU=0.0,NumJobs.GPU=0))}}
-tmpdata<-merge(tmpdata,tmpdatac,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdatac<-data_cpu_org%>%rename(CoreHours.CPU=CoreHours,NumJobs.CPU=NumJobs)
+tmpdatag<-data_gpu_org%>%mutate(CoreHours.GPU=GPUHours*24.0)%>%rename(NumJobs.GPU=NumJobs)
+tmpdata<-merge(tmpdatac,tmpdatag,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdata[is.na(tmpdata)] <- 0
+tmpdata<-tmpdata%>%group_by(Organization.HighLevel)%>%summarize(CoreHours.CPU=sum(CoreHours.CPU),NumJobs.CPU=sum(NumJobs.CPU),CoreHours.GPU=sum(CoreHours.GPU),NumJobs.GPU=sum(NumJobs.GPU))
+for (org in levels(tmpdata$Organization.HighLevel)){if(!any(tmpdata$Organization.HighLevel==org)){tmpdata<-rbind(tmpdata,data.frame(Organization.HighLevel=org,CoreHours.CPU=0.0,NumJobs.CPU=0,CoreHours.GPU=0.0,NumJobs.GPU=0))}}
 tmpdata<-merge(tmpdata,tmpdatag,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdata<-tmpdata%>%mutate(CoreHours=CoreHours.CPU+CoreHours.GPU,NumJobs=NumJobs.CPU+NumJobs.GPU)%>%select(Organization.HighLevel,CoreHours,NumJobs,CoreHours.CPU,NumJobs.CPU,CoreHours.GPU,NumJobs.GPU)%>%arrange(desc(CoreHours))
 write.csv(tmpdata,file=org2data)
 rm(tmpdata,tmpdatac,tmpdatag)
 
