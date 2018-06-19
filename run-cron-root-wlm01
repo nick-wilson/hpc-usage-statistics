@@ -20,6 +20,9 @@ echo first make, only interested in pbs-report data
 make veryveryclean pbs-report.raw.$suffix.csv unused.$suffix.csv
 make veryclean
 
+echo get system utilisation statistics
+(cd system-utilisation && ./run)
+
 if [ ${GET_LATEST:-1} -eq 1 ] ; then
  echo get latest application and project data
  if [ -x /app/nsccadmin/log/printjob/get-latest ] ; then /app/nsccadmin/log/printjob/get-latest ; fi
