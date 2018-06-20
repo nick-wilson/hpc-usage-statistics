@@ -38,6 +38,10 @@ if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  ssh nscc01 $PWD/make-boxplots
 fi
 
+echo get system utilisation statistics
+(cd system-utilisation && ./run)
+head cores-mean.csv gpus-mean.csv
+
 echo fix file ownership
 ./fix-permissions
 
@@ -49,6 +53,3 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
    ./update-myusage && \
    ./fix-permissions
 fi
-echo get system utilisation statistics
-(cd system-utilisation && ./run)
-head cores-mean.csv gpus-mean.csv
