@@ -51,7 +51,8 @@ if (report_org==1) {
 # Stats for Deep Learning applications
 if (report_dl==1){
  cat("\nStats for DL\n")
- data<-odata%>%filter(Application.Name=="keras"|Application.Name=="Caffe"|Application.Name=="Torch"|Application.Name=="Theano"|Application.Name=="darknet"|Application.Name=="TensorFlow")
+ data<-odata%>%filter(Application.Name=="keras"|Application.Name=="Caffe"|Application.Name=="Torch"|Application.Name=="Theano"|Application.Name=="darknet"|Application.Name=="TensorFlow"|Application.Name=="AlexNet_*.py"|Application.Name=="singularity:Caffe"|Application.Name=="singularity:TensorFlow"|Application.Name=="Cifar"|Application.Name=="TADPOLE")
+
  unused<-ounused%>%filter(Organization=="XXXX")
  filter<-"MACHINELEARNING."
  source("PBS-Application-Stats-Generate.R")
