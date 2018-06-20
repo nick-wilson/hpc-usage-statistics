@@ -1,0 +1,32 @@
+#!/bin/bash
+# Reduce size of csv files containing application, project and user information
+cd `dirname $0` || exit $?
+
+# exit if config has not been set up yet
+if [ ! -f "config" ] ; then exit ; fi
+. ./config
+
+tmpfile_d=`mktemp`
+tmpfile_g=`mktemp`
+pbsreport="pbs-report.cleaned.$suffix.csv"
+
+# exit if pbs-report has not been run yet
+if [ ! -f "$pbsreport" ] ; then exit ; fi
+
+# Filter application and project information
+tail -n +3 "$pbsreport" | sed -e 's/|.*/,/' -e 's/\[[0-9]*\]/\[\]/' | uniq > "$tmpfile_g"
+for f in alljobs.$suffix.csv project.$suffix.csv ; do
+ if [ ! -f "$f" ] ; then continue ; fi
+ fgrep -f "$tmpfile_g" "$f" > "$tmpfile_d" && touch -r "$f" "$tmpfile_d" && mv "$tmpfile_d" "$f"
+done
+
+# Filter username information
+tail -n +3 "$pbsreport" | awk -F\| '{printf "^%s,\n",$2}' | sort | uniq > "$tmpfile_g"
+for f in "usernames.$suffix.csv" ; do
+ if [ ! -f "$f" ] ; then continue ; fi
+ head -n 1 "$f" > "$tmpfile_d"
+ grep -f "$tmpfile_g" "$f" >> "$tmpfile_d" && touch -r "$f" "$tmpfile_d" && mv "$tmpfile_d" "$f"
+done
+
+# cleanup before exit
+rm -f "$tmpfile_g" "$tmpfile_d"
