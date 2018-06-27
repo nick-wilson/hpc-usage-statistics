@@ -40,7 +40,7 @@ fi
 
 echo get system utilisation statistics
 (cd system-utilisation && ./run)
-head cores-mean.csv gpus-mean.csv
+head cores-mean.$suffix.csv gpus-mean.$suffix.csv
 
 echo fix file ownership
 ./fix-permissions
