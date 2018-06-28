@@ -1,0 +1,38 @@
+#!/bin/bash
+#set -x
+
+umask 077
+. ./config
+
+file="pbs-report.cleaned.$suffix.csv"
+if [ ! -f "$file" ] ; then echo not ready ; exit 1 ; fi
+
+tmpfile=`mktemp --tmpdir=/dev/shm`
+cp -p "$file" "$tmpfile"
+
+logdir=/app/nscc/log/user_usage
+p=all
+
+chown root.nscc-proj "$logdir"
+chmod 0751 "$logdir"
+if [ ! -d "$logdir/$cpu/$p" ] ; then mkdir "$logdir/$p" ; fi
+chown root.nscc-proj "$logdir/$p"
+chmod 0751 "$logdir/$p"
+
+echo generating list of users
+users=`grep -h -v '^"","Username"' user_walltime_?pu.$suffix.csv | awk -F, '{print $2}' | sort | uniq | sed -e 's/"//g'`
+
+for u in $users ; do
+ echo extracting data for $u
+ csv="$logdir/$p/$u.csv"
+ if [ ! -f "$csv" ] ; then
+  echo creating csv file for "$u"
+  head -n 2 "$tmpfile" > "$csv"
+  chown $u "$csv"
+  chgrp nscc-proj "$csv"
+  chmod a-wx,ug+r,o-r "$csv"
+ fi
+ awk -F\| '{if ( $2 == "'$u'" ) {print $0}}' "$tmpfile" >> "$csv"
+done
+
+rm -f "$tmpfile"
