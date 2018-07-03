@@ -8,10 +8,14 @@ file="pbs-report.cleaned.$suffix.csv"
 if [ ! -f "$file" ] ; then echo not ready ; exit 1 ; fi
 
 tmpfile=`mktemp --tmpdir=/dev/shm`
-cp -p "$file" "$tmpfile"
+head -n 2 "$file" > "$tmpfile".header
+cat user_walltime_?pu.$suffix.csv | awk -F\" '{print $4}' | grep -v Username  |  cut -c 1,1 | sort | uniq | while read i ; do
+ egrep '^[^\|]*\|'$i "$file" > "$tmpfile.$i"
+done
 
 logdir=/app/nscc/log/user_usage
 p=all
+
 
 chown root.nscc-proj "$logdir"
 chmod 0751 "$logdir"
@@ -25,14 +29,16 @@ users=`grep -h -v '^"","Username"' user_walltime_?pu.$suffix.csv | awk -F, '{pri
 for u in $users ; do
  echo extracting data for $u
  csv="$logdir/$p/$u.csv"
+ if [ x"$1" == x"--reset" ] ; then rm -f "$csv" ; fi
  if [ ! -f "$csv" ] ; then
+  i="${u:0:1}"
   echo creating csv file for "$u"
-  head -n 2 "$tmpfile" > "$csv"
+  cp "$tmpfile".header "$csv"
   chown $u "$csv"
   chgrp nscc-proj "$csv"
   chmod a-wx,ug+r,o-r "$csv"
  fi
- awk -F\| '{if ( $2 == "'$u'" ) {print $0}}' "$tmpfile" >> "$csv"
+ awk -F\| '{if ( $2 == "'$u'" ) {print $0}}' "$tmpfile.$i" >> "$csv"
 done
 
-rm -f "$tmpfile"
+rm -f "$tmpfile".? "$tmpfile".header
