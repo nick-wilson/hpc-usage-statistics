@@ -20,9 +20,9 @@ for f in alljobs.$suffix.csv project.$suffix.csv ; do
  fgrep -f "$tmpfile_g" "$f" > "$tmpfile_d" && touch -r "$f" "$tmpfile_d" && mv "$tmpfile_d" "$f"
 done
 
-# Filter depend.csv
+# Filter job dependencies
 tail -n +3 "$pbsreport" | sed -e 's/|.*/,/' -e 's/\[[0-9]*\]/\[\]/' -e 's/^/"/' -e 's/,/",/' | uniq > "$tmpfile_g"
-for f in depend.csv ; do
+for f in depend.$suffix.csv ; do
  if [ ! -f "$f" ] ; then continue ; fi
  head -n 1 "$f" > "$tmpfile_d"
  fgrep -f "$tmpfile_g" "$f" >> "$tmpfile_d" && touch -r "$f" "$tmpfile_d" && mv "$tmpfile_d" "$f"

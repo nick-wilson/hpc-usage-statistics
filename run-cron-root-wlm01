@@ -25,9 +25,6 @@ if [ ${GET_LATEST:-1} -eq 1 ] ; then
  if [ -x /app/nsccadmin/log/printjob/get-latest ] ; then /app/nsccadmin/log/printjob/get-latest ; fi
 fi
 
-echo copy in job dependency data
-cp -p /app/nsccadmin/log/printjob/depend.csv .
-
 echo second pass of statistics
 make veryclean stats
 

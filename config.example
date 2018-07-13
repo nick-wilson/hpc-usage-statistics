@@ -45,6 +45,7 @@ prefix=${ey}-${em}
 csvalljobs=/app/nsccadmin/log/printjob/alljobs.csv
 csvproject=/app/nsccadmin/log/printjob/project.csv
 csvprojectinfo=/app/nsccadmin/log/printjob/project-info.csv
+csvdepend=/app/nsccadmin/log/printjob/depend.csv
 csvusernames=/app/nsccadmin/log/printjob/usernames.csv
 amslogdir=/app/nsccadmin/log/ams
 

@@ -15,8 +15,8 @@ boxplot(Wait.Time.Hours~Queue,data=production,las=2,main=main,ylab=ylabel,xlab=x
 
 filter_dependent_jobs<-1
 if (filter_dependent_jobs==1) {
-#  depend<-read.csv(file="depend.csv",header=FALSE,col.names=c("Job.ID.NoIndex","Dependency"),colClasses=c("character","logical"))
-  depend<-read.csv(file="depend.csv",header=TRUE,col.names=c("Job.ID.NoIndex","Dependency"),colClasses=c("character","logical"))
+  filename<-paste0("depend.",suffix,".csv")
+  depend<-read.csv(file=filename,header=TRUE,col.names=c("Job.ID.NoIndex","Dependency"),colClasses=c("character","logical"))
   l<-!grepl("A",data$Job.ID)
   data<-data[l,]
   data<-merge(data,depend,all.x=TRUE,all.y=FALSE,sort=FALSE)
