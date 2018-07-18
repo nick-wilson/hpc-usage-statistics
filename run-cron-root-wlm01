@@ -36,7 +36,7 @@ if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
 fi
 
 echo get system utilisation statistics
-(cd system-utilisation && ./run)
+(cd system-utilisation && ./run && rm -f cores.*.csv {gpu-,}summary.*.csv pbsnodes-a.*)
 head cores-mean.$suffix.csv gpus-mean.$suffix.csv
 
 echo fix file ownership
