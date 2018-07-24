@@ -74,17 +74,28 @@ fi
 # all filesets
 csvf="storage-byfileset.$suffix.csv"
 if [ ! -f $csvf ] ; then
-echo 'Fileset,GB,quota' > "$csvf"
+echo 'Filesystem,Fileset,GB,quota' > "$csvf"
 for fs in home home1 ; do
  f="$logdir/$fs.fileset.quota.$datestring"
- echo f=$f
  if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/$fs.fileset.quota."* | tail -1` ; fi
- echo f=$f
  if [ x"$fs" == xhome ] ; then
-  tail -n +3 "$f" | awk '{printf "'${fs}':%s,%s,%s\n",$1,$3,$4}'
+  tail -n +3 "$f" | awk '{printf "'${fs},${fs}':%s,%s,%s\n",$1,$3,$4}'
  else
-  tail -n +3 "$f" | awk '{printf "'${fs}':%s,%s,%s\n",$1,$4,$5}'
+  tail -n +3 "$f" | awk '{printf "'${fs},${fs}':%s,%s,%s\n",$1,$4,$5}'
  fi
 done | sort -t, -rnk 2,2 >> "$csvf"
 fi
 
+
+f="storage-fileset-category.$suffix.csv"
+echo Fileset,type > $f
+fs="home"
+for user in $users ; do
+ echo ${fs}:${user},HOME_HOMEDIRS >> $f
+done
+projects=`getent group | grep '^[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]:' | awk -F: '{printf "%s ",$1}'`
+for proj in $projects ; do
+ echo home:${proj},HOME_PROJECTS >> $f
+ echo home1:${proj},DATA_PROJECTS >> $f
+done
+echo home:csibio,HOME_PROJECTS_CSIBIO >> $f
