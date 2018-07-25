@@ -1,7 +1,8 @@
 #!/bin/bash
 ## set -x
 set -eu
-users=`getent passwd | awk -F: '{printf "%s ",$1}'`
+#users=`getent passwd | awk -F: '{printf "%s ",$1}'`
+users=`ldapsearch -xxx | grep '^dn: uid' | sed -e "s/^dn: uid=//" -e "s/,.*//" | sort | uniq`
 
 . ./config
 
@@ -13,7 +14,6 @@ csv="storage.$suffix.csv"
 if [ ! -f "$csv" ] ; then
 echo '"Username","home_gb","home_files","home1_gb","home1_files","secure_gb","secure_files","scratch_gb","scratch_files","seq_gb","seq_files"' > $csv
 
-users=`getent passwd | awk -F: '{printf "%s ",$1}'`
 for user in $users ; do
 
 fs=home
