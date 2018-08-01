@@ -15,7 +15,7 @@ if [ ! -f "$pbsreport" ] ; then exit ; fi
 
 # Filter application and project information
 tail -n +3 "$pbsreport" | sed -e 's/|.*/,/' -e 's/\[[0-9]*\]/\[\]/' | uniq > "$tmpfile_g"
-for f in alljobs.$suffix.csv project.$suffix.csv ; do
+for f in alljobs.$suffix.csv project.$suffix.csv ngpus.$suffix.csv ; do
  if [ ! -f "$f" ] ; then continue ; fi
  fgrep -f "$tmpfile_g" "$f" > "$tmpfile_d" && touch -r "$f" "$tmpfile_d" && mv "$tmpfile_d" "$f"
 done

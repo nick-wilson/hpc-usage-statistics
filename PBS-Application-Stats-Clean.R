@@ -9,6 +9,7 @@ jobcores<-paste0("cores.",suffix,".csv")
 usernames<-paste0("usernames.",suffix,".csv")
 project<-paste0("project.",suffix,".csv")
 apps<-paste0("alljobs.",suffix,".csv")
+ngpuscsv<-paste0("ngpus.",suffix,".csv")
 
 # load in csv data from pbsreport and rename the columns
 cat("load from csv\n")
@@ -66,6 +67,15 @@ levels(projects$Project)<-c(levels(projects$Project),"Unknown")
 data<-merge(data,projects,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Project[is.na(data$Project)]<-"Unknown"
 #data$Project[is.na(data$Project)]<-"Personal"
+
+ngpus<-read.csv(file=ngpuscsv,header=FALSE,colClasses=c("character","numeric"))
+colnames(ngpus)<-c("Job.ID.NoIndex","ngpus")
+#ngpus<-read.csv(file=pbsngpus,header=FALSE,colClasses=c("character")
+#ngpus$ngpus<-as.numeric(ngpus$ngpus)
+data<-merge(data,ngpus,all.x=TRUE,all.y=FALSE,sort=FALSE)
+data$ngpus[is.na(data$ngpus)]<-0
+#data$GPU.Hours<-as.numeric(data$ngpus)*as.numeric(data$Wall.Time.Hours)
+data$GPU.Hours<-data$ngpus*data$Wall.Time.Hours
 
 # merge in names of users
 cat("read in user information\n")

@@ -49,6 +49,10 @@ project-info.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 depend.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 	cp $(csvdepend) $@
 
+# Collect job dependeny information
+ngpus.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
+	cp $(csvngpus) $@
+
 #Calculate unused allocations
 unused.$(suffix).csv: config.R
 	./make-unused
@@ -63,7 +67,7 @@ queue_firstrun.$(suffix).csv: config
 	./make-queuefirstrun
 
 # Generate statistics if any source files have been updated
-alldata.$(suffix).csv: unused.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv depend.$(suffix).csv config.R
+alldata.$(suffix).csv: unused.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv config.R
 	./make-stats
 
 .PHONY : stats
