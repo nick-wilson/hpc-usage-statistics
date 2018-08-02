@@ -19,6 +19,7 @@ which Rscript
 echo first make, only interested in pbs-report data
 make veryveryclean pbs-report.raw.$suffix.csv unused.$suffix.csv
 make veryclean
+git pull
 
 if [ ${GET_LATEST:-1} -eq 1 ] ; then
  echo get latest application and project data
