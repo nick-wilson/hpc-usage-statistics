@@ -1,5 +1,5 @@
 #!/bin/bash
-## set -x
+##set -x
 set -eu
 #users=`getent passwd | awk -F: '{printf "%s ",$1}'`
 users=`ldapsearch -xxx | grep '^dn: uid' | sed -e "s/^dn: uid=//" -e "s/,.*//" | sort | uniq`
@@ -56,9 +56,11 @@ fi
 csvp="storage-byproject."$suffix".csv"
 if [ ! -f $csvp ] ; then
 f="$logdir/home.fileset.quota.$datestring"
+f1="$logdir/home1.fileset.quota.$datestring"
 if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/home.fileset.quota".* | tail -1` ; fi
+if [ ! -f "$f1" ] ; then f1=`ls -1 "$logdir/home1.fileset.quota".* | tail -1` ; fi
 echo 'Project,home_gb' > "$csvp"
-getent group | grep '^[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' | sed -e 's,:.*,,' | while read p  ; do s=`grep "^$p " "$f" | awk '{print $3}'` ; echo $p,$s ; done >> "$csvp"
+getent group | grep '^[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' | sed -e 's,:.*,,' | while read p  ; do s=`grep "^$p " "$f" | awk '{print $3}'` ; s1=`grep "^$p " "$f1" | awk '{print $4}'` ; if [ x"$s1" != x ] ; then ((s=s+s1)) ; fi ; echo $p,$s ; done >> "$csvp"
 sed -i \
  -e 's/^11/NUS-11/' \
  -e 's/^12/NTU-12/' \
@@ -88,6 +90,7 @@ fi
 
 
 f="storage-fileset-category.$suffix.csv"
+if [ ! -f $csvf ] ; then
 echo Fileset,type > $f
 fs="home"
 for user in $users ; do
@@ -99,3 +102,4 @@ for proj in $projects ; do
  echo home1:${proj},DATA_PROJECTS >> $f
 done
 echo home:csibio,HOME_PROJECTS_CSIBIO >> $f
+fi
