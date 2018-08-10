@@ -31,13 +31,13 @@ for u in $users ; do
  csv="$logdir/$p/$u.csv"
  if [ x"$1" == x"--reset" ] ; then rm -f "$csv" ; fi
  if [ ! -f "$csv" ] ; then
-  i="${u:0:1}"
   echo creating csv file for "$u"
   cp "$tmpfile".header "$csv"
   chown $u "$csv"
   chgrp nscc-proj "$csv"
   chmod a-wx,ug+r,o-r "$csv"
  fi
+ i="${u:0:1}"
  awk -F\| '{if ( $2 == "'$u'" ) {print $0}}' "$tmpfile.$i" >> "$csv"
 done
 

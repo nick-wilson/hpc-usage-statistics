@@ -47,3 +47,9 @@ f="$logdir/$cpu/$p/$u"
 done
 
 done
+
+if [ x"$1" == x"--all" ] ; then
+ shift
+ echo update full user statistics
+ ./update-myusage-all
+fi
