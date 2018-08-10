@@ -29,12 +29,18 @@ fi
 echo second pass of statistics
 make veryclean stats
 
+echo reduce size of external data sources
+./filter-alljobs
+
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  echo Update myusage data
  ./update-myusage
  echo make boxplots
  ssh nscc01 $PWD/make-boxplots
 fi
+
+echo update DGX statistics
+(cd dgx && make clean stats)
 
 echo get system utilisation statistics
 (cd system-utilisation && ./run && rm -f cores.*.csv {gpu-,}summary.*.csv pbsnodes-a.*)
