@@ -36,6 +36,9 @@ if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  ssh nscc01 $PWD/make-boxplots
 fi
 
+echo update DGX statistics
+(cd dgx && make clean stats)
+
 echo get system utilisation statistics
 (cd system-utilisation && ./run && rm -f cores.*.csv {gpu-,}summary.*.csv pbsnodes-a.*)
 head cores-mean.$suffix.csv gpus-mean.$suffix.csv

@@ -11,3 +11,4 @@ tmp.*
 *.stderr
 archive
 system-utilisation
+dgx
