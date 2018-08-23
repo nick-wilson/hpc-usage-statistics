@@ -81,7 +81,7 @@ clean:
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-*.$(suffix).csv *pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv
+	rm -f alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-*.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv *pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv
 
 # Remove data which requires root access
 .PHONY : veryveryclean
