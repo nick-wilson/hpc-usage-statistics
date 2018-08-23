@@ -13,7 +13,7 @@ unused<-unused%>%filter(Organization=="XXXX")
 
 # Characterize by Project/Personal
 data$Type<-data$Project
-data$Type<-as.factor(gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NIS-).*','Project',data$Type))
+data$Type<-as.factor(gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NIS-|NSCC-|DGX-).*','Project',data$Type))
 data$Type<-as.factor(gsub('(personal-.*|resv|Unknown)','Personal',data$Type))
 
 #backup data
