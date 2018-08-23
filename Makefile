@@ -86,7 +86,7 @@ veryclean: clean
 # Remove data which requires root access
 .PHONY : veryveryclean
 veryveryclean: veryclean
-	rm -f *pbs-report.raw.$(suffix).csv queue_firstrun.$(suffix).stdout queue_firstrun.$(suffix).csv
+	rm -f *pbs-report.raw.$(suffix).csv queue_firstrun.$(suffix).stdout queue_firstrun.$(suffix).csv cores-mean.$(suffix).csv cores-summary.$(suffix).csv gpus-mean.$(suffix).csv gpus-summary.$(suffix).csv
 
 # Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : distclean
