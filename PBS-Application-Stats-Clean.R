@@ -68,6 +68,7 @@ data<-merge(data,projects,all.x=TRUE,all.y=FALSE,sort=FALSE)
 data$Project[is.na(data$Project)]<-"Unknown"
 #data$Project[is.na(data$Project)]<-"Personal"
 
+cat("read in gpu information\n")
 ngpus<-read.csv(file=ngpuscsv,header=FALSE,colClasses=c("character","numeric"))
 colnames(ngpus)<-c("Job.ID.NoIndex","ngpus")
 #ngpus<-read.csv(file=pbsngpus,header=FALSE,colClasses=c("character")
