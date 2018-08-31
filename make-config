@@ -21,6 +21,6 @@ EOF
 if [ ! -d dgx ] ; then git clone file:///app/src/repos/usage-dgx.git dgx ; fi
 if [ ! -d system-utilisation ] ; then git clone file:///app/src/repos/system-utilisation.git ; fi
 
-git pull
-(cd dgx && git pull)
-(cd system-utilisation && git pull)
+type git > /dev/null 2>&1 && git pull
+type git > /dev/null 2>&1 && (cd dgx && git pull)
+type git > /dev/null 2>&1 && (cd system-utilisation && git pull)
