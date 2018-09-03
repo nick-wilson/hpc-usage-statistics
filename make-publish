@@ -10,7 +10,7 @@ if [ $publish -eq 1 ] ; then
 fi
 
 # High level institutes
-orgs="ASTAR NUS NTU CREATE SUTD SMU Industry Other"
+orgs="ASTAR NUS NTU CREATE SUTD SMU Industry NSCC GOV AISG Other"
 # Individual organizations
 orgs="$orgs GIS IHPC KOMTECH"
 orgs="$orgs MACHINELEARNING"
