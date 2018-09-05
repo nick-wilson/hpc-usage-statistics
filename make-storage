@@ -3,6 +3,7 @@
 set -eu
 #users=`getent passwd | awk -F: '{printf "%s ",$1}'`
 users=`ldapsearch -xxx | grep '^dn: uid' | sed -e "s/^dn: uid=//" -e "s/,.*//" | sort | uniq`
+users="root $users"
 
 . ./config
 
