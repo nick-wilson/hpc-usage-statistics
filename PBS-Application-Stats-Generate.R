@@ -224,13 +224,15 @@ tmpdata$Project.Stakeholder<-gsub(  'A.STAR-13......',  'A*STAR-13xxxxxx',tmpdat
 tmpdata$Project.Stakeholder<-gsub('Industry-14......','Industry-14xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(    'SUTD-15......',    'SUTD-15xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(     'NIS-16......',     'NIS-16xxxxxx',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('Industry-20......','Industry-20xxxxxx',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('Industry-21......','Industry-21xxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('Industry-2.......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
+#
+tmpdata$Project.Stakeholder<-gsub('resv','NSCC-90000001',tmpdata$Project.Stakeholder)
 #
 tmpdata$Project.Stakeholder<-gsub('personal-.*','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Unknown','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('resv','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('30003671','Personal',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('10031963','Personal',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('10019921','Personal',tmpdata$Project.Stakeholder)
 tmpdata[tmpdata$home_gb==-1,"home_gb"]<-0
 tmpdata<-tmpdata%>%group_by(Project.Stakeholder)%>%summarise(CoreHours=sum(CoreHours),NumJobs=sum(NumJobs),Storage.GB=sum(home_gb))%>%arrange(desc(CoreHours),desc(Storage.GB))
 write.csv(tmpdata,file=project_by_stakeholder)
