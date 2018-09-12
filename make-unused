@@ -1,43 +1,19 @@
 #!/bin/bash
-ulimit -m 67108864
-ulimit -v 67108864
-
 . ./config
 
-q=production
+in="unused-mean.$suffix.csv"
+out="unused.$suffix.csv"
 
-PATH="$PATH:/opt/pbs/unsupported" ; export PATH
-pbs_report=`which pbs-report`
+if [ -f "$out" ] ; then exit ; fi
 
-rawfile="$q.pbs-report.raw.$suffix.csv"
-if [ ! -f "$rawfile" ] ; then
-tmpfile="$rawfile".tmp
-
-if [ x${HOSTNAME:0:3}$USER != xwlmroot ] ; then
- echo ssh to root@wlm01 to run $pbs_report
- ssh root@wlm01 "ulimit -m 67108864 ; ulimit -v 67108864 ; $pbs_report --verbose --csv \| --begin $sy$sm$sd --end $ey$em$ed --time partial -q $q" > "$tmpfile" || rm -f "$tmpfile"
-else
- echo running $pbs_report
- $pbs_report --verbose --csv "|" --begin $sy$sm$sd --end $ey$em$ed --time partial -q $q > "$tmpfile" || rm -f "$tmpfile"
+if [ ! -f "$in" ] ; then
+ if [ -d system-utilisation ] ; then
+  (cd system-utilisation && ./run)
+ fi
 fi
 
-mv "$tmpfile" "$rawfile"
-fi
-
-cleanedfile="$q.pbs-report.cleaned.$suffix.csv"
-if [ "$rawfile" -nt "$cleanedfile" ] ; then /bin/rm -f "$cleanedfile" ; fi
-if [ ! -f "$cleanedfile" ] ; then
-if grep 'No results matched your query' "$rawfile" ; then
-cat << EOF > "$cleanedfile"
-||||Date/Time||Execution||Core|Virtual|Used|Used|Queue|Suspend
-Job ID|Username|Queue|Job Name|Created|Package|Host(s)|Nodes|Memory|Memory|CPU Time|Wall Time|Wait Time|Time|Exit 
-1|joebloggs|production|jobname|2017/10/16 12:08|None|std0101/0*23|1|0kb|0kb|0|14|2686181|0|-2
+if [ ! -f "$out" ] ; then
+cat << EOF > $out
+"Organization","Organization.HighLevel","CoreHours","NumJobs"
+"GIS-UNUSED","A*STAR","0.0","0"
 EOF
-else
-./pbsreport-clean-$q.py
-fi
-fi
-
-./pbsreport-count-cores-$q.py
-type Rscript > /dev/null 2>&1 || module load R
-Rscript Unused-$q.R

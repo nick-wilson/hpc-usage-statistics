@@ -8,8 +8,6 @@ report_org<-$report_org
 report_dl<-$report_dl
 days<-$days
 hours<-$hours
-production_nodes<-$production_nodes
-production_cores<-$production_cores
 filter_dependent_jobs<-$filter_dependent_jobs
 EOF
 

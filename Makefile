@@ -54,7 +54,7 @@ ngpus.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 	cp $(csvngpus) $@
 
 #Calculate unused allocations
-unused.$(suffix).csv: config.R
+unused.$(suffix).csv: config
 	./make-unused
 
 ams-personal.$(suffix).csv: config
@@ -76,19 +76,19 @@ stats: queue_firstrun.$(suffix).csv alldata.$(suffix).csv ams-personal.$(suffix)
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-byorg,storage-byuser,project_,unused}*.$(suffix).csv $(prefix)-*.zip *.$(suffix).png
+	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-byorg,storage-byuser,project_}*.$(suffix).csv $(prefix)-*.zip *.$(suffix).png
 
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-*.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv *pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv
+	rm -f alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-*.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv pbs-report.cleaned.$(suffix).csv *cores.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv
 
 # Remove data which requires root access
+# Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : veryveryclean
 veryveryclean: veryclean
-	rm -f *pbs-report.raw.$(suffix).csv queue_firstrun.$(suffix).stdout queue_firstrun.$(suffix).csv cores-mean.$(suffix).csv cores-summary.$(suffix).csv gpus-mean.$(suffix).csv gpus-summary.$(suffix).csv
+	rm -f pbs-report.raw.$(suffix).csv queue_firstrun.$(suffix).stdout queue_firstrun.$(suffix).csv cores-mean.$(suffix).csv cores-summary.$(suffix).csv gpus-mean.$(suffix).csv gpus-summary.$(suffix).csv unused.$(suffix).csv
 
-# Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : distclean
 distclean: veryveryclean
 	rm -f config

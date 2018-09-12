@@ -16,8 +16,6 @@ ed=31
 
 # Number of days
 days=31
-# Number of nodes reserved for production queue
-production_nodes=60
 
 # Type of report: monthly, weekly, aggregate
 type=monthly
@@ -55,6 +53,5 @@ logdir=/app/nsccadmin/log/usage-statistics
 statsuser=fsg3
 statsgroup=nscc-proj
 
-# used to calculate unused production queue
+# number of hours in reporting period
 hours=`expr $days \* 24`
-production_cores=`expr $production_nodes \* 24`
