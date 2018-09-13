@@ -17,3 +17,4 @@ cat << EOF > $out
 "Organization","Organization.HighLevel","CoreHours","NumJobs"
 "GIS-UNUSED","A*STAR","0.0","0"
 EOF
+fi
