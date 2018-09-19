@@ -96,7 +96,11 @@ if [ ! -f $csvf ] ; then
 echo Fileset,type > $csvf
 fs="home"
 for user in $users ; do
- echo ${fs}:${user},HOME_HOMEDIRS >> $csvf
+ if [ x"$user" == xroot ] ; then
+  echo ${fs}:${user},HOME_NOT_FILESET >> $csvf
+ else
+  echo ${fs}:${user},HOME_HOMEDIRS >> $csvf
+ fi
 done
 projects=`getent group | grep '^[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]:' | awk -F: '{printf "%s ",$1}'`
 for proj in $projects ; do
