@@ -29,6 +29,9 @@ report_dl=1
 # Queue first run statistics
 qfirstrun=1
 
+# DGX statistics
+dgx=1
+
 # To automatically copy files out to stakeholders set publish=1
 publish=0
 
@@ -47,6 +50,7 @@ csvdepend=/app/nsccadmin/log/printjob/depend.csv
 csvusernames=/app/nsccadmin/log/printjob/usernames.csv
 csvngpus=/app/nsccadmin/log/printjob/ngpus.csv
 amslogdir=/app/nsccadmin/log/ams
+repos="file:///app/nsccadmin/repos"
 
 # Location of output directory
 logdir=/app/nsccadmin/log/usage-statistics
