@@ -45,7 +45,7 @@ echo update DGX statistics
 (cd dgx && make clean stats)
 
 echo get system utilisation statistics
-(cd system-utilisation && ./run && rm -f cores.*.csv {gpu-,}summary.*.csv pbsnodes-a.*)
+(cd system-utilisation && ./run )
 head cores-mean.$suffix.csv gpus-mean.$suffix.csv
 
 echo fix file ownership
@@ -58,4 +58,9 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
    make && \
    ./update-myusage && \
    ./fix-permissions
+fi
+
+if [ ${GET_LATEST:-0} -eq 0 ] ; then
+ rm -f alljobs.$suffix.csv project.$suffix.csv project-info.$suffix.csv depend.$suffix.csv usernames.$suffix.csv ngpus.$suffix.csv
+ (cd system-utilisation && rm -f cores.*.csv {gpu-,}summary.*.csv pbsnodes-a.*)
 fi
