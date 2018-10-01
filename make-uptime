@@ -5,8 +5,9 @@ echo "uptime(hrs) uptime(days) production_corehours production_nodes"
 tail -n +2 uptime.csv | awk '{u=u+$5;p=p+$11;} END {print u,u/24.0,p,p/(u*24)}'
 
 p=`tail -n +2 uptime.csv | awk '{p=p+$11;} END {printf "%d",p}'`
+h=`tail -n +2 uptime.csv | awk '{u=u+$5;} END {printf "%d",u}'`
 days=`tail -n +2 uptime.csv | awk '{u=u+$5;} END {printf "%.5f",u/24.0}'`
 nodes=`tail -n +2 uptime.csv | awk '{u=u+$5;p=p+$11;} END {printf "%.5f",p/(u*24.0)}'`
 
 ls config || exit $?
-sed -i -e "s/^days=.*/days=$days/" -e "s/^production_nodes=.*/production_nodes=$nodes/" -e "s/^hours=.*/hours=1/" -e "s/^production_cores=.*/production_cores=$p/" config
+sed -i -e "s/^days=.*/days=$days/" -e "s/^hours=.*/hours=$h/" config
