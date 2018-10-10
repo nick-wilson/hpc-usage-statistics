@@ -40,7 +40,7 @@ make
 
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  echo Update myusage data
- ./update-myusage
+ ./update-myusage --all
  echo make boxplots
  ssh nscc01 $PWD/make-boxplots
 fi
@@ -60,7 +60,7 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
  cd /app/nsccadmin/apps/usage-statistics/reports/aggregate && \
    ./aggregate && \
    make && \
-   ./update-myusage && \
+   ./update-myusage --all --reset && \
    ./fix-permissions
 fi
 
