@@ -40,5 +40,5 @@ for base in personal projects ; do
  fi
 # cp -v $file ams-$base.$suffix.csv
  head -1 $file > ams-$base.$suffix.csv
- tail -n +2 $file | sort -t, -rnk 6,6 >> ams-$base.$suffix.csv
+ tail -n +2 $file | sort -t, -rnk 2,2 >> ams-$base.$suffix.csv
 done
