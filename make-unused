@@ -1,15 +1,12 @@
 #!/bin/bash
 . ./config
 
-in="unused-mean.$suffix.csv"
 out="unused.$suffix.csv"
 
 if [ -f "$out" ] ; then exit ; fi
 
-if [ ! -f "$in" ] ; then
- if [ -d system-utilisation ] ; then
-  (cd system-utilisation && ./run)
- fi
+if [ -d system-utilisation ] ; then
+ (cd system-utilisation && ./run)
 fi
 
 if [ ! -f "$out" ] ; then
