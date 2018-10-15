@@ -35,7 +35,7 @@ usernames.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 
 # Collect application information
 alljobs.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	cp $(csvalljobs) $@
+	cp $(csvalljobs) $@ ; rm -f alljobs1.$(suffix).csv
 
 # Collect project information
 project.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
