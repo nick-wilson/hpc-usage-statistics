@@ -14,6 +14,9 @@ scripts="Storage.R Storage-Fileset.R PBS-Application-Stats-Clean.R PBS-Applicati
 # base directory
 base=/app/nsccadmin/log
 
+# reduce size of ancillary files
+./filter-alljobs
+
 type Rscript > /dev/null 2>&1 || module load R
 # Run the script to generate csv files with statistics
 for script in $scripts ; do
