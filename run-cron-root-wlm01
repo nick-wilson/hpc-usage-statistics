@@ -31,9 +31,6 @@ fi
 echo second pass of statistics
 make veryclean stats
 
-echo reduce size of external data sources
-./filter-alljobs
-
 echo get alternate application names
 if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi
 make

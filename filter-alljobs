@@ -29,4 +29,4 @@ for f in depend.$suffix.csv ; do
 done
 
 # cleanup before exit
-rm -f "$tmpfile_g" "$tmpfile_d"
+rm -f "$tmpfile_g" "$tmpfile_d" alljobs1.$suffix.csv
