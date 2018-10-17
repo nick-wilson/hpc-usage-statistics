@@ -12,7 +12,42 @@ This will do the following:
 
 1. Run pbs-report over date range specified in config as root on wlm01 (uses ssh if username or hostname is not correct)
 2. Clean output to correct for any "|" characters in job names and to remove header and footer lines
-3. Count the number of cores used by each job (gpu nodes always counted as 24 cores) in a csv file
-4. Collect application information in a csv file
-5. Collect information about all users who submitted jobs in a csv file
-6. Run R scripts to generate statistics
+3. Count the number of cores used by each job (gpu nodes always counted as 24 cores) and put that in a separate csv file
+4. Collect application information in a separate csv file
+5. Collect information about all users who submitted jobs in a separate csv file
+6. Collect project information in a separate csv file
+7. Collect GPUs requested in a separate csv file
+8. Run a script to parse archive pbsnodes data to calculate unused reserved resources
+9. Run R scripts to generate statistics
+
+Once the scripts have been run then the data is cut-and-pasted from the csv files into the Excel spreadsheet template.
+The formatting is set up correctly so if you use "Paste Values" then that will be preserved.
+The worksheets to csv file mapping is:
+
+"Queue First Job $END_DATE" -> queue_firstrun.$DATE_RANGE.csv
+"Core Summary $END_DATE" -> cores-mean.$DATE_RANGE.csv & gpus-mean.$DATE_RANGE.csv
+"Project Usage $END_DATE" -> project_walltime_info.$DATE_RANGE.csv
+"Project Stakeholder $END_DATE" -> project_by_stakeholder.$DATE_RANGE.csv
+"Project Status $END_DATE" -> ams-projects.$DATE_RANGE.csv
+"Personal Status $END_DATE" -> ams-personal.$DATE_RANGE.csv
+"Storage Summary $END_DATE" -> storage-byfileset-summary.$DATE_RANGE.csv
+"Storage by Fileset $END_DATE" -> storage-byfileset.$DATE_RANGE.csv
+"Storage By Org $END_DATE" -> storage-byorg2.$DATE_RANGE.csv
+“Active Users $END_DATE" ->  active-totals.$DATE_RANGE.csv
+
+and then the CPU utilisation worksheets:
+“By Cores CPU $END_DATE" ->  stats_by_core_cpu.$DATE_RANGE.csv
+“Applications CPU $END_DATE" -> application_usage_cpu.$DATE_RANGE.csv
+“User Walltime CPU $END_DATE" -> user_walltime_cpu.$DATE_RANGE.csv
+“Org HighLevel CPU $END_DATE" -> org2_walltime_cpu.$DATE_RANGE.csv
+“Org Breakdown CPU $END_DATE" ->  org_walltime_cpu.$DATE_RANGE.csv
+“Largest Jobs CPU $END_DATE" -> top100_cpu.$DATE_RANGE.csv
+
+and then the GPU worksheets follow the same pattern:
+“By Cores GPU $END_DATE" ->  stats_by_core_gpu.$DATE_RANGE.csv
+“Applications GPU $END_DATE" -> application_usage_gpu.$DATE_RANGE.csv
+“User Walltime GPU $END_DATE" -> user_walltime_gpu.$DATE_RANGE.csv
+“Org HighLevel GPU $END_DATE" -> org2_walltime_gpu.$DATE_RANGE.csv
+“Org Breakdown GPU $END_DATE" ->  org_walltime_gpu.$DATE_RANGE.csv
+“Largest Jobs GPU $END_DATE" -> top100_gpu.$DATE_RANGE.csv
+
