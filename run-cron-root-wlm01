@@ -32,6 +32,7 @@ echo second pass of statistics
 make veryclean stats
 
 echo get alternate application names
+if [ -d load2apps ] ; then (cd load2apps && git pull) ; fi
 if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi
 make
 
