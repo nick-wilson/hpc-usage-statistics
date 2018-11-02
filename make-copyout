@@ -10,7 +10,7 @@ chmod go-rwx ~ccewjh/Monthly_Usage/*.NUS.$suffix.csv
 yes | cp -ip *.NTU.$suffix.csv ~melvin/Monthly_Usage/
 chown melvin.ntu ~melvin/Monthly_Usage/*.NTU.$suffix.csv
 chmod go-rwx ~melvin/Monthly_Usage/*.NTU.$suffix.csv
-# Copy IHPC data to Al Davis home directory
-yes | cp -ip *.IHPC.$suffix.csv ~aldavis/Monthly_Usage/
-chown aldavis.ihpc ~aldavis/Monthly_Usage/*.IHPC.$suffix.csv
-chmod go-rwx ~aldavis/Monthly_Usage/*.IHPC.$suffix.csv
+## # Copy IHPC data to Al Davis home directory
+## yes | cp -ip *.IHPC.$suffix.csv ~aldavis/Monthly_Usage/
+## chown aldavis.ihpc ~aldavis/Monthly_Usage/*.IHPC.$suffix.csv
+## chmod go-rwx ~aldavis/Monthly_Usage/*.IHPC.$suffix.csv
