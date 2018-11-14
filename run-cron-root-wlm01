@@ -63,7 +63,7 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
 fi
 
 if [ ${GET_LATEST:-0} -eq 0 ] ; then
- rm -f alljobs.$suffix.csv project.$suffix.csv project-info.$suffix.csv depend.$suffix.csv usernames.$suffix.csv ngpus.$suffix.csv
+ rm -f alljobs*.$suffix.csv project.$suffix.csv project-info.$suffix.csv depend.$suffix.csv usernames.$suffix.csv ngpus.$suffix.csv
  (cd system-utilisation && rm -f cores.*.csv {gpu-,}summary.*.csv pbsnodes-a.*)
  (cd load2apps && ./clean)
  (cd dgx && make veryclean)
