@@ -12,3 +12,4 @@ fi
 
 (cd archive/totals && ./gather)
 cp -p archive/totals/totals.csv /app/nsccadmin/log/usage-statistics/aggregate/aggregate-bymonth.csv
+cp -p archive/totals/totals.csv /app/nsccadmin/log/usage-statistics/
