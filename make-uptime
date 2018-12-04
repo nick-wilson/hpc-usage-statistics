@@ -1,13 +1,11 @@
 #!/bin/sh
 cp -p /app/nsccadmin/log/printjob/uptime.csv .
 cp -p /app/nsccadmin/log/printjob/uptime.csv /app/nsccadmin/log/usage-statistics/
-echo "uptime(hrs) uptime(days) production_corehours production_nodes"
-tail -n +2 uptime.csv | awk '{u=u+$5;p=p+$11;} END {print u,u/24.0,p,p/(u*24)}'
+echo "uptime(hrs) uptime(days)"
+tail -n +2 uptime.csv | awk '{u=u+$5;} END {print u,u/24.0}'
 
-p=`tail -n +2 uptime.csv | awk '{p=p+$11;} END {printf "%d",p}'`
 h=`tail -n +2 uptime.csv | awk '{u=u+$5;} END {printf "%d",u}'`
 days=`tail -n +2 uptime.csv | awk '{u=u+$5;} END {printf "%.5f",u/24.0}'`
-nodes=`tail -n +2 uptime.csv | awk '{u=u+$5;p=p+$11;} END {printf "%.5f",p/(u*24.0)}'`
 
-ls config || exit $?
+ls config > /dev/null || exit $?
 sed -i -e "s/^days=.*/days=$days/" -e "s/^hours=.*/hours=$h/" config
