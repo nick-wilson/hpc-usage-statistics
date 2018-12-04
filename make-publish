@@ -1,20 +1,13 @@
 #!/bin/bash
+set -x
 cd `dirname "$0"` || exit $?
 
 . ./config
 
-if [ $publish -eq 1 ] ; then
- echo Copy files to stakeholder home directories and update myusage command data
- # requires root permission
- su -c "./update-myusage ; ./make-copyout"
-fi
-
-# High level institutes
-orgs="ASTAR NUS NTU CREATE SUTD SMU Industry NSCC GOV AISG Other"
-# Individual organizations
-orgs="$orgs GIS IHPC KOMTECH"
-orgs="$orgs MACHINELEARNING"
-#orgs="$orgs BEARS-BERKELEY CARES E2S2 ETHZ NRD SINBERBEST SINBERISE SMART TUM-CREATE"
+# Individual stakeholder reports
+stakeholders="ASTAR NUS NTU CREATE SUTD SMU Industry NSCC GOV AISG Other"
+# Organisations and other reports
+others="GIS IHPC KOMTECH MACHINELEARNING"
 
 # base directory
 base=/app/nsccadmin/log
@@ -24,12 +17,15 @@ logdir=$base/usage-statistics
 outputfiles=`echo {active-totals,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_,ams-,queue_firstrun,{cores,gpus}-{mean,summary}}*.$suffix.csv`
 
 copy_to_logdir () {
- mkdir -p $logdir/$1/by-org && \
+ mkdir -p $logdir/$1/stakeholder $logdir/$1/other && \
  cp -pv $outputfiles $logdir/$1/
- for org in $orgs ; do
-  mv -v $logdir/$1/*.$org.$suffix.csv $logdir/$1/by-org/ 2>/dev/null
+ for stakeholder in $stakeholders ; do
+  mv -v $logdir/$1/*.$stakeholder.$suffix.csv $logdir/$1/stakeholder/ 2>/dev/null
  done
- rmdir $logdir/$1/by-org 2>/dev/null
+ for other in $others ; do
+  mv -v $logdir/$1/*.$other.$suffix.csv $logdir/$1/other/ 2>/dev/null
+ done
+ rmdir $logdir/$1/stakeholder $logdir/$1/other 2>/dev/null
 }
 
 if [ x"$type" == xpartial ] ; then
