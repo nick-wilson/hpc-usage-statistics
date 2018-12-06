@@ -42,23 +42,27 @@ filter_dependent_jobs=1
 suffix=${sy}${sm}${sd}-${ey}${em}${ed}
 prefix=${ey}-${em}
 
-# Base directory
+#Location of data
 base=/app/nsccadmin/log
+log=usage-statistics
+ams=ams
+data=printjob
+#
+logdir=$base/$log
+amsdir=$base/$ams
+#data and base used in Makefile
 
-# Location of external data
-data=$base/printjob
-csvalljobs=$data/alljobs.csv
-csvproject=$data/project.csv
-csvprojectinfo=$data/project-info.csv
-csvdepend=$data/depend.csv
-csvusernames=$data/usernames.csv
-csvngpus=$data/ngpus.csv
-amslogdir=$base/ams
+# Name of csv files
+csvalljobs=alljobs.csv
+csvproject=project.csv
+csvprojectinfo=project-info.csv
+csvdepend=depend.csv
+csvusernames=usernames.csv
+csvngpus=ngpus.csv
 
 # Location of source code repositories
 repos="file:///app/nsccadmin/repos"
 
-# Location of output directory
-logdir=$base/usage-statistics
+# Username for output files
 statsuser=fsg3
 statsgroup=nscc-proj

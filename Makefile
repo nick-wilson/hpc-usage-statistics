@@ -31,27 +31,27 @@ storage-byproject.$(suffix).csv: storage.$(suffix).csv
 
 # Collect username information
 usernames.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	cp $(csvusernames) $@
+	cp $(base)/$(data)/$(csvusernames) $@
 
 # Collect application information
 alljobs.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	cp $(csvalljobs) $@ ; rm -f alljobs1.$(suffix).csv
+	cp $(base)/$(data)/$(csvalljobs) $@ ; rm -f alljobs1.$(suffix).csv
 
 # Collect project information
 project.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	cp $(csvproject) $@
+	cp $(base)/$(data)/$(csvproject) $@
 
 # Collect project information
 project-info.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	cp $(csvprojectinfo) $@
+	cp $(base)/$(data)/$(csvprojectinfo) $@
 
 # Collect job dependeny information
 depend.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	cp $(csvdepend) $@
+	cp $(base)/$(data)/$(csvdepend) $@
 
 # Collect job dependeny information
 ngpus.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	cp $(csvngpus) $@
+	cp $(base)/$(data)/$(csvngpus) $@
 
 #Calculate unused allocations
 unused.$(suffix).csv: config

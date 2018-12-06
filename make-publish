@@ -8,11 +8,7 @@ stakeholders="ASTAR NUS NTU CREATE SUTD SMU Industry NSCC GOV AISG Other"
 # Organisations and other reports
 others="GIS IHPC KOMTECH MACHINELEARNING"
 
-# base directory
-base=/app/nsccadmin/log
-
 # Copy data to log directory
-logdir=$base/usage-statistics
 outputfiles=`echo {active-totals,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_,ams-,queue_firstrun,{cores,gpus}-{mean,summary}}*.$suffix.csv`
 
 copy_to_logdir () {
