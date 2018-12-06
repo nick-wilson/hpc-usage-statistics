@@ -1,0 +1,21 @@
+#!/bin/bash
+cp -p config.example config.new
+. ./config
+sed -i \
+   -e "s/^sy=.*/sy=$sy/" -e "s/^sm=.*/sm=$sm/" -e "s/^sd=.*/sd=$sd/" \
+   -e "s/^type=.*/type=$type/" \
+   -e "s/^report_org=.*/report_org=$report_org/" \
+   -e "s/^report_dl=.*/report_dl=$report_dl/" \
+   -e "s/^qfirstrun=.*/qfirstrun=$qfirstrun/" \
+   -e "s/^dgx=.*/dgx=$dgx/" \
+   -e "s/^filter_dependent_jobs=.*/filter_dependent_jobs=$filter_dependent_jobs/" \
+ config.new
+grep ^ey= config | fgrep 'ey=${sy}' > /dev/null ||  sed -i -e "s/^ey=.*/ey=$ey/" config.new
+grep ^em= config | fgrep 'em=${sm}' > /dev/null ||  sed -i -e "s/^em=.*/em=$em/" config.new
+grep ^ed= config | fgrep 'ed=${sd}' > /dev/null ||  sed -i -e "s/^ed=.*/ed=$ed/" config.new
+grep ^days= config | fgrep 'days=${ed}' > /dev/null ||  sed -i -e "s/^days=.*/days=$days/" config.new
+grep ^hours= config | fgrep 'hours=`expr $days \* 24`' > /dev/null ||  sed -i -e "s/^hours=.*/hours=$hours/" config.new
+diff -q config config.new && /bin/rm -f config.new && exit
+touch -r config config.new 
+/bin/mv -f config config~
+/bin/mv -f config.new config
