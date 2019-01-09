@@ -109,3 +109,14 @@ for proj in $projects ; do
 done
 echo home:csibio,HOME_PROJECTS_CSIBIO >> $csvf
 fi
+
+csvf="user-summary.$suffix.csv"
+if [ ! -f $csvf ] ; then
+ fs="home"
+ f="$logdir/$fs.fileset.status.$datestring"
+ if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/$fs.fileset.status."* | tail -1` ; fi
+ echo Type , Count > $csvf
+ echo Valid , `tail -n +2 $f | awk -F, 'BEGIN {sum=0;} {if ( $8 == 1 ) {sum=sum+1;};} END {printf "%d",sum;}'` >> $csvf
+ echo Expired , `tail -n +2 $f | awk -F, 'BEGIN {sum=0;} {if ( $8 == 0 ) {sum=sum+1;};} END {printf "%d",sum;}'` >> $csvf
+ echo Total , `tail -n +2 $f | wc -l` >> $csvf
+fi
