@@ -214,7 +214,7 @@ tmpdata$NumJobs[is.na(tmpdata$NumJobs)] <- 0
 tmpdata$home_gb<-as.integer(tmpdata$home_gb)
 tmpdata$home_gb[is.na(tmpdata$home_gb)] <- -1
 tmpdata<-tmpdata%>%arrange(desc(CoreHours),desc(home_gb))
-tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|DGX-|NIS-)','',tmpdata$Project)
+tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|NIS-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_walltime)
 #
 tmpdata$Project.Stakeholder<-tmpdata$Project
@@ -225,8 +225,12 @@ tmpdata$Project.Stakeholder<-gsub('Industry-14......','Industry-14xxxxxx',tmpdat
 tmpdata$Project.Stakeholder<-gsub(    'SUTD-15......',    'SUTD-15xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(     'NIS-16......',     'NIS-16xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Industry-2.......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub( 'Industry-2......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(   'TCOMS-........',   'TCOMS-xxxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(    'NSCC-........',    'NSCC-xxxxxxxx',tmpdata$Project.Stakeholder)
 #
-tmpdata$Project.Stakeholder<-gsub('resv','NSCC-90000001',tmpdata$Project.Stakeholder)
+#tmpdata$Project.Stakeholder<-gsub('resv','NSCC-90000001',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('resv','NSCC-xxxxxxxx',tmpdata$Project.Stakeholder)
 #
 tmpdata$Project.Stakeholder<-gsub('personal-.*','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Unknown','Personal',tmpdata$Project.Stakeholder)
@@ -243,6 +247,6 @@ cat("Project core hours\n")
 tmpdata<-data%>%group_by(Username,Project)%>%summarise(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))
 tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
 tmpdata<-tmpdata%>%select(Username,Organization,Project,CoreHours,NumJobs,Name,Organization.HighLevel)%>%arrange(desc(CoreHours))
-tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|DGX-|NIS-)','',tmpdata$Project)
+tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|NIS-|TCOMS-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_by_user)
 rm(tmpdata)

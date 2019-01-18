@@ -15,7 +15,7 @@ tmpdata<-data_cpu%>%group_by(Project)%>%summarise(CoreHours=sum(CoreHours),lengt
 colnames(tmpdata)<-c("Project","CoreHours","NumJobs")
 tmpdata$CoreHours[is.na(tmpdata$CoreHours)] <- 0.0
 tmpdata$NumJobs[is.na(tmpdata$NumJobs)] <- 0
-tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|DGX-|NIS-)','',tmpdata$Project)
+tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|NIS-|TCOMS-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_walltime_cpu)
 #
 tmpdata$Project.Stakeholder<-tmpdata$Project
@@ -26,8 +26,11 @@ tmpdata$Project.Stakeholder<-gsub('Industry-14......','Industry-14xxxxxx',tmpdat
 tmpdata$Project.Stakeholder<-gsub(    'SUTD-15......',    'SUTD-15xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(     'NIS-16......',     'NIS-16xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Industry-2.......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub( 'Industry-2......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(   'TCOMS-........',   'TCOMS-xxxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(    'NSCC-........',    'NSCC-xxxxxxxx',tmpdata$Project.Stakeholder)
 #
-tmpdata$Project.Stakeholder<-gsub('resv','NSCC-90000001',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('resv','NSCC-xxxxxxxx',tmpdata$Project.Stakeholder)
 #
 tmpdata$Project.Stakeholder<-gsub('personal-.*','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Unknown','Personal',tmpdata$Project.Stakeholder)
@@ -44,7 +47,8 @@ tmpdata<-data_gpu%>%group_by(Project)%>%summarise(GPUHours=sum(CoreHours)/24.0,l
 colnames(tmpdata)<-c("Project","GPUHours","NumJobs")
 tmpdata$GPUHours[is.na(tmpdata$GPUHours)] <- 0.0
 tmpdata$NumJobs[is.na(tmpdata$NumJobs)] <- 0
-tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|DGX-|NIS-)','',tmpdata$Project)
+#tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|DGX-|NIS-)','',tmpdata$Project)
+tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|NIS-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_walltime_gpu)
 #
 tmpdata$Project.Stakeholder<-tmpdata$Project
@@ -55,8 +59,11 @@ tmpdata$Project.Stakeholder<-gsub('Industry-14......','Industry-14xxxxxx',tmpdat
 tmpdata$Project.Stakeholder<-gsub(    'SUTD-15......',    'SUTD-15xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(     'NIS-16......',     'NIS-16xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Industry-2.......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(' Industry-2......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(   'TCOMS-........',   'TCOMS-xxxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub(    'NSCC-........',    'NSCC-xxxxxxxx',tmpdata$Project.Stakeholder)
 #
-tmpdata$Project.Stakeholder<-gsub('resv','NSCC-90000001',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub('resv','NSCC-xxxxxxxx',tmpdata$Project.Stakeholder)
 #
 tmpdata$Project.Stakeholder<-gsub('personal-.*','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Unknown','Personal',tmpdata$Project.Stakeholder)

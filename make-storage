@@ -63,6 +63,8 @@ if [ ! -f "$f1" ] ; then f1=`ls -1 "$logdir/home1.fileset.quota".* | tail -1` ; 
 echo 'Project,home_gb' > "$csvp"
 getent group | grep '^[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' | sed -e 's,:.*,,' | while read p  ; do s=`grep "^$p " "$f" | awk '{print $3}'` ; s1=`grep "^$p " "$f1" | awk '{print $4}'` ; if [ x"$s1" != x ] ; then ((s=s+s1)) ; fi ; echo $p,$s ; done >> "$csvp"
 sed -i \
+ -e 's/^16000547/TCOMS-16000547/' \
+ -e 's/^16001092/TCOMS-16001092/' \
  -e 's/^11/NUS-11/' \
  -e 's/^12/NTU-12/' \
  -e 's/^13/A*STAR-13/' \
@@ -70,7 +72,7 @@ sed -i \
  -e 's/^15/SUTD-15/' \
  -e 's/^16/NIS-16/' \
  -e 's/^2/Industry-2/' \
- -e 's/^41/DGX-41/' \
+ -e 's/^41/NSCC-41/' \
  -e 's/^90/NSCC-90/' \
  "$csvp"
 fi
