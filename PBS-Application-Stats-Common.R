@@ -9,6 +9,6 @@ unused_csv<-paste0("unused.",suffix,".csv")
 coresgroup_sort<-c("1","2-23","24","25-96","97-240","241-960",">960")
 
 # Organizations to report against
-allorgs<-c("A*STAR","NTU","NUS","CREATE","SMU","SUTD","TCOMS","Industry","GOV","NSCC")
+allorgs<-c("A*STAR","NTU","NUS","SUTD","TCOMS","Industry","GOV","CREATE","SMU","NSCC")
 
 library(dplyr,warn.conflicts=FALSE)

@@ -15,7 +15,7 @@ tmpdata<-data_cpu%>%group_by(Project)%>%summarise(CoreHours=sum(CoreHours),lengt
 colnames(tmpdata)<-c("Project","CoreHours","NumJobs")
 tmpdata$CoreHours[is.na(tmpdata$CoreHours)] <- 0.0
 tmpdata$NumJobs[is.na(tmpdata$NumJobs)] <- 0
-tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|NIS-|TCOMS-)','',tmpdata$Project)
+tmpdata$Project_Short<-gsub('(NUS-|NTU-|A.STAR-|Industry-|SUTD-|NIS-|NSCC-|TCOMS-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_walltime_cpu)
 #
 tmpdata$Project.Stakeholder<-tmpdata$Project
@@ -47,8 +47,7 @@ tmpdata<-data_gpu%>%group_by(Project)%>%summarise(GPUHours=sum(CoreHours)/24.0,l
 colnames(tmpdata)<-c("Project","GPUHours","NumJobs")
 tmpdata$GPUHours[is.na(tmpdata$GPUHours)] <- 0.0
 tmpdata$NumJobs[is.na(tmpdata$NumJobs)] <- 0
-#tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|DGX-|NIS-)','',tmpdata$Project)
-tmpdata$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-|NSCC-|NIS-)','',tmpdata$Project)
+tmpdata$Project_Short<-gsub('(NUS-|NTU-|A.STAR-|Industry-|SUTD-|NIS-|NSCC-|TCOMS-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_walltime_gpu)
 #
 tmpdata$Project.Stakeholder<-tmpdata$Project

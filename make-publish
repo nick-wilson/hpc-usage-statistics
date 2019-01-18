@@ -4,7 +4,7 @@ cd `dirname "$0"` || exit $?
 . ./config
 
 # Individual stakeholder reports
-stakeholders="ASTAR NUS NTU CREATE SUTD SMU TCOMS Industry NSCC GOV"
+stakeholders="ASTAR NUS NTU SUTD TCOMS Industry GOV CREATE SMU NSCC"
 # Organisations and other reports
 others="GIS IHPC KOMTECH MACHINELEARNING"
 
