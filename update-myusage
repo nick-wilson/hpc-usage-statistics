@@ -51,5 +51,26 @@ done
 if [ x"$1" == x"--all" ] ; then
  shift
  echo update full user statistics
- ./update-myusage-all
+ ./update-myusage-all "$@"
+fi
+
+if [ x"$type" == xmonthly ] ; then
+d=$logdir/project
+f="project_by_user.$suffix.csv"
+sed -e 's/"//g' $f | awk -F, '{print $9}' | egrep -v '^(Project_Short|Unknown|personal-|resv|Personal)' | sort | uniq | while read p ; do
+ echo extracting project data for $p
+ if [ ! -f "$d/$p" ] ; then echo Month,Project,CoreHours,Jobs > "$d/$p" ; fi
+ awk -F, '{if ( $9 == "\"'$p'\"" ) {printf "\"'$suffix'\",%s,%s,%.1f,%d\n",$9,$2,$5,$6;};}' $f >> "$d/$p"
+ chown root "$d/$p" 
+ chgrp nscc-proj "$d/$p"
+ chmod a-wx,ug+r,o-r "$d/$p"
+ users=`awk -F, '{if ( $9 == "\"'$p'\"" ) {print $2}}' $f | sed -e 's/"//g' | sort | uniq`
+ for u in $users ; do
+  if [ ! -f "$d/$p.$u" ] ; then echo Month,Project,CoreHours,Jobs > "$d/$p.$u" ; fi
+  awk -F, '{if ( $9 == "\"'$p'\"" && $2 == "\"'$u'\"" ) {printf "\"'$suffix'\",%s,%s,%.1f,%d\n",$9,$2,$5,$6;};}' $f >> "$d/$p.$u"
+  chown $u "$d/$p.$u" 
+  chgrp nscc-proj "$d/$p.$u"
+  chmod a-wx,ug+r,o-r "$d/$p.$u"
+ done
+done
 fi
