@@ -39,6 +39,7 @@ elif [ x"$type" == xweekly ] ; then
  copy_to_logdir weekly
 else
  copy_to_logdir
+ ./make-totals
 fi
 
 # Set appropriate file permissions on data
