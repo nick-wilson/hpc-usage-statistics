@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 . ./config
 
@@ -29,14 +29,82 @@ corehours_total=`echo $cores_total $uptime_hours | awk '{printf "%.1f",$1*$2}'`
 corehours_online=""
 percent_cores_online=""
 if [ x"$cores_online" != x ] ; then
-corehours_online=`echo $cores_online $uptime_hours | awk '{printf "%.1f",$1*$2}'`
-percent_cores_online=`echo $cores_online $cores_total | awk '{printf "%.1f%%",100*$1/$2}'`
+ corehours_online=`echo $cores_online $uptime_hours | awk '{printf "%.1f",$1*$2}'`
+ percent_cores_online=`echo $cores_online $cores_total | awk '{printf "%.1f%%",100*$1/$2}'`
 fi
 
 corehours_jobs=`tail -n 1 total.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
 corehours_astar=`tail -n 1 total.ASTAR.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
 corehours_ntu=`tail -n 1 total.NTU.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
 corehours_nus=`tail -n 1 total.NUS.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
+percent_utilisation_total=`echo $corehours_jobs $corehours_total | awk '{printf "%.1f%%",100*$1/$2}'`
+percent_utilisation_online=""
+if [ x"$cores_online" != x ] ; then
+ percent_utilisation_online=`echo $corehours_jobs $corehours_online | awk '{printf "%.1f%%",100*$1/$2}'`
+fi
+
+echo \"${suffix}\",${uptime_hours},${downtime_hours},${cores_online},${cores_total},${percent_cores_online},${corehours_jobs},${corehours_total},${corehours_online},${percent_utilisation_total},${percent_utilisation_online},${corehours_astar},${corehours_ntu},${corehours_nus} | tee -a $f
+
+
+f=$base/$log/utilisation_gpu.csv
+
+if [ ! -f "$f" ] ; then
+echo \"date\",\"uptime_hours\",\"downtime_hours\",\"gpus_online\",\"gpus_total\",\"percent_gpus_online\",\"gpuhours_jobs\",\"gpuhours_total\",\"gpuhours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\",\"gpuhours_astar\",\"gpuhours_ntu\",\"gpuhours_nus\" | tee $f
+fi
+
+((gpus_total=128))
+gpus_online=`grep ^gpus_online, gpus-mean.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
+gpuhours_total=`echo $gpus_total $uptime_hours | awk '{printf "%.1f",$1*$2}'`
+
+gpuhours_online=""
+percent_gpus_online=""
+if [ x"$gpus_online" != x ] ; then
+ gpuhours_online=`echo $gpus_online $uptime_hours | awk '{printf "%.1f",$1*$2}'`
+ percent_gpus_online=`echo $gpus_online $gpus_total | awk '{printf "%.1f%%",100*$1/$2}'`
+fi
+
+gpuhours_jobs=`tail -n 1 total.$suffix.csv | awk -F, '{printf "%.1f",$4/24.0}'`
+gpuhours_astar=`tail -n 1 total.ASTAR.$suffix.csv | awk -F, '{printf "%.1f",$4/24.0}'`
+gpuhours_ntu=`tail -n 1 total.NTU.$suffix.csv | awk -F, '{printf "%.1f",$4/24.0}'`
+gpuhours_nus=`tail -n 1 total.NUS.$suffix.csv | awk -F, '{printf "%.1f",$4/24.0}'`
+percent_utilisation_total=`echo $gpuhours_jobs $gpuhours_total | awk '{printf "%.1f%%",100*$1/$2}'`
+percent_utilisation_online=""
+if [ x"$gpus_online" != x ] ; then
+ percent_utilisation_online=`echo $gpuhours_jobs $gpuhours_online | awk '{printf "%.1f%%",100*$1/$2}'`
+fi
+
+echo \"${suffix}\",${uptime_hours},${downtime_hours},${gpus_online},${gpus_total},${percent_gpus_online},${gpuhours_jobs},${gpuhours_total},${gpuhours_online},${percent_utilisation_total},${percent_utilisation_online},${gpuhours_astar},${gpuhours_ntu},${gpuhours_nus} | tee -a $f
+
+
+f=$base/$log/utilisation_cpu.csv
+
+if [ ! -f "$f" ] ; then
+echo \"date\",\"uptime_hours\",\"downtime_hours\",\"cores_online\",\"cores_total\",\"percent_cores_online\",\"corehours_jobs\",\"corehours_total\",\"corehours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\",\"corehours_astar\",\"corehours_ntu\",\"corehours_nus\" | tee $f
+fi
+
+((cores_total_gpu=gpus_total*24))
+((cores_total=cores_total-cores_total_gpu))
+
+if [ x"$gpus_online" != x -a x"$cores_online" != x ] ; then
+ cores_online=`echo $cores_online $gpus_online |  awk '{printf "%.1f",$1-($2*24)}'`
+else
+ cores_online=""
+ gpus_online=""
+fi
+
+corehours_total=`echo $cores_total $uptime_hours | awk '{printf "%.1f",$1*$2}'`
+
+corehours_online=""
+percent_cores_online=""
+if [ x"$cores_online" != x ] ; then
+ corehours_online=`echo $cores_online $uptime_hours | awk '{printf "%.1f",$1*$2}'`
+ percent_cores_online=`echo $cores_online $cores_total | awk '{printf "%.1f%%",100*$1/$2}'`
+fi
+
+corehours_jobs=`tail -n 1 total.$suffix.csv | awk -F, '{printf "%.1f",$3}'`
+corehours_astar=`tail -n 1 total.ASTAR.$suffix.csv | awk -F, '{printf "%.1f",$3}'`
+corehours_ntu=`tail -n 1 total.NTU.$suffix.csv | awk -F, '{printf "%.1f",$3}'`
+corehours_nus=`tail -n 1 total.NUS.$suffix.csv | awk -F, '{printf "%.1f",$3}'`
 percent_utilisation_total=`echo $corehours_jobs $corehours_total | awk '{printf "%.1f%%",100*$1/$2}'`
 percent_utilisation_online=""
 if [ x"$cores_online" != x ] ; then
