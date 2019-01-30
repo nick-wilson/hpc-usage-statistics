@@ -60,6 +60,11 @@ csvdepend=depend.csv
 csvusernames=usernames.csv
 csvngpus=ngpus.csv
 
+# list of stakeholder
+stakeholders="ASTAR NUS NTU SUTD TCOMS Industry GOV CREATE SMU NSCC"
+# Other organisations repored against
+others="GIS IHPC KOMTECH MACHINELEARNING"
+
 # Location of source code repositories
 repos="file:///app/nsccadmin/repos"
 

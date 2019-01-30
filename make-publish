@@ -3,11 +3,6 @@ cd `dirname "$0"` || exit $?
 
 . ./config
 
-# Individual stakeholder reports
-stakeholders="ASTAR NUS NTU SUTD TCOMS Industry GOV CREATE SMU NSCC"
-# Organisations and other reports
-others="GIS IHPC KOMTECH MACHINELEARNING"
-
 # Copy data to log directory
 outputfiles=`echo {active-totals,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_,ams-,queue_firstrun,{cores,gpus}-{mean,summary}}*.$suffix.csv`
 

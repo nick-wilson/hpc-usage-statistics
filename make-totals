@@ -2,25 +2,23 @@
 
 . ./config
 
-base=/app/nsccadmin/log
-log=usage-statistics
-ams=ams
-data=printjob
-
-
 cd `dirname $0`
-f=$base/$log/utilisation.csv
-
-if [ ! -f "$f" ] ; then
-echo \"date\",\"uptime_hours\",\"downtime_hours\",\"cores_online\",\"cores_total\",\"percent_cores_online\",\"corehours_jobs\",\"corehours_total\",\"corehours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\",\"corehours_astar\",\"corehours_ntu\",\"corehours_nus\",\"corehours_sutd\" | tee $f
-fi
 
 year=${suffix:0:4}
 month=${suffix:4:2}
-echo $year $month
 
 uptime_hours=`awk -F, '{if ( $1 == '$year' && $2 == '$month' ) {printf "%d",$3}}' $base/$data/uptime.csv`
 downtime_hours=`awk -F, '{if ( $1 == '$year' && $2 == '$month' ) {printf "%d",$4}}' $base/$data/uptime.csv`
+
+f=$logdir/utilisation.csv
+if [ ! -f "$f" ] ; then
+echo -n \"date\",\"uptime_hours\",\"downtime_hours\",\"cores_online\",\"cores_total\",\"percent_cores_online\",\"corehours_jobs\",\"corehours_total\",\"corehours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\" > "$f"
+for s in $stakeholders ; do
+ ss=`echo $s | tr '[A-Z]' '[a-z]'`
+ echo -n ,\"corehours_${ss}\" >> $f
+done
+echo >> "$f"
+fi
 
 cores_total=31320
 cores_online=`grep ^cores_online, cores-mean.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
@@ -34,22 +32,31 @@ if [ x"$cores_online" != x ] ; then
 fi
 
 corehours_jobs=`tail -n 1 total.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
-corehours_astar=`tail -n 1 total.ASTAR.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
-corehours_ntu=`tail -n 1 total.NTU.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
-corehours_nus=`tail -n 1 total.NUS.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
-corehours_sutd=`tail -n 1 total.SUTD.$suffix.csv | awk -F, '{printf "%.1f",$2}'`
 percent_utilisation_total=`echo $corehours_jobs $corehours_total | awk '{printf "%.1f%%",100*$1/$2}'`
 percent_utilisation_online=""
 if [ x"$cores_online" != x ] ; then
  percent_utilisation_online=`echo $corehours_jobs $corehours_online | awk '{printf "%.1f%%",100*$1/$2}'`
 fi
 
-echo \"${suffix}\",${uptime_hours},${downtime_hours},${cores_online},${cores_total},${percent_cores_online},${corehours_jobs},${corehours_total},${corehours_online},${percent_utilisation_total},${percent_utilisation_online},${corehours_astar},${corehours_ntu},${corehours_nus},${corehours_sutd} | tee -a $f
+echo -n \"${suffix}\",${uptime_hours},${downtime_hours},${cores_online},${cores_total},${percent_cores_online},${corehours_jobs},${corehours_total},${corehours_online},${percent_utilisation_total},${percent_utilisation_online} >> "$f"
+for s in $stakeholders ; do
+ if [ -f total.$s.$suffix.csv ] ; then
+  tail -n 1 total.$s.$suffix.csv | awk -F, '{printf ",%.1f",$2}' >> "$f"
+ else
+  echo -n , >> "$f"
+ fi
+done
+echo >> "$f"
+tail -n 1 "$f"
 
-f=$base/$log/utilisation_gpu.csv
-
+f=$logdir/utilisation_gpu.csv
 if [ ! -f "$f" ] ; then
-echo \"date\",\"uptime_hours\",\"downtime_hours\",\"gpus_online\",\"gpus_total\",\"percent_gpus_online\",\"gpuhours_jobs\",\"gpuhours_total\",\"gpuhours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\",\"gpuhours_astar\",\"gpuhours_ntu\",\"gpuhours_nus\",\"gpuhours_sutd\" | tee $f
+echo -n \"date\",\"uptime_hours\",\"downtime_hours\",\"gpus_online\",\"gpus_total\",\"percent_gpus_online\",\"gpuhours_jobs\",\"gpuhours_total\",\"gpuhours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\" > "$f"
+for s in $stakeholders ; do
+ ss=`echo $s | tr '[A-Z]' '[a-z]'`
+ echo -n ,\"gpuhours_${ss}\" >> $f
+done
+echo >> "$f"
 fi
 
 ((gpus_total=128))
@@ -64,22 +71,31 @@ if [ x"$gpus_online" != x ] ; then
 fi
 
 gpuhours_jobs=`tail -n 1 total.$suffix.csv | awk -F, '{printf "%.1f",$4/24.0}'`
-gpuhours_astar=`tail -n 1 total.ASTAR.$suffix.csv | awk -F, '{printf "%.1f",$4/24.0}'`
-gpuhours_ntu=`tail -n 1 total.NTU.$suffix.csv | awk -F, '{printf "%.1f",$4/24.0}'`
-gpuhours_nus=`tail -n 1 total.NUS.$suffix.csv | awk -F, '{printf "%.1f",$4/24.0}'`
-gpuhours_sutd=`tail -n 1 total.SUTD.$suffix.csv | awk -F, '{printf "%.1f",$4/24.0}'`
 percent_utilisation_total=`echo $gpuhours_jobs $gpuhours_total | awk '{printf "%.1f%%",100*$1/$2}'`
 percent_utilisation_online=""
 if [ x"$gpus_online" != x ] ; then
  percent_utilisation_online=`echo $gpuhours_jobs $gpuhours_online | awk '{printf "%.1f%%",100*$1/$2}'`
 fi
 
-echo \"${suffix}\",${uptime_hours},${downtime_hours},${gpus_online},${gpus_total},${percent_gpus_online},${gpuhours_jobs},${gpuhours_total},${gpuhours_online},${percent_utilisation_total},${percent_utilisation_online},${gpuhours_astar},${gpuhours_ntu},${gpuhours_nus},${gpuhours_sutd} | tee -a $f
+echo -n \"${suffix}\",${uptime_hours},${downtime_hours},${gpus_online},${gpus_total},${percent_gpus_online},${gpuhours_jobs},${gpuhours_total},${gpuhours_online},${percent_utilisation_total},${percent_utilisation_online} >> "$f"
+for s in $stakeholders ; do
+ if [ -f total.$s.$suffix.csv ] ; then
+  tail -n 1 total.$s.$suffix.csv | awk -F, '{printf ",%.1f",$4/24.0}' >> "$f"
+ else
+  echo -n , >> "$f"
+ fi
+done
+echo >> "$f"
+tail -n 1 "$f"
 
-f=$base/$log/utilisation_cpu.csv
-
+f=$logdir/utilisation_cpu.csv
 if [ ! -f "$f" ] ; then
-echo \"date\",\"uptime_hours\",\"downtime_hours\",\"cores_online\",\"cores_total\",\"percent_cores_online\",\"corehours_jobs\",\"corehours_total\",\"corehours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\",\"corehours_astar\",\"corehours_ntu\",\"corehours_nus\",\"corehours_sutd\" | tee $f
+echo -n \"date\",\"uptime_hours\",\"downtime_hours\",\"cores_online\",\"cores_total\",\"percent_cores_online\",\"corehours_jobs\",\"corehours_total\",\"corehours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\" > "$f"
+for s in $stakeholders ; do
+ ss=`echo $s | tr '[A-Z]' '[a-z]'`
+ echo -n ,\"corehours_${ss}\" >> $f
+done
+echo >> "$f"
 fi
 
 ((cores_total_gpu=gpus_total*24))
@@ -102,14 +118,19 @@ if [ x"$cores_online" != x ] ; then
 fi
 
 corehours_jobs=`tail -n 1 total.$suffix.csv | awk -F, '{printf "%.1f",$3}'`
-corehours_astar=`tail -n 1 total.ASTAR.$suffix.csv | awk -F, '{printf "%.1f",$3}'`
-corehours_ntu=`tail -n 1 total.NTU.$suffix.csv | awk -F, '{printf "%.1f",$3}'`
-corehours_nus=`tail -n 1 total.NUS.$suffix.csv | awk -F, '{printf "%.1f",$3}'`
-corehours_sutd=`tail -n 1 total.SUTD.$suffix.csv | awk -F, '{printf "%.1f",$3}'`
 percent_utilisation_total=`echo $corehours_jobs $corehours_total | awk '{printf "%.1f%%",100*$1/$2}'`
 percent_utilisation_online=""
 if [ x"$cores_online" != x ] ; then
  percent_utilisation_online=`echo $corehours_jobs $corehours_online | awk '{printf "%.1f%%",100*$1/$2}'`
 fi
 
-echo \"${suffix}\",${uptime_hours},${downtime_hours},${cores_online},${cores_total},${percent_cores_online},${corehours_jobs},${corehours_total},${corehours_online},${percent_utilisation_total},${percent_utilisation_online},${corehours_astar},${corehours_ntu},${corehours_nus},${corehours_sutd} | tee -a $f
+echo -n \"${suffix}\",${uptime_hours},${downtime_hours},${cores_online},${cores_total},${percent_cores_online},${corehours_jobs},${corehours_total},${corehours_online},${percent_utilisation_total},${percent_utilisation_online} >> "$f"
+for s in $stakeholders ; do
+ if [ -f total.$s.$suffix.csv ] ; then
+  tail -n 1 total.$s.$suffix.csv | awk -F, '{printf ",%.1f",$3}' >> "$f"
+ else
+  echo -n , >> "$f"
+ fi
+done
+echo >> "$f"
+tail -n 1 "$f"
