@@ -1,0 +1,23 @@
+#!/bin/bash
+. ./config
+
+type git > /dev/null 2>&1 || exit 0
+git pull
+
+if [ ! -d dgx ] ; then
+ git clone $repos/usage-dgx.git dgx
+else
+ (cd dgx && git pull)
+fi
+
+if [ ! -d system-utilisation ] ; then
+ git clone $repos/system-utilisation.git
+else
+ (cd system-utilisation && git pull)
+fi
+
+if [ ! -d load2apps ] ; then
+ git clone $repos/load2apps.git
+else
+ (cd load2apps && git pull)
+fi

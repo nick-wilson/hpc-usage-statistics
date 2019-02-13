@@ -16,13 +16,4 @@ cat << EOF > config.py
 suffix="$suffix"
 EOF
 
-type git > /dev/null 2>&1 || exit 0
-git pull
-
-if [ ! -d system-utilisation ] ; then git clone $repos/system-utilisation.git ; fi
-(cd system-utilisation && git pull)
-
-if [ ${dgx:-0} -eq 1 ] ; then
- if [ ! -d dgx ] ; then git clone $repos/usage-dgx.git dgx ; fi
- (cd dgx && git pull)
-fi
+./make-pull
