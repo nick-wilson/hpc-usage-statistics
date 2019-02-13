@@ -3,6 +3,8 @@
 source("config.R")
 source("PBS-Application-Stats-Common.R")
 
+if (!exists("dgx_on")) {dgx_on<-0}
+
 openpng<-function(filename){
   png(filename,width=854,height=544)
   #par(mar=c(8.1,4.1,4.1,2.1))
@@ -17,6 +19,10 @@ makeboxplot_bycore<-function(data,main,outline) {
 makeboxplot_byqueue<-function(data,main,outline) {
   ylabel<-"Wait Time / hour"
   xlabel<-"Queue"
+  if (dgx_on==1){
+  # larger margins for DGX queues
+    par(mar=c(7.5, 5, 5, 5))
+  }
   boxplot(Wait.Time.Hours~Queue,data=data,las=2,main=main,ylab=ylabel,outline=outline)
 }
 
@@ -34,7 +40,12 @@ data<-data%>%filter(Dependency==FALSE)
 }
 bkupdata<-data
 
-data<-data%>%filter(Queue=="dev"|Queue=="small"|Queue=="medium"|Queue=="normal"|Queue=="long"|Queue=="q1"|Queue=="q4"|Queue=="largemem"|Queue=="production"|Queue=="paidq"|Queue=="vis"|Queue=="iworkq"|Queue=="gpunormal"|Queue=="gpulong")
+if (dgx_on==1){
+  data<-data%>%filter(Queue=="dev"|Queue=="small"|Queue=="medium"|Queue=="normal"|Queue=="long"|Queue=="q1"|Queue=="q4"|Queue=="largemem"|Queue=="production"|Queue=="paidq"|Queue=="vis"|Queue=="iworkq"|Queue=="gpunormal"|Queue=="gpulong"|Queue=="dgx-03g-04h"|Queue=="dgx-03g-24h"|Queue=="dgx-03g-48h"|Queue=="dgx-48g-04h"|Queue=="dgx-48g-24h"|Queue=="dgx-48g-48h")
+} else {
+  data<-data%>%filter(Queue=="dev"|Queue=="small"|Queue=="medium"|Queue=="normal"|Queue=="long"|Queue=="q1"|Queue=="q4"|Queue=="largemem"|Queue=="production"|Queue=="paidq"|Queue=="vis"|Queue=="iworkq"|Queue=="gpunormal"|Queue=="gpulong")
+}
+
 data$Queue<-factor(data$Queue)
 data$CoresGroup<-factor(data$CoresGroup,coresgroup_sort)
 
