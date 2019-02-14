@@ -7,7 +7,7 @@ source("PBS-Application-Stats-Common.R")
 library(xlsx)
 
 # Load template
-file<-"application_usage-template.xlsx"
+file<-"template.xlsx"
 wb <- loadWorkbook(file)
 sheets <- getSheets(wb)
 
@@ -174,4 +174,4 @@ fileOutput<-paste0("application_usage-",suffix,".xlsx")
 saveWorkbook(wb,file=fileOutput)
 forceFormulaRefresh(file=fileOutput, output=NULL, verbose=FALSE)
 
-#write.xlsx(data,file="application_usage-template.xlsx",sheetName = "All Data",append = TRUE)
+#write.xlsx(data,file=fileOutput,sheetName = "All Data",append = TRUE)
