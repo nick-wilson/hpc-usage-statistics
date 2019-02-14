@@ -1,5 +1,4 @@
 #!/bin/bash
-
 . ./config
 
 cd `dirname $0`
@@ -10,14 +9,20 @@ month=${suffix:4:2}
 uptime_hours=`awk -F, '{if ( $1 == '$year' && $2 == '$month' ) {printf "%d",$3}}' $base/$data/uptime.csv`
 downtime_hours=`awk -F, '{if ( $1 == '$year' && $2 == '$month' ) {printf "%d",$4}}' $base/$data/uptime.csv`
 
+### Combined
+
+_header='"date","uptime_hours","downtime_hours","cores_online","cores_total","percent_cores_online","corehours_jobs","corehours_total","corehours_online","percent_utilisation_total","percent_utilisation_online"'
+for s in $stakeholders other ; do
+ ss=`echo $s | tr '[A-Z]' '[a-z]'`
+ _header="$_header",\"corehours_${ss}\"
+done
+
 f=$logdir/utilisation.csv
 if [ ! -f "$f" ] ; then
-echo -n \"date\",\"uptime_hours\",\"downtime_hours\",\"cores_online\",\"cores_total\",\"percent_cores_online\",\"corehours_jobs\",\"corehours_total\",\"corehours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\" > "$f"
-for s in $stakeholders ; do
- ss=`echo $s | tr '[A-Z]' '[a-z]'`
- echo -n ,\"corehours_${ss}\" >> $f
-done
-echo >> "$f"
+ echo "$_header" > "$f"
+else
+ _x=`head -n 1 "$f"`
+ if [ x"$_x" != x"$_header" ] ; then echo ERROR: format incorrect ; echo old: "$_header" ; echo new: "$_x" ; exit 1 ; fi
 fi
 
 cores_total=31320
@@ -49,14 +54,19 @@ done
 echo >> "$f"
 tail -n 1 "$f"
 
+### GPU
+_header='"date","uptime_hours","downtime_hours","gpus_online","gpus_total","percent_gpus_online","gpuhours_jobs","gpuhours_total","gpuhours_online","percent_utilisation_total","percent_utilisation_online"'
+for s in $stakeholders other ; do
+ ss=`echo $s | tr '[A-Z]' '[a-z]'`
+ _header="$_header",\"gpuhours_${ss}\"
+done
+
 f=$logdir/utilisation_gpu.csv
 if [ ! -f "$f" ] ; then
-echo -n \"date\",\"uptime_hours\",\"downtime_hours\",\"gpus_online\",\"gpus_total\",\"percent_gpus_online\",\"gpuhours_jobs\",\"gpuhours_total\",\"gpuhours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\" > "$f"
-for s in $stakeholders ; do
- ss=`echo $s | tr '[A-Z]' '[a-z]'`
- echo -n ,\"gpuhours_${ss}\" >> $f
-done
-echo >> "$f"
+ echo "$_header" > "$f"
+else
+ _x=`head -n 1 "$f"`
+ if [ x"$_x" != x"$_header" ] ; then echo ERROR: format incorrect ; echo old: "$_header" ; echo new: "$_x" ; exit 1 ; fi
 fi
 
 ((gpus_total=128))
@@ -88,14 +98,20 @@ done
 echo >> "$f"
 tail -n 1 "$f"
 
+### CPU
+
+_header='"date","uptime_hours","downtime_hours","cores_online","cores_total","percent_cores_online","corehours_jobs","corehours_total","corehours_online","percent_utilisation_total","percent_utilisation_online"'
+for s in $stakeholders other ; do
+ ss=`echo $s | tr '[A-Z]' '[a-z]'`
+ _header="$_header",\"corehours_${ss}\"
+done
+
 f=$logdir/utilisation_cpu.csv
 if [ ! -f "$f" ] ; then
-echo -n \"date\",\"uptime_hours\",\"downtime_hours\",\"cores_online\",\"cores_total\",\"percent_cores_online\",\"corehours_jobs\",\"corehours_total\",\"corehours_online\",\"percent_utilisation_total\",\"percent_utilisation_online\" > "$f"
-for s in $stakeholders ; do
- ss=`echo $s | tr '[A-Z]' '[a-z]'`
- echo -n ,\"corehours_${ss}\" >> $f
-done
-echo >> "$f"
+ echo "$_header" > "$f"
+else
+ _x=`head -n 1 "$f"`
+ if [ x"$_x" != x"$_header" ] ; then echo ERROR: format incorrect ; echo old: "$_header" ; echo new: "$_x" ; exit 1 ; fi
 fi
 
 ((cores_total_gpu=gpus_total*24))
