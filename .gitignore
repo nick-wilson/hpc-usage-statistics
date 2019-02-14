@@ -3,6 +3,8 @@ config.R
 config.py
 config.pyc
 *.csv
+application_usage-*.xlsx
+no_rename-*.xlsx
 *.Rdata
 *.png
 queue_firstrun.*.stdout

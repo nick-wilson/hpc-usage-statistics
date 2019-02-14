@@ -20,7 +20,7 @@ module load singularity
 singularity exec /app/singularity/images/nscc/common/R_3.2.3.simg /bin/sh << EOF
 export LANG=C
 Rscript PBS-xlsx.R
-cp -p application_usage-${suffix}.xlsx no_rename-${suffix}.xls
+cp -p application_usage-${suffix}.xlsx no_rename-${suffix}.xlsx
 python rename-worksheets.py
 xvfb-run Rscript PBS-wait-boxplots.R
 EOF
