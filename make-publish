@@ -4,7 +4,7 @@ cd `dirname "$0"` || exit $?
 . ./config
 
 # Copy data to log directory
-outputfiles=`echo {active-totals,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_,ams-,queue_firstrun,{cores,gpus}-{mean,summary}}*.$suffix.csv`
+outputfiles=`echo {active-totals,user-summary,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_,ams-,queue_firstrun,{cores,gpus}-{mean,summary}}*.$suffix.csv`
 
 copy_to_logdir () {
  mkdir -p $logdir/$1/stakeholder $logdir/$1/other && \
