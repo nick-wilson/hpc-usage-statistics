@@ -3,7 +3,7 @@
 source("config.R")
 source("PBS-Application-Stats-Common.R")
 
-install.packages("xlsx")
+#install.packages("xlsx")
 library(xlsx)
 
 # Load template
@@ -25,6 +25,27 @@ cell <- cells[[3]]
 setCellValue(cell,d[3,2])
 cell <- cells[[4]]
 setCellValue(cell,d[4,2])
+#
+cell <- cells[[8]]
+setCellValue(cell,hours)
+#
+csvf<-paste0("gpus-mean.",suffix,".csv")
+d<-read.csv(csvf,header=FALSE)
+cell <- cells[[13]]
+setCellValue(cell,d[1,2])
+cell <- cells[[14]]
+setCellValue(cell,d[2,2])
+cell <- cells[[15]]
+setCellValue(cell,d[3,2])
+cell <- cells[[16]]
+setCellValue(cell,d[4,2])
+#
+csvf<-paste0("total.",suffix,".csv")
+d<-read.csv(csvf,header=TRUE)
+cell <- cells[[9]]
+setCellValue(cell,d[1,"Combined"])
+cell <- cells[[20]]
+setCellValue(cell,d[1,"GPU"]/24.0)
 
 # Write out completed spreadsheet
 fileOutput<-paste0("application_usage-",suffix,".xlsx")
