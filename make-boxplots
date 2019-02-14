@@ -4,11 +4,27 @@ cd `dirname $0`
 pwd
 . ./config
 
-export PATH="/app/pbs/bin:$PATH:/opt/pbs/bin:/opt/pbs/sbin"
+#export PATH="/app/pbs/bin:$PATH:/opt/pbs/bin:/opt/pbs/sbin"
+#. /etc/profile.d/modules.sh
+#. /app/modules/modules.sh
+#module load R
+#which Rscript
+#
+#echo making boxplots
+#xvfb-run Rscript PBS-wait-boxplots.R
+
 . /etc/profile.d/modules.sh
 . /app/modules/modules.sh
-module load R
-which Rscript
+module load singularity
 
-echo making boxplots
+singularity exec /app/singularity/images/nscc/common/R_3.2.3.simg /bin/sh << EOF
+export LANG=C
+Rscript PBS-xlsx.R
+cp -p application_usage-${suffix}.xlsx no_rename-${suffix}.xls
+python rename-worksheets.py
 xvfb-run Rscript PBS-wait-boxplots.R
+EOF
+
+# apt-get install -y r-base r-base-dev libcurl4-openssl-dev libssl-dev libxml2-dev default-jre default-jdk xvfb
+# R CMD javareconf
+# R CMD 'install.packages(c("tidyverse","rJava","xlsx"))'

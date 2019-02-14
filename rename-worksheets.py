@@ -3,7 +3,8 @@ import os
 import config as cfg
 import openpyxl
 
-wb=openpyxl.load_workbook("application_usage-template.xlsx")
+#wb=openpyxl.load_workbook("application_usage-template.xlsx")
+wb=openpyxl.load_workbook("application_usage-"+cfg.suffix+".xlsx")
 
 def rename_sheet(label):
     #wb_sheet = wb.get_sheet_by_name(label)
