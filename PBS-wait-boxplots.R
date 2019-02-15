@@ -3,7 +3,7 @@
 source("config.R")
 source("PBS-Application-Stats-Common.R")
 
-if (!exists("dgx_on")) {dgx_on<-0}
+if (!exists("dgx_on")) {dgx_on<-1}
 
 openpng<-function(filename){
   png(filename,width=854,height=544)

@@ -36,15 +36,16 @@ if [ -d load2apps ] ; then (cd load2apps && git pull) ; fi
 if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi
 make
 
+echo make spreadsheet and graphics
+ssh nscc01 $PWD/make-reporting
+
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  echo Update myusage data
  ./update-myusage --all
- echo make boxplots
- ssh nscc01 $PWD/make-boxplots
 fi
 
 echo update DGX statistics
-(cd dgx && make clean stats)
+(cd dgx && make veryclean stats)
 
 echo get system utilisation statistics
 (cd system-utilisation && ./run )
@@ -63,8 +64,8 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
 fi
 
 if [ ${GET_LATEST:-0} -eq 0 ] ; then
- rm -f alljobs*.$suffix.csv project.$suffix.csv project-info.$suffix.csv depend.$suffix.csv usernames.$suffix.csv ngpus.$suffix.csv
+ #rm -f alljobs*.$suffix.csv project.$suffix.csv project-info.$suffix.csv depend.$suffix.csv usernames.$suffix.csv ngpus.$suffix.csv
  (cd system-utilisation && rm -f cores.*.csv {gpu-,}summary.*.csv pbsnodes-a.*)
- (cd load2apps && ./clean)
- (cd dgx && make veryclean)
+ #(cd load2apps && ./clean)
+ #(cd dgx && make veryclean)
 fi

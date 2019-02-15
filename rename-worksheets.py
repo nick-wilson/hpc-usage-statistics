@@ -17,4 +17,8 @@ sheets=["Queue First Job", "Core Summary", "Project Usage", "Project Stakeholder
 for sheet in sheets:
     rename_sheet(sheet)
 
+for i in wb.worksheets:
+    if i.title == 'Cumulative':
+        wb.remove_sheet(i)
+
 wb.save("application_usage-"+cfg.suffix+".xlsx")

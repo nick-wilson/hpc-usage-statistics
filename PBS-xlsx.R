@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-
+options(java.parameters = "-Xmx1024m")
 source("config.R")
 source("PBS-Application-Stats-Common.R")
 
@@ -39,6 +39,9 @@ myupdate<-function(sheet_name,sc,ec,df){
       setCellValue(cells[[jj]],df[i,j],showNA=FALSE)
     }
   }
+  rm(cells)
+  rm(rows)
+  rm(sheet)
   ## If you don't want to preserve formatting you can just use
   # addDataFrame(df,sheet,col.names=FALSE,row.names=FALSE,startRow=2,startColumn=1)
   return
@@ -113,6 +116,7 @@ prefix<-'ams-projects'
 myupdate(sheet_name,sc,ec,df=myread(prefix))
 
 sheet_name<-'Personal Status'
+# 10,000 placeholders
 sc<-1
 ec<-6
 prefix<-'ams-personal'
@@ -125,6 +129,7 @@ prefix<-'storage-byfileset-summary'
 myupdate(sheet_name,sc,ec,df=myread(prefix))
 
 sheet_name<-'Storage by Fileset'
+# 10,000 placeholders
 sc<-1
 ec<-3
 prefix<-'storage-byfileset'
@@ -136,38 +141,106 @@ ec<-8
 prefix<-'storage-byorg2'
 myupdate(sheet_name,sc,ec,df=myread(prefix))
 
-# sheet_name<-'xxx'
-# sc,ec<-xxx
-# prefix<-'xxx'
-# myupdate(sheet_name,sc,ec,df=myread(prefix))
+sheet_name<-'Active Users'
+sc<-1
+ec<-2
+prefix<-'active-totals'
+tmp<-myread(prefix)
+myupdate(sheet_name,sc,ec,df=tmp)
+nactive<-tmp[nrow(tmp),2]
+prefix<-'user-summary'
+tmp<-myread(prefix)
+ninactive<-tmp[1,2]-nactive
+nexpired<-tmp[2,2]
+ntotal<-tmp[3,2]
+sheet <- sheets[[sheet_name]]
+rows <- getRows(sheet)
+cells <- getCells(rows,colIndex=2)
+cell <- cells[[1]]
+setCellValue(cells[[14]],nactive)
+setCellValue(cells[[15]],ninactive)
+setCellValue(cells[[16]],nexpired)
+setCellValue(cells[[17]],ntotal)
 
+for (t in c("cpu","gpu")){
+  u<-"CPU"
+  if (t=="gpu"){u="GPU"}
+  sheet_name<-paste0('By Cores ',u)
+  sc<-1
+  ec<-5
+  prefix<-paste0('stats_by_core_',t)
+  myupdate(sheet_name,sc,ec,df=myread(prefix))
 
-# Project Stakeholder -> project_by_stakeholder.$DATE_RANGE.csv 5
-# Project Status -> ams-projects.$DATE_RANGE.csv 6
-# Personal Status -> ams-personal.$DATE_RANGE.csv 6
-# Storage Summary -> storage-byfileset-summary.$DATE_RANGE.csv 3
-# Storage by Fileset -> storage-byfileset.$DATE_RANGE.csv 3
-# Storage By Org -> storage-byorg2.$DATE_RANGE.csv 9x7
-# Active Users ->  active-totals.$DATE_RANGE.csv
-# 
-# By Cores CPU ->  stats_by_core_cpu.$DATE_RANGE.csv
-# Applications CPU -> application_usage_cpu.$DATE_RANGE.csv
-# User Walltime CPU -> user_walltime_cpu.$DATE_RANGE.csv
-# Org HighLevel CPU -> org2_walltime_cpu.$DATE_RANGE.csv
-# Org Breakdown CPU ->  org_walltime_cpu.$DATE_RANGE.csv
-# Largest Jobs CPU -> top100_cpu.$DATE_RANGE.csv
-# 
-# By Cores GPU ->  stats_by_core_gpu.$DATE_RANGE.csv
-# Applications GPU -> application_usage_gpu.$DATE_RANGE.csv
-# User Walltime GPU -> user_walltime_gpu.$DATE_RANGE.csv
-# Org HighLevel GPU -> org2_walltime_gpu.$DATE_RANGE.csv
-# Org Breakdown GPU ->  org_walltime_gpu.$DATE_RANGE.csv
-# Largest Jobs GPU -> top100_gpu.$DATE_RANGE.csv
-#
-# Cumulative
-#
-# DGX sheet
+  sheet_name<-paste0('Applications ',u)
+  # 5000 placeholders
+  sc<-1
+  ec<-5
+  prefix<-paste0('application_usage_',t)
+  myupdate(sheet_name,sc,ec,df=myread(prefix))
 
+  sheet_name<-paste0('User Walltime ',u)
+  # 5000 placeholders
+  sc<-1
+  ec<-7
+  prefix<-paste0('user_walltime_',t)
+  myupdate(sheet_name,sc,ec,df=myread(prefix))
+  
+  sheet_name<-paste0('Project ',u)
+  # 100 placeholders
+  sc<-1
+  ec<-4
+  prefix<-paste0('project_by_stakeholder_',t)
+  myupdate(sheet_name,sc,ec,df=myread(prefix))
+  
+  sheet_name<-paste0('Org HighLevel ',u)
+  # 100 placeholders
+  sc<-1
+  ec<-4
+  prefix<-paste0('org2_walltime_',t)
+  myupdate(sheet_name,sc,ec,df=myread(prefix))
+  
+  sheet_name<-paste0('Org Breakdown ',u)
+  # 100 placeholders
+  sc<-1
+  ec<-4
+  prefix<-paste0('org_walltime_',t)
+  myupdate(sheet_name,sc,ec,df=myread(prefix))
+  
+  sheet_name<-paste0('Largest Jobs ',u)
+  # 100 placeholders
+  sc<-1
+  ec<-9
+  prefix<-paste0('top100_',t)
+  myupdate(sheet_name,sc,ec,df=myread(prefix))
+}
+
+sheet_name<-'ApplicationsDGX'
+# 1000 placeholders
+sc<-1
+ec<-5
+prefix<-'dgx/application_usage_dgx'
+myupdate(sheet_name,sc,ec,df=myread(prefix))
+
+sheet_name<-'User DGX'
+# 1000 placeholders
+sc<-1
+ec<-7
+prefix<-'dgx/user_walltime_dgx'
+myupdate(sheet_name,sc,ec,df=myread(prefix))
+
+sheet_name<-'Projects DGX'
+# 100 placeholders
+sc<-1
+ec<-4
+prefix<-'dgx/project_usage_dgx'
+myupdate(sheet_name,sc,ec,df=myread(prefix))
+
+sheet_name<-'Org Breakdown DGX'
+# 100 placeholders
+sc<-1
+ec<-4
+prefix<-'dgx/org_walltime_dgx'
+myupdate(sheet_name,sc,ec,df=myread(prefix))
 
 # Write out completed spreadsheet
 fileOutput<-paste0("application_usage-",suffix,".xlsx")
