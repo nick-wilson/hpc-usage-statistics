@@ -162,6 +162,26 @@ setCellValue(cells[[15]],ninactive)
 setCellValue(cells[[16]],nexpired)
 setCellValue(cells[[17]],ntotal)
 
+t<-"cpu"
+u<-"CPU"
+sheet_name<-paste0('Applications ',u)
+# 5000 placeholders
+sc<-1
+ec<-5
+prefix<-paste0('application_usage_',t)
+myupdate(sheet_name,sc,ec,df=myread(prefix))
+
+t<-"gpu"
+u<-"GPU"
+sheet_name<-paste0('Applications ',u)
+# 5000 placeholders
+sc<-1
+ec<-5
+prefix<-paste0('application_usage_',t)
+tmp<-myread(prefix)
+tmp<-tmp%>%filter(GPUHours>10)
+myupdate(sheet_name,sc,ec,df=tmp)
+
 for (t in c("cpu","gpu")){
   u<-"CPU"
   if (t=="gpu"){u="GPU"}
@@ -169,13 +189,6 @@ for (t in c("cpu","gpu")){
   sc<-1
   ec<-5
   prefix<-paste0('stats_by_core_',t)
-  myupdate(sheet_name,sc,ec,df=myread(prefix))
-
-  sheet_name<-paste0('Applications ',u)
-  # 5000 placeholders
-  sc<-1
-  ec<-5
-  prefix<-paste0('application_usage_',t)
   myupdate(sheet_name,sc,ec,df=myread(prefix))
 
   sheet_name<-paste0('User Walltime ',u)

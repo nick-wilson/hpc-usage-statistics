@@ -19,34 +19,28 @@ PATH="${PATH}:/app/git/2.9.3/bin" ; export PATH
 which git
 
 echo first make, only interested in pbs-report data
-make veryveryclean pbs-report.raw.$suffix.csv unused.$suffix.csv
-make veryclean
-git pull
+./make-pull
+make veryveryclean pbs-report.raw.$suffix.csv
 
 if [ ${GET_LATEST:-1} -eq 1 ] ; then
  echo get latest application and project data
  if [ -x /app/nsccadmin/log/printjob/get-latest ] ; then /app/nsccadmin/log/printjob/get-latest ; fi
 fi
 
-echo second pass of statistics
+echo second pass of statistics with latest application and qstat information
 make veryclean stats
 
 echo get alternate application names
-if [ -d load2apps ] ; then (cd load2apps && git pull) ; fi
 if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi
+if [ -d dgx ] ; then make -C dgx veryclean ; fi
+
+echo third pass of statistics with fixed application data
 make
 
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  echo Update myusage data
  ./update-myusage --all
 fi
-
-echo update DGX statistics
-(cd dgx && make veryclean stats)
-
-echo get system utilisation statistics
-(cd system-utilisation && ./run )
-head cores-mean.$suffix.csv gpus-mean.$suffix.csv
 
 echo fix file ownership
 ./fix-permissions
@@ -56,6 +50,7 @@ ssh nscc01 su $statsuser -c $PWD/make-reporting
 
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  if [ x"$type" == xweekly ] ; then
+  echo circulate weekly spreadsheet via email
   su $statsuser -c $PWD/make-email
  fi
 fi
@@ -69,9 +64,5 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
    ./fix-permissions
 fi
 
-if [ ${GET_LATEST:-0} -eq 0 ] ; then
- #rm -f alljobs*.$suffix.csv project.$suffix.csv project-info.$suffix.csv depend.$suffix.csv usernames.$suffix.csv ngpus.$suffix.csv
- (cd system-utilisation && rm -f cores.*.csv {gpu-,}summary.*.csv pbsnodes-a.*)
- #(cd load2apps && ./clean)
- #(cd dgx && make veryclean)
-fi
+echo system utilisation data
+head cores-mean.$suffix.csv gpus-mean.$suffix.csv

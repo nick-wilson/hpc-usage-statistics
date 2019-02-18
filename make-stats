@@ -21,4 +21,6 @@ for script in $scripts ; do
  Rscript "$script"
 done
 
+if [ ${dgx:-0} -eq 1 ] ; then make -C dgx ; fi
+
 if [  ${publish:-0} -eq 1 ] ; then ./make-publish ; fi
