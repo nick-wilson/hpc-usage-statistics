@@ -1,16 +1,40 @@
-#!/bin/bash
-
+#!/bin/sh
+cd `dirname $0` || exit $?
 . ./config
 
-email_csv="email.$suffix.csv"
-report_cleaned_csv="pbs-report.cleaned.$suffix.csv"
+subject="Weekly application statistics for $ed/$em/$ey"
+recip="utsui.shun@sg.fujitsu.com,nick.wilson@sg.fujitsu.com"
+cc="srikanth.gumma@sg.fujitsu.com,amitabh.pandey@sg.fujitsu.com"
 
-# Fail if PBS report is not found
-if [ ! -f "$report_cleaned_csv" ] ; then exit 1 ; fi
+a1="application_usage-${suffix}.xlsx"
+a2="wait_byqueue+outliers.${suffix}.png"
+a3="wait_byqueue-outliers.${suffix}.png"
+a4="wait_bycore_cpu-outliers.${suffix}.png"
+a5="wait_byqueue_bycore_cpu-outliers.${suffix}.png"
+a6="wait_bycore_gpu-outliers.${suffix}.png"
+a7="wait_byqueue_bycore_gpu-outliers.${suffix}.png"
 
-# Gather raw username information
-echo Username,Email > "$email_csv"
-awk -F\| '{print $2}' "$report_cleaned_csv" | tail -n +3 | sort | uniq | while read username ; do
- email=`ldapsearch -x -LLL "(uid=$username)" | grep ^mail | sed -e 's,^mail: ,,'`
- echo ${username},${email}
-done >> "$email_csv"
+if [ ! -f $a1 ] ; then echo missing: $a1 ; exit 1 ; fi
+if [ ! -f $a2 ] ; then echo missing: $a2 ; exit 1 ; fi
+if [ ! -f $a3 ] ; then echo missing: $a3 ; exit 1 ; fi
+if [ ! -f $a4 ] ; then echo missing: $a4 ; exit 1 ; fi
+if [ ! -f $a5 ] ; then echo missing: $a5 ; exit 1 ; fi
+if [ ! -f $a6 ] ; then echo missing: $a6 ; exit 1 ; fi
+if [ ! -f $a7 ] ; then echo missing: $a7 ; exit 1 ; fi
+
+mailx \
+  -s "$subject" \
+  -c "$cc" \
+  -a $a1 \
+  -a $a2 \
+  -a $a3 \
+  -a $a4 \
+  -a $a5 \
+  -a $a6 \
+  -a $a7 \
+  $recip << EOF
+Auto-generated weekly statistics.
+Have not been checked to confirm accuracy.
+EOF
+
+cp -pv *.png application_usage-${suffix}.xlsx no_rename-${suffix}.xlsx "$logdir/reporting/$type/"

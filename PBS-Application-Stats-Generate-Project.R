@@ -58,7 +58,7 @@ tmpdata$Project.Stakeholder<-gsub('Industry-14......','Industry-14xxxxxx',tmpdat
 tmpdata$Project.Stakeholder<-gsub(    'SUTD-15......',    'SUTD-15xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(     'NIS-16......',     'NIS-16xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Industry-2.......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub(' Industry-2......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata$Project.Stakeholder<-gsub( 'Industry-2......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(   'TCOMS-........',   'TCOMS-xxxxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(    'NSCC-........',    'NSCC-xxxxxxxx',tmpdata$Project.Stakeholder)
 #

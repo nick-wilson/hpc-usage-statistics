@@ -36,9 +36,6 @@ if [ -d load2apps ] ; then (cd load2apps && git pull) ; fi
 if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi
 make
 
-echo make spreadsheet and graphics
-ssh nscc01 $PWD/make-reporting
-
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  echo Update myusage data
  ./update-myusage --all
@@ -53,6 +50,15 @@ head cores-mean.$suffix.csv gpus-mean.$suffix.csv
 
 echo fix file ownership
 ./fix-permissions
+
+echo make spreadsheet and graphics
+ssh nscc01 su $statsuser -c $PWD/make-reporting
+
+if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
+ if [ x"$type" == xweekly ] ; then
+  su $statsuser -c $PWD/make-email
+ fi
+fi
 
 if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
  echo update aggregate statistics when running monthly report
