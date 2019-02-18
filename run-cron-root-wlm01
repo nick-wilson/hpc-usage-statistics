@@ -66,3 +66,6 @@ fi
 
 echo system utilisation data
 head cores-mean.$suffix.csv gpus-mean.$suffix.csv
+echo
+echo alternate application names
+sed -e 's/^.*,//' load2apps/alternate.csv  | sort | uniq
