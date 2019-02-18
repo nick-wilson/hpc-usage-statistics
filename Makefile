@@ -76,7 +76,7 @@ stats: queue_firstrun.$(suffix).csv alldata.$(suffix).csv ams-personal.$(suffix)
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-byorg,storage-byuser,project_}*.$(suffix).csv $(prefix)-*.zip *.$(suffix).png
+	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-byorg,storage-byuser,project_}*.$(suffix).csv $(prefix)-*.zip *.$(suffix).png no_rename-$(suffix).xlsx application_usage-$(suffix).xlsx
 
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean

@@ -225,12 +225,11 @@ tmpdata$Project.Stakeholder<-gsub('Industry-14......','Industry-14xxxxxx',tmpdat
 tmpdata$Project.Stakeholder<-gsub(    'SUTD-15......',    'SUTD-15xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(     'NIS-16......',     'NIS-16xxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Industry-2.......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub( 'Industry-2......','Industry-2xxxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(   'TCOMS-........',   'TCOMS-xxxxxxxx',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub(    'NSCC-........',    'NSCC-xxxxxxxx',tmpdata$Project.Stakeholder)
 #
-#tmpdata$Project.Stakeholder<-gsub('resv','NSCC-90000001',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('resv','NSCC-xxxxxxxx',tmpdata$Project.Stakeholder)
+tmpdata[grepl("^Industry-2......$",tmpdata$Project.Stakeholder),"Project.Stakeholder"]<-'Industry-2xxxxxxx'
 #
 tmpdata$Project.Stakeholder<-gsub('personal-.*','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Unknown','Personal',tmpdata$Project.Stakeholder)
@@ -238,6 +237,9 @@ tmpdata$Project.Stakeholder<-gsub('30003671','Personal',tmpdata$Project.Stakehol
 tmpdata$Project.Stakeholder<-gsub('10031963','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('10019921','Personal',tmpdata$Project.Stakeholder)
 tmpdata[tmpdata$home_gb==-1,"home_gb"]<-0
+# Storage associated with Personal projects should be the amount of data in home directory filesets
+s<-read.csv(paste0("storage-byfileset-summary.",suffix,".csv"))
+tmpdata[tmpdata$Project.Stakeholder=='Personal',4]<-s[s$type=='HOME_HOMEDIRS',2]
 tmpdata<-tmpdata%>%group_by(Project.Stakeholder)%>%summarise(CoreHours=sum(CoreHours),NumJobs=sum(NumJobs),Storage.GB=sum(home_gb))%>%arrange(desc(CoreHours),desc(Storage.GB))
 write.csv(tmpdata,file=project_by_stakeholder)
 rm(tmpdata)
