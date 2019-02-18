@@ -25,6 +25,9 @@ python rename-worksheets.py
 xvfb-run Rscript PBS-wait-boxplots.R
 EOF
 
+chmod 0640 *.png *.xlsx *.pyc
+chown ${statsuser}.${statsgroup} *.png *.xlsx *.pyc
+
 # apt-get install -y r-base r-base-dev libcurl4-openssl-dev libssl-dev libxml2-dev default-jre default-jdk xvfb
 # R CMD javareconf
 # R CMD 'install.packages(c("tidyverse","rJava","xlsx"))'
