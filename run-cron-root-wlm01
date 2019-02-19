@@ -18,9 +18,17 @@ which Rscript
 PATH="${PATH}:/app/git/2.9.3/bin" ; export PATH
 which git
 
-echo first make, only interested in pbs-report data
+echo get latest version
 ./make-pull
-make veryveryclean pbs-report.raw.$suffix.csv
+
+echo clean up old results and only leave config file
+make veryveryclean
+if [ -d dgx ] ; then make -C dgx veryclean ; fi
+if [ -d load2apps ] ; then (cd load2apps && ./clean) ; fi
+if [ -d system-utilisation ] ; then (cd system-utilisation && ./clean) ; fi
+
+echo first make, only interested in pbs-report data
+make pbs-report.raw.$suffix.csv
 
 if [ ${GET_LATEST:-1} -eq 1 ] ; then
  echo get latest application and project data
@@ -47,6 +55,10 @@ echo fix file ownership
 
 echo make spreadsheet and graphics
 ssh nscc01 su $statsuser -c $PWD/make-reporting
+if [ ! -f "application_usage-${suffix}.xlsx" ] ; then
+ echo attempt 1 failed, retry
+ ssh ntu01 su $statsuser -c $PWD/make-reporting
+fi
 
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  if [ x"$type" == xweekly ] ; then
