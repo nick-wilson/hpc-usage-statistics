@@ -30,8 +30,8 @@ home1_files=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {
 fs=secure
 f="$logdir/$fs.user.quota.$datestring"
 if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/$fs.user.quota".* | tail -1` ; fi
-secure_gb=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$3;} END {printf "%d",sum;}'`
-secure_files=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$9;} END {printf "%d",sum;}'`
+secure_gb=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$4;} END {printf "%d",sum;}'`
+secure_files=`grep "^$user " $f | sed -e 's/ days/_days/' | awk 'BEGIN {sum=0;} {sum=sum+$10;} END {printf "%d",sum;}'`
 
 fs=scratch
 f="$logdir/$fs.user.quota.$datestring"
