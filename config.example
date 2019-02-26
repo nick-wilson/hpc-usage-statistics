@@ -66,7 +66,7 @@ stakeholders="ASTAR NTU NUS SUTD TCOMS Industry GOV CREATE SMU NSCC"
 others="GIS IHPC KOMTECH MACHINELEARNING"
 
 # Location of source code repositories
-repos="file:///app/nsccadmin/repos"
+repos="file:///app/nsccadmin/apps/usage-statistics/reports/repos"
 
 # Username for output files
 statsuser=fsg3
