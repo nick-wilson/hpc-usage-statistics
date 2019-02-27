@@ -179,7 +179,7 @@ sc<-1
 ec<-5
 prefix<-paste0('application_usage_',t)
 tmp<-myread(prefix)
-tmp<-tmp%>%filter(GPUHours>10)
+tmp<-tmp%>%filter(GPUHours>5)
 myupdate(sheet_name,sc,ec,df=tmp)
 
 for (t in c("cpu","gpu")){
@@ -232,7 +232,10 @@ sheet_name<-'ApplicationsDGX'
 sc<-1
 ec<-5
 prefix<-'dgx/application_usage_dgx'
-myupdate(sheet_name,sc,ec,df=myread(prefix))
+tmp<-myread(prefix)
+tmp<-tmp%>%filter(GPU.Hours>1)
+myupdate(sheet_name,sc,ec,df=tmp)
+#myupdate(sheet_name,sc,ec,df=myread(prefix))
 
 sheet_name<-'User DGX'
 # 1000 placeholders
