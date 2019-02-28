@@ -54,10 +54,10 @@ echo fix file ownership
 ./fix-permissions
 
 echo make spreadsheet and graphics
-ssh nscc01 su $statsuser -c $PWD/make-reporting
+ssh ntu01 su $statsuser -c $PWD/make-reporting
 if [ ! -f "application_usage-${suffix}.xlsx" ] ; then
  echo attempt 1 failed, retry
- ssh ntu01 su $statsuser -c $PWD/make-reporting
+ ssh nscc04 su $statsuser -c $PWD/make-reporting
 fi
 
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
