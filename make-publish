@@ -37,5 +37,7 @@ else
  ./make-totals
 fi
 
+if [ -d dgx ] ; then (cd dgx && ./make-publish) ; fi
+
 # Set appropriate file permissions on data
 ./fix-permissions
