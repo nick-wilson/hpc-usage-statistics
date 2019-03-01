@@ -10,10 +10,12 @@ else
  (cd dgx && git pull)
 fi
 
-if [ ! -d system-utilisation ] ; then
- git clone $repos/system-utilisation.git
+if [ -d system-utilisation ] ; then
+ if [ -d system-utilisation/.git ] ; then
+  (cd system-utilisation && git pull)
+ fi
 else
- (cd system-utilisation && git pull)
+ git clone $repos/system-utilisation.git
 fi
 
 if [ ! -d load2apps ] ; then
