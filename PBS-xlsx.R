@@ -96,6 +96,16 @@ setCellValue(cell,tmp[1,"Combined"])
 cell <- cells[[20]]
 setCellValue(cell,tmp[1,"GPU"]/24.0)
 rm(tmp)
+#
+cell <- cells[[23]]
+setCellValue(cell,48)
+cell <- cells[[24]]
+setCellValue(cell,48.0)
+csvf<-paste0("dgx/total.",suffix,".csv")
+tmp<-read.csv(csvf,header=TRUE)
+cell <- cells[[25]]
+setCellValue(cell,tmp[1,"GPU.Hours"])
+rm(tmp)
 
 sheet_name<-'Project Usage'
 sc<-1
