@@ -97,10 +97,13 @@ cell <- cells[[20]]
 setCellValue(cell,tmp[1,"GPU"]/24.0)
 rm(tmp)
 #
+csvf<-paste0("dgx/gpus-mean_dgx.",suffix,".csv")
+tmp<-read.csv(csvf,header=FALSE)
 cell <- cells[[23]]
-setCellValue(cell,48)
+setCellValue(cell,tmp[1,2])
 cell <- cells[[24]]
-setCellValue(cell,48.0)
+setCellValue(cell,tmp[2,2])
+rm(tmp)
 csvf<-paste0("dgx/total.",suffix,".csv")
 tmp<-read.csv(csvf,header=TRUE)
 cell <- cells[[25]]
