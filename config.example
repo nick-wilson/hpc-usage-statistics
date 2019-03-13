@@ -61,7 +61,7 @@ csvusernames=usernames.csv
 csvngpus=ngpus.csv
 
 # list of stakeholder
-stakeholders="ASTAR NTU NUS SUTD TCOMS Industry GOV CREATE SMU NSCC"
+stakeholders="ASTAR NTU NUS SUTD TCOMS Industry GOV CREATE SMU NSCC ADMIN"
 # Other organisations repored against
 others="GIS IHPC KOMTECH MACHINELEARNING"
 

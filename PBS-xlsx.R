@@ -170,10 +170,10 @@ sheet <- sheets[[sheet_name]]
 rows <- getRows(sheet)
 cells <- getCells(rows,colIndex=2)
 cell <- cells[[1]]
-setCellValue(cells[[14]],nactive)
-setCellValue(cells[[15]],ninactive)
-setCellValue(cells[[16]],nexpired)
-setCellValue(cells[[17]],ntotal)
+setCellValue(cells[[15]],nactive)
+setCellValue(cells[[16]],ninactive)
+setCellValue(cells[[17]],nexpired)
+setCellValue(cells[[18]],ntotal)
 
 t<-"cpu"
 u<-"CPU"
