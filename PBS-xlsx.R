@@ -65,48 +65,62 @@ rows <- getRows(sheet)
 cells <- getCells(rows,colIndex=2)
 csvf<-paste0("cores-mean.",suffix,".csv")
 tmp<-read.csv(csvf,header=FALSE)
-cell <- cells[[1]]
-setCellValue(cell,tmp[1,2])
 cell <- cells[[2]]
-setCellValue(cell,tmp[2,2])
+setCellValue(cell,tmp[1,2])
 cell <- cells[[3]]
-setCellValue(cell,tmp[3,2])
+setCellValue(cell,tmp[2,2])
 cell <- cells[[4]]
+setCellValue(cell,tmp[3,2])
+cell <- cells[[5]]
 setCellValue(cell,tmp[4,2])
 #
-cell <- cells[[8]]
+cell <- cells[[9]]
 setCellValue(cell,hours)
 #
 csvf<-paste0("gpus-mean.",suffix,".csv")
 tmp<-read.csv(csvf,header=FALSE)
-cell <- cells[[13]]
-setCellValue(cell,tmp[1,2])
 cell <- cells[[14]]
-setCellValue(cell,tmp[2,2])
+setCellValue(cell,tmp[1,2])
 cell <- cells[[15]]
-setCellValue(cell,tmp[3,2])
+setCellValue(cell,tmp[2,2])
 cell <- cells[[16]]
+setCellValue(cell,tmp[3,2])
+cell <- cells[[17]]
 setCellValue(cell,tmp[4,2])
 rm(tmp)
 #
 csvf<-paste0("total.",suffix,".csv")
 tmp<-read.csv(csvf,header=TRUE)
-cell <- cells[[9]]
+cell <- cells[[10]]
 setCellValue(cell,tmp[1,"Combined"])
-cell <- cells[[20]]
+cell <- cells[[21]]
 setCellValue(cell,tmp[1,"GPU"]/24.0)
 rm(tmp)
 #
 csvf<-paste0("dgx/gpus-mean_dgx.",suffix,".csv")
 tmp<-read.csv(csvf,header=FALSE)
-cell <- cells[[23]]
-setCellValue(cell,tmp[1,2])
 cell <- cells[[24]]
+setCellValue(cell,tmp[1,2])
+cell <- cells[[25]]
 setCellValue(cell,tmp[2,2])
 rm(tmp)
 csvf<-paste0("dgx/total.",suffix,".csv")
 tmp<-read.csv(csvf,header=TRUE)
-cell <- cells[[25]]
+cell <- cells[[26]]
+setCellValue(cell,tmp[1,"GPU.Hours"])
+rm(tmp)
+#
+cells <- getCells(rows,colIndex=3)
+csvf<-paste0("partial.",suffix,".csv")
+tmp<-read.csv(csvf,header=TRUE)
+cell <- cells[[10]]
+setCellValue(cell,tmp[1,"Combined"])
+cell <- cells[[21]]
+setCellValue(cell,tmp[1,"GPU"]/24.0)
+rm(tmp)
+csvf<-paste0("dgx/partial.",suffix,".csv")
+tmp<-read.csv(csvf,header=TRUE)
+cell <- cells[[26]]
 setCellValue(cell,tmp[1,"GPU.Hours"])
 rm(tmp)
 

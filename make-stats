@@ -9,7 +9,7 @@ for f in config.R ; do
 done
 
 # R script to merge output from pbs-report with job application statistics
-scripts="Storage.R Storage-Fileset.R PBS-Application-Stats-Clean.R PBS-Application-Stats-Combined.R ProjectInfo.R PBS-Application-Stats-Project.R PBS-Application-Stats-Active.R"
+scripts="Storage.R Storage-Fileset.R PBS-Application-Stats-Clean.R PBS-Application-Stats-Combined.R ProjectInfo.R PBS-Application-Stats-Project.R PBS-Application-Stats-Active.R PBS-Application-Stats-Utilisation.R"
 
 # reduce size of ancillary files
 ./filter-alljobs
