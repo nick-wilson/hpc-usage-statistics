@@ -13,7 +13,7 @@ monthlydir=`echo $PWD/../../${ey}${em}*`
 export PATH="/app/pbs/bin:$PATH:/opt/pbs/bin:/opt/pbs/sbin"
 . /etc/profile.d/modules.sh
 . /app/modules/modules.sh
-module load R
+module load R/3.3.1
 which Rscript
 PATH="${PATH}:/app/git/2.9.3/bin" ; export PATH
 which git
