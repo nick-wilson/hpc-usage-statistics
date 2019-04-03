@@ -1,0 +1,14 @@
+#!/bin/bash
+
+type git > /dev/null 2>&1 || exit 0
+echo base
+git status
+echo
+
+for d in system-utilisation load2apps dgx dgx/system-utilisation ; do
+ if [ -d $d ] ; then
+  echo $d
+  (cd $d && git status)
+  echo
+ fi
+done
