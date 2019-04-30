@@ -6,7 +6,7 @@ source("PBS-Application-Stats-Common.R")
 
 # Inputs
 pbsreport<-paste0("pbs-report.cleaned.partial.",suffix,".csv")
-jobcores<-paste0("cores.",suffix,".csv")
+jobcores<-paste0("cores.partial.",suffix,".csv")
 usernames<-paste0("usernames.",suffix,".csv")
 project<-paste0("project.",suffix,".csv")
 apps<-paste0("alljobs.",suffix,".csv")
