@@ -43,4 +43,4 @@ Auto-generated weekly statistics.
 Have not been checked to confirm accuracy.
 EOF
 
-cp -pv *.png application_usage-${suffix}.xlsx no_rename-${suffix}.xlsx "$logdir/reporting/$type/"
+cp -pv *.png application_usage-${suffix}.xlsx "$logdir/reporting/$type/"
