@@ -22,6 +22,12 @@ if [ ! -f $a5 ] ; then echo missing: $a5 ; exit 1 ; fi
 if [ ! -f $a6 ] ; then echo missing: $a6 ; exit 1 ; fi
 if [ ! -f $a7 ] ; then echo missing: $a7 ; exit 1 ; fi
 
+#wait until work hours
+if [ x"$NOWAIT" == x ] ; then
+hm=`date +%k%M`
+while [ $hm -lt 900 ] ; do date ; echo sleep ;  sleep 60 ; hm=`date +%k%M` ; echo $hm ; done
+fi
+
 mailx \
   -s "$subject" \
   -c "$cc" \
@@ -37,4 +43,4 @@ Auto-generated weekly statistics.
 Have not been checked to confirm accuracy.
 EOF
 
-cp -pv *.png application_usage-${suffix}.xlsx no_rename-${suffix}.xlsx "$logdir/reporting/$type/"
+cp -pv *.png application_usage-${suffix}.xlsx "$logdir/reporting/$type/"
