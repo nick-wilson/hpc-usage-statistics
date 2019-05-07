@@ -24,6 +24,8 @@ cpuwall_cpu<-paste0("cpu_walltime_by_user_by_application_cpu.",filter,suffix,".c
 cpuwall_gpu<-paste0("cpu_walltime_by_user_by_application_gpu.",filter,suffix,".csv")
 project_walltime<-paste0("project_walltime.",filter,suffix,".csv")
 project_by_user<-paste0("project_by_user.",filter,suffix,".csv")
+project_by_user_cpu<-paste0("project_by_user_cpu.",filter,suffix,".csv")
+project_by_user_gpu<-paste0("project_by_user_gpu.",filter,suffix,".csv")
 project_by_stakeholder<-paste0("project_by_stakeholder.",filter,suffix,".csv")
 project_storage<-paste0("storage-byproject.",suffix,".csv")
 
@@ -251,4 +253,23 @@ tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
 tmpdata<-tmpdata%>%select(Username,Organization,Project,CoreHours,NumJobs,Name,Organization.HighLevel)%>%arrange(desc(CoreHours))
 tmpdata$Project_Short<-gsub('(NUS-|NTU-|A.STAR-|Industry-|SUTD-|NIS-|NSCC-|TCOMS-)','',tmpdata$Project)
 write.csv(tmpdata,file=project_by_user)
+rm(tmpdata)
+
+# Corehours per user per project
+cat("Project core hours for CPU nodes\n")
+tmpdata<-data_cpu%>%group_by(Username,Project)%>%summarise(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))
+tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdata<-tmpdata%>%select(Username,Organization,Project,CoreHours,NumJobs,Name,Organization.HighLevel)%>%arrange(desc(CoreHours))
+tmpdata$Project_Short<-gsub('(NUS-|NTU-|A.STAR-|Industry-|SUTD-|NIS-|NSCC-|TCOMS-)','',tmpdata$Project)
+write.csv(tmpdata,file=project_by_user_cpu)
+rm(tmpdata)
+
+# Corehours per user per project
+cat("Project core hours for GPU nodes\n")
+tmpdata<-data_gpu%>%group_by(Username,Project)%>%summarise(CoreHours=sum(CoreHours),NumJobs=length(Job.ID))
+tmpdata$GPUHours<-tmpdata$CoreHours/24.0
+tmpdata<-merge(tmpdata,users,all.x=TRUE,all.y=FALSE,sort=FALSE)
+tmpdata<-tmpdata%>%select(Username,Organization,Project,CoreHours,GPUHours,NumJobs,Name,Organization.HighLevel)%>%arrange(desc(CoreHours))
+tmpdata$Project_Short<-gsub('(NUS-|NTU-|A.STAR-|Industry-|SUTD-|NIS-|NSCC-|TCOMS-)','',tmpdata$Project)
+write.csv(tmpdata,file=project_by_user_gpu)
 rm(tmpdata)
