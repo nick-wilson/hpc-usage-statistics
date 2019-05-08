@@ -235,9 +235,6 @@ tmpdata[grepl("^Industry-2......$",tmpdata$Project.Stakeholder),"Project.Stakeho
 #
 tmpdata$Project.Stakeholder<-gsub('personal-.*','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Unknown','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('30003671','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('10031963','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('10019921','Personal',tmpdata$Project.Stakeholder)
 tmpdata[tmpdata$home_gb==-1,"home_gb"]<-0
 # Storage associated with Personal projects should be the amount of data in home directory filesets
 s<-read.csv(paste0("storage-byfileset-summary.",suffix,".csv"))

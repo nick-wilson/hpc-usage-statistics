@@ -34,9 +34,6 @@ tmpdata[grepl("^Industry-2......$",tmpdata$Project.Stakeholder),"Project.Stakeho
 #
 tmpdata$Project.Stakeholder<-gsub('personal-.*','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Unknown','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('30003671','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('10031963','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('10019921','Personal',tmpdata$Project.Stakeholder)
 #
 tmpdata<-tmpdata%>%group_by(Project.Stakeholder)%>%summarise(CoreHours=sum(CoreHours),NumJobs=sum(NumJobs))%>%arrange(desc(CoreHours))
 write.csv(tmpdata,file=project_by_stakeholder_cpu)
@@ -66,9 +63,6 @@ tmpdata[grepl("^Industry-2......$",tmpdata$Project.Stakeholder),"Project.Stakeho
 #
 tmpdata$Project.Stakeholder<-gsub('personal-.*','Personal',tmpdata$Project.Stakeholder)
 tmpdata$Project.Stakeholder<-gsub('Unknown','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('30003671','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('10031963','Personal',tmpdata$Project.Stakeholder)
-tmpdata$Project.Stakeholder<-gsub('10019921','Personal',tmpdata$Project.Stakeholder)
 #
 tmpdata<-tmpdata%>%group_by(Project.Stakeholder)%>%summarise(GPUHours=sum(GPUHours),NumJobs=sum(NumJobs))%>%arrange(desc(GPUHours))
 write.csv(tmpdata,file=project_by_stakeholder_gpu)
