@@ -61,7 +61,7 @@ f1="$logdir/home1.fileset.quota.$datestring"
 if [ ! -f "$f" ] ; then f=`ls -1 "$logdir/home.fileset.quota".* | tail -1` ; fi
 if [ ! -f "$f1" ] ; then f1=`ls -1 "$logdir/home1.fileset.quota".* | tail -1` ; fi
 echo 'Project,home_gb' > "$csvp"
-getent group | egrep '^(2107174|[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]):' | sed -e 's,:.*,,' | while read p  ; do s=`grep "^$p " "$f" | awk '{print $3}'` ; s1=`grep "^$p " "$f1" | awk '{print $4}'` ; if [ x"$s1" != x ] ; then ((s=s+s1)) ; fi ; echo $p,$s ; done >> "$csvp"
+getent group | egrep '^(2107174|[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]):' | grep -v 10006001 | sed -e 's,:.*,,' | while read p  ; do s=`grep "^$p " "$f" | awk '{print $3}'` ; s1=`grep "^$p " "$f1" | awk '{print $4}'` ; if [ x"$s1" != x ] ; then ((s=s+s1)) ; fi ; echo $p,$s ; done >> "$csvp"
 sed -i \
  -e 's/^16000547/TCOMS-16000547/' \
  -e 's/^16001092/TCOMS-16001092/' \
@@ -104,7 +104,7 @@ for user in $users ; do
   echo ${fs}:${user},HOME_HOMEDIRS >> $csvf
  fi
 done
-projects=`getent group | grep '^[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]:' | awk -F: '{printf "%s ",$1}'`
+projects=`getent group | egrep '^(2107174|[1-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]):' | grep -v 10006001 | awk -F: '{printf "%s ",$1}'`
 for proj in $projects ; do
  echo home:${proj},HOME_PROJECTS >> $csvf
  echo home1:${proj},DATA_PROJECTS >> $csvf
