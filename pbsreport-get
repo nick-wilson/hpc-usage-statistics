@@ -25,6 +25,6 @@ if [ x${HOSTNAME:0:3}$USER != xwlmroot ] ; then
  ssh root@wlm01 "ulimit -m 67108864 ; ulimit -v 67108864 ; $pbs_report --verbose --csv \| --begin $sy$sm$sd --end $ey$em$ed --time partial" > "$tmpfile" || rm -f "$tmpfile"
 else
  echo running $pbs_report
- $pbs_report --verbose --csv "|" --begin $sy$sm$sd --end $ey$em$ed --time partial > "$tmpfile" || rm -f "$tmpfile"
+ $pbs_report --verbose --csv "|" --begin $sy$sm$sd --end $ey$em$ed --time partial --inclusive > "$tmpfile" || rm -f "$tmpfile"
 fi
 mv "$tmpfile" "$rawfile_p"
