@@ -1,6 +1,7 @@
 #!/bin/bash
-ulimit -m 67108864
-ulimit -v 67108864
+memlimit=${MEMLIMIT:-67108864}
+ulimit -m $memlimit
+ulimit -v $memlimit
 
 . ./config
 
@@ -9,11 +10,11 @@ pbs_report=`which pbs-report`
 
 rawfile="pbs-report.raw.$suffix.csv"
 rawfile_p="pbs-report.raw.partial.$suffix.csv"
-tmpfile="$rawfile".tmp
+tmpfile="pbs-report.raw.$suffix.tmp"
 
 if [ x${HOSTNAME:0:3}$USER != xwlmroot ] ; then
  echo ssh to root@wlm01 to run $pbs_report
- ssh root@wlm01 "ulimit -m 67108864 ; ulimit -v 67108864 ; $pbs_report --verbose --csv \| --begin $sy$sm$sd --end $ey$em$ed --time full" > "$tmpfile" || rm -f "$tmpfile"
+ ssh root@wlm01 "ulimit -m $memlimit ; ulimit -v $memlimit ; $pbs_report --verbose --csv \| --begin $sy$sm$sd --end $ey$em$ed --time full" > "$tmpfile" || rm -f "$tmpfile"
 else
  echo running $pbs_report
  $pbs_report --verbose --csv "|" --begin $sy$sm$sd --end $ey$em$ed --time full > "$tmpfile" || rm -f "$tmpfile"
@@ -22,7 +23,7 @@ mv "$tmpfile" "$rawfile"
 
 if [ x${HOSTNAME:0:3}$USER != xwlmroot ] ; then
  echo ssh to root@wlm01 to run $pbs_report
- ssh root@wlm01 "ulimit -m 67108864 ; ulimit -v 67108864 ; $pbs_report --verbose --csv \| --begin $sy$sm$sd --end $ey$em$ed --time partial" > "$tmpfile" || rm -f "$tmpfile"
+ ssh root@wlm01 "ulimit -m $memlimit ; ulimit -v $memlimit ; $pbs_report --verbose --csv \| --begin $sy$sm$sd --end $ey$em$ed --time partial --inclusive" > "$tmpfile" || rm -f "$tmpfile"
 else
  echo running $pbs_report
  $pbs_report --verbose --csv "|" --begin $sy$sm$sd --end $ey$em$ed --time partial --inclusive > "$tmpfile" || rm -f "$tmpfile"
