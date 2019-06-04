@@ -15,35 +15,42 @@ sed -i \
 make config.py
 
 pbsreportrawalpha=pbs-report.raw.alpha.csv
-pbsreportrawproduction=pbs-report.raw.production.csv
-pbsreportrawaggregate=pbs-report.raw.$suffix.csv
 pbsreportcleanedalpha=pbs-report.cleaned.alpha.csv
-pbsreportcleanedproduction=pbs-report.cleaned.production.csv
-pbsreportcleanedaggregate=pbs-report.cleaned.$suffix.csv
 
+pbsreportrawproduction=pbs-report.raw.production.csv
+pbsreportrawpartialproduction=pbs-report.raw.partial.production.csv
+pbsreportcleanedproduction=pbs-report.cleaned.production.csv
+pbsreportcleanedpartialproduction=pbs-report.cleaned.partial.production.csv
+
+pbsreportrawaggregate=pbs-report.raw.$suffix.csv
+pbsreportrawpartialaggregate=pbs-report.raw.partial.$suffix.csv
+pbsreportcleanedaggregate=pbs-report.cleaned.$suffix.csv
+pbsreportcleanedpartialaggregate=pbs-report.cleaned.partial.$suffix.csv
+
+export MEMLIMIT=100000000
 make $pbsreportrawaggregate
-if [ $pbsreportrawaggregate -nt $pbsreportcleanedproduction ] ; then echo rm -f $pbsreportcleanedproduction ; fi
+if [ $pbsreportrawaggregate -nt $pbsreportcleanedproduction ] ; then echo rm -f $pbsreportcleanedproduction $pbsreportcleanedpartialproduction ; fi
 
 if [ ! -f $pbsreportcleanedproduction ] ; then
  rm -f $pbsreportcleanedaggregate && \
   make $pbsreportcleanedaggregate && \
-  mv $pbsreportcleanedaggregate $pbsreportcleanedproduction || \
-  rm -f $pbsreportcleanedaggregate $pbsreportcleanedproduction
+  mv $pbsreportcleanedaggregate $pbsreportcleanedproduction && \
+  mv $pbsreportcleanedpartialaggregate $pbsreportcleanedpartialproduction || \
+  rm -f $pbsreportcleanedaggregate $pbsreportcleanedproduction $pbsreportcleanedpartialaggregate $pbsreportcleanedpartialproduction
 fi
 
 if [ ! -f $pbsreportcleanedalpha ] ; then
  # Alpha Phase
  gzip -dc archive/alpha/pbs-report.cleaned.alpha.csv.gz > $pbsreportcleanedalpha || \
   rm -f $pbsreportcleanedalpha
- ## d=20160328-20160617
- ## g=../$d/pbs-report.cleaned.$d.csv
- ## head -n 2 $g > $pbsreportcleanedalpha && \
- ##  tail -n +3 $g | sed -e 's,^,A,' >> $pbsreportcleanedalpha || \
- ##  rm -f $pbsreportcleanedalpha
 fi
 
 cp $pbsreportcleanedalpha $pbsreportcleanedaggregate && \
  tail -n +3 $pbsreportcleanedproduction >> $pbsreportcleanedaggregate || \
  rm -f $pbsreportcleanedaggregate
+
+cp $pbsreportcleanedalpha $pbsreportcleanedpartialaggregate && \
+ tail -n +3 $pbsreportcleanedpartialproduction >> $pbsreportcleanedpartialaggregate || \
+ rm -f $pbsreportcleanedpartialaggregate
 
 ./make-unused
