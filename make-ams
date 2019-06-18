@@ -33,12 +33,21 @@ fi
 if [ $ed -lt 10 ] ; then ed=0$ed ; fi
 if [ $em -lt 10 ] ; then em=0$em ; fi
 
-for stem in personal projects ; do
- file=`ls -1t $amsdir/$stem.${ey}${em}${ed}*.csv 2>/dev/null | head -n 1`
- if [ x"$file" == x ] ; then
-  file=`ls -1t $amsdir/$stem.*.csv | head -n 1`
- fi
-# cp -v $file ams-$stem.$suffix.csv
- head -1 $file > ams-$stem.$suffix.csv
- tail -n +2 $file | sort -t, -rnk 2,2 >> ams-$stem.$suffix.csv
-done
+stem="/app/nsccadmin/log/ams/ams-projects"
+file=`ls -1t "${stem}.${ey}${em}${ed}"*.csv 2>/dev/null | head -n 1`
+if [ x"$file" == x ] ; then
+  file=`ls -1t "${stem}".*.csv | head -n 1`
+fi
+if [ ! -f "$file" ] ; then echo ERROR: no AMS file ; exit 1 ; fi
+
+csv="ams-personal.$suffix.csv"
+head -1 "$file" | awk -F, '{printf "%s,%s,%s,%s,%s,fraction_used\n",$1,$7,$8,$9,$5}' > "$csv"
+tail -n +2 "$file" | grep    ^personal- | sed -e "s/^personal-//" \
+  | awk -F, '{printf "%s,%.1f,%.1f,%.1f,%.1f,%.3f\n",$1,$7,$8,$9,$5,$7/$5}' \
+  | sort -t, -rnk 2,2 >> "$csv"
+
+csv="ams-projects.$suffix.csv"
+head -1 "$file" | awk -F, '{printf "%s,%s,%s,%s,%s,fraction_used,%s\n",$1,$7,$8,$9,$5,$2}' > "$csv"
+tail -n +2 "$file" | grep -v ^personal- \
+  | awk -F, '{printf "%s,%.1f,%.1f,%.1f,%.1f,%.3f,%s\n",$1,$7,$8,$9,$5,$7/$5,$2}' \
+  | sort -t, -rnk 2,2 >> "$csv"
