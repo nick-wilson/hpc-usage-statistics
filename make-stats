@@ -24,3 +24,11 @@ done
 if [ ${dgx:-0} -eq 1 ] ; then make -C dgx ; fi
 
 if [  ${publish:-0} -eq 1 ] ; then ./make-publish ; fi
+
+if [ -f "pbs-report.cleaned.$suffix.csv" -a -f "alldata.$suffix.csv" ] ; then
+ npbs=`tail -n +3 pbs-report.cleaned.$suffix.csv | awk -F\| 'BEGIN {sum=0;} $7 !~ /dgx/ {sum=sum+1;} END {print sum}'`
+ njob=`tail -n +2 alldata.$suffix.csv | wc -l`
+ echo check number of jobs in statistics is correct: njob=$njob npbs=$npbs
+ if [ $npbs -ne $njob ] ; then make clean ; echo ERROR ; exit 1 ; fi
+ echo OK
+fi
