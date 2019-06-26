@@ -42,12 +42,12 @@ if [ ! -f "$file" ] ; then echo ERROR: no AMS file ; exit 1 ; fi
 
 csv="ams-personal.$suffix.csv"
 head -1 "$file" | awk -F, '{printf "%s,%s,%s,%s,%s,fraction_used\n",$1,$7,$8,$9,$5}' > "$csv"
-tail -n +2 "$file" | grep    ^personal- | sed -e "s/^personal-//" \
+tail -n +2 "$file" | grep -v dgx_hrs | grep    ^personal- | sed -e "s/^personal-//" \
   | awk -F, '{printf "%s,%.1f,%.1f,%.1f,%.1f,%.3f\n",$1,$7,$8,$9,$5,$7/$5}' \
   | sort -t, -rnk 2,2 >> "$csv"
 
 csv="ams-projects.$suffix.csv"
 head -1 "$file" | awk -F, '{printf "%s,%s,%s,%s,%s,fraction_used,%s\n",$1,$7,$8,$9,$5,$2}' > "$csv"
-tail -n +2 "$file" | grep -v ^personal- \
+tail -n +2 "$file" | grep -v dgx_hrs | grep -v ^personal- \
   | awk -F, '{printf "%s,%.1f,%.1f,%.1f,%.1f,%.3f,%s\n",$1,$7,$8,$9,$5,$7/$5,$2}' \
   | sort -t, -rnk 2,2 >> "$csv"
