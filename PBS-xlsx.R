@@ -138,7 +138,7 @@ myupdate(sheet_name,sc,ec,df=myread(prefix))
 
 sheet_name<-'Project Status'
 sc<-1
-ec<-6
+ec<-8
 prefix<-'ams-projects'
 myupdate(sheet_name,sc,ec,df=myread(prefix))
 
