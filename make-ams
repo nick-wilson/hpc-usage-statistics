@@ -33,21 +33,31 @@ fi
 if [ $ed -lt 10 ] ; then ed=0$ed ; fi
 if [ $em -lt 10 ] ; then em=0$em ; fi
 
-stem="/app/nsccadmin/log/ams/ams-projects"
+
+getfile(){
+stem="$1"
+target="$2"
 file=`ls -1t "${stem}.${ey}${em}${ed}"*.csv 2>/dev/null | head -n 1`
 if [ x"$file" == x ] ; then
   file=`ls -1t "${stem}".*.csv | head -n 1`
 fi
-if [ ! -f "$file" ] ; then echo ERROR: no AMS file ; exit 1 ; fi
+if [ ! -f "$file" ] ; then echo ERROR: no AMS file 1>&2 ; exit 1 ; fi
+cp -p "$file" "$target"
+}
+
+amslog="/app/nsccadmin/log/ams"
+getfile "$amslog/ams-archive" "ams-archive.$suffix.csv"
+input="ams-raw.$suffix.csv"
+getfile "$amslog/ams-projects" "$input"
 
 csv="ams-personal.$suffix.csv"
-head -1 "$file" | awk -F, '{printf "%s,%s,%s,%s,%s,fraction_used\n",$1,$7,$8,$9,$5}' > "$csv"
-tail -n +2 "$file" | grep -v dgx_hrs | grep    ^personal- | sed -e "s/^personal-//" \
+head -1 "$input" | awk -F, '{printf "%s,%s,%s,%s,%s,fraction_used\n",$1,$7,$8,$9,$5}' > "$csv"
+tail -n +2 "$input" | grep -v dgx_hrs | grep    ^personal- | sed -e "s/^personal-//" \
   | awk -F, '{printf "%s,%.1f,%.1f,%.1f,%.1f,%.3f\n",$1,$7,$8,$9,$5,$7/$5}' \
   | sort -t, -rnk 2,2 >> "$csv"
 
 csv="ams-projects.$suffix.csv"
-head -1 "$file" | awk -F, '{printf "%s,%s,%s,%s,%s,fraction_used,%s,%s\n",$1,$7,$8,$9,$5,$2,$3}' > "$csv"
-tail -n +2 "$file" | grep -v ^personal- \
+head -1 "$input" | awk -F, '{printf "%s,%s,%s,%s,%s,fraction_used,%s,%s\n",$1,$7,$8,$9,$5,$2,$3}' > "$csv"
+tail -n +2 "$input" | grep -v ^personal- \
   | awk -F, '{total=$5-$6; if ( total > 0.0 ) {printf "%s,%.1f,%.1f,%.1f,%.1f,%.3f,%s,%s\n",$1,$7,$8,$9,total,$7/total,$2,$3;};}' \
   | sort -t, -rnk 2,2 >> "$csv"

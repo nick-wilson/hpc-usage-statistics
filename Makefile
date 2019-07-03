@@ -81,13 +81,13 @@ clean:
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv alljobs1.$(suffix).csv alljobs2.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-*.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv pbs-report.cleaned.$(suffix).csv pbs-report.cleaned.partial.$(suffix).csv cores.$(suffix).csv cores.partial.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv user-summary.$(suffix).csv
+	rm -f alljobs.$(suffix).csv alljobs1.$(suffix).csv alljobs2.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-p*.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv pbs-report.cleaned.$(suffix).csv pbs-report.cleaned.partial.$(suffix).csv cores.$(suffix).csv cores.partial.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv user-summary.$(suffix).csv
 
 # Remove data which requires root access
 # Only remove pbs-report data as a last resort as it is an external dependency
 .PHONY : veryveryclean
 veryveryclean: veryclean
-	rm -f pbs-report.raw.$(suffix).csv pbs-report.raw.partial.$(suffix).csv queue_firstrun.$(suffix).stdout queue_firstrun.$(suffix).csv cores-mean.$(suffix).csv cores-summary.$(suffix).csv gpus-mean.$(suffix).csv gpus-summary.$(suffix).csv unused.$(suffix).csv
+	rm -f pbs-report.raw.$(suffix).csv pbs-report.raw.partial.$(suffix).csv queue_firstrun.$(suffix).stdout queue_firstrun.$(suffix).csv cores-mean.$(suffix).csv cores-summary.$(suffix).csv gpus-mean.$(suffix).csv gpus-summary.$(suffix).csv unused.$(suffix).csv ams-raw.$(suffix).csv ams-archive.$(suffix).csv
 
 .PHONY : distclean
 distclean: veryveryclean
