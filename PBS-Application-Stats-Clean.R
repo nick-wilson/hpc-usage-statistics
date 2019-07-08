@@ -44,8 +44,8 @@ data[data$Cores>1&data$Cores<=23,"CoresGroup"]<-"2-23"
 data[data$Cores==24,"CoresGroup"]<-"24"
 data[data$Cores>24&data$Cores<=96,"CoresGroup"]<-"25-96"
 data[data$Cores>96&data$Cores<=240,"CoresGroup"]<-"97-240"
-data[data$Cores>240&data$Cores<=960,"CoresGroup"]<-"241-960"
-data[data$Cores>960,"CoresGroup"]<-">960"
+data[data$Cores>240&data$Cores<=576,"CoresGroup"]<-"241-576"
+data[data$Cores>576,"CoresGroup"]<-">576"
 
 # Multiply cores by wall time to get CoreHours
 cat("calculate core hours\n")

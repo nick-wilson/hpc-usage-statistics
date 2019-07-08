@@ -196,7 +196,7 @@ rm(tmpdata)
 
 # Calculate GPU stats split by core
 tmpdata<-data_gpu%>%group_by(CoresGroup)%>%summarise(length(Job.ID),sum(CoreHours)/24.0,median(Wait.Time.Hours),mean(Wait.Time.Hours))
-coresgroup_sort_gpu<-c("24","25-96","97-240","241-960",">960")
+coresgroup_sort_gpu<-c("24","25-96","97-240","241-576",">576")
 tmpdata<-tmpdata[match(coresgroup_sort_gpu,tmpdata$CoresGroup),]
 colnames(tmpdata)<-c("GPUs","Number of Jobs","Total GPU Hours","Median Wait (Hours)","Mean Wait (Hours)")
 tmpdata$GPUs<-c("1","2-4","5-10","11-40",">40")

@@ -123,10 +123,10 @@ gpudata<-bkupdata%>%filter(Node.Type=="GPU")
 gpudata[gpudata$CoresGroup=="24","CoresGroup"]<-"1"
 gpudata[gpudata$CoresGroup=="25-96","CoresGroup"]<-"2 - 4"
 gpudata[gpudata$CoresGroup=="97-240","CoresGroup"]<-"5 - 10"
-gpudata[gpudata$CoresGroup=="241-960","CoresGroup"]<-"11 - 40"
-gpudata[gpudata$CoresGroup==">960","CoresGroup"]<-"> 40"
+gpudata[gpudata$CoresGroup=="241-576","CoresGroup"]<-"11 - 24"
+gpudata[gpudata$CoresGroup==">576","CoresGroup"]<-"> 24"
 #gpudata$CoresGroup<-factor(gpudata$CoresGroup,c("1","2 - 4","5 - 10","11 - 40","> 40"))
-gpudata$CoresGroup<-factor(gpudata$CoresGroup,c("1","2 - 4","5 - 10","11 - 40"))
+gpudata$CoresGroup<-factor(gpudata$CoresGroup,c("1","2 - 4","5 - 10","11 - 24"))
 
 outline<-TRUE
 file_outliers<-"+outliers"
