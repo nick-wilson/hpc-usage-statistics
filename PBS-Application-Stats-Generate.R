@@ -199,7 +199,7 @@ tmpdata<-data_gpu%>%group_by(CoresGroup)%>%summarise(length(Job.ID),sum(CoreHour
 coresgroup_sort_gpu<-c("24","25-96","97-240","241-576",">576")
 tmpdata<-tmpdata[match(coresgroup_sort_gpu,tmpdata$CoresGroup),]
 colnames(tmpdata)<-c("GPUs","Number of Jobs","Total GPU Hours","Median Wait (Hours)","Mean Wait (Hours)")
-tmpdata$GPUs<-c("1","2-4","5-10","11-40",">40")
+tmpdata$GPUs<-c("1","2-4","5-10","11-24",">24")
 tmpdata[is.na(tmpdata)] <- 0
 write.csv(tmpdata,file=stats_by_core_gpu,row.names=FALSE)
 rm(tmpdata)
