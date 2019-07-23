@@ -2,6 +2,10 @@
 
 . ./config
 
+if [ -d dgx ] ; then
+ (cd dgx && ./make-stakeholder)
+fi
+
 copyout(){
  stakeholder="$1"
  rep_u="$2"
