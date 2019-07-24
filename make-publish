@@ -17,6 +17,7 @@ copy_to_logdir () {
   mv -v $logdir/$1/*.$other.$suffix.csv $logdir/$1/other/ 2>/dev/null
  done
  rmdir $logdir/$1/stakeholder $logdir/$1/other 2>/dev/null
+ cp -pv *.png application_usage-${suffix}.xlsx "$logdir/reporting/$type/"
 }
 
 if [ x"$type" == xpartial ] ; then

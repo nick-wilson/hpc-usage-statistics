@@ -2,25 +2,23 @@
 cd `dirname $0` || exit $?
 . ./config
 
-subject="Weekly application statistics for $ed/$em/$ey"
-recip="utsui.shun@sg.fujitsu.com,nick.wilson@sg.fujitsu.com"
-cc="srikanth.gumma@sg.fujitsu.com,amitabh.pandey@sg.fujitsu.com"
+if [ x"$email_recip" == x ] ; then echo missing: target email ; exit 1 ; fi
+if [ x"$email_cc" == x ] ; then echo missing: target cc email ; exit 1 ; fi
+if [ x"$email_subject" == x ] ; then echo missing: subject line ; exit 1 ; fi
+if [ x"$email_files" == x ] ; then echo missing: attachment list ; exit 1 ; fi
 
-a1="application_usage-${suffix}.xlsx"
-a2="wait_byqueue+outliers.${suffix}.png"
-a3="wait_byqueue-outliers.${suffix}.png"
-a4="wait_bycore_cpu-outliers.${suffix}.png"
-a5="wait_byqueue_bycore_cpu-outliers.${suffix}.png"
-a6="wait_bycore_gpu-outliers.${suffix}.png"
-a7="wait_byqueue_bycore_gpu-outliers.${suffix}.png"
+error=0
+errmsg="missing "
+attach=""
+for f in $email_files ; do
+ if [ ! -f $f ] ; then echo missing: $f ; errmsg="$errmsg $f" ; error=1 ; fi
+ attach="$attach -a $f"
+done
 
-if [ ! -f $a1 ] ; then echo missing: $a1 ; exit 1 ; fi
-if [ ! -f $a2 ] ; then echo missing: $a2 ; exit 1 ; fi
-if [ ! -f $a3 ] ; then echo missing: $a3 ; exit 1 ; fi
-if [ ! -f $a4 ] ; then echo missing: $a4 ; exit 1 ; fi
-if [ ! -f $a5 ] ; then echo missing: $a5 ; exit 1 ; fi
-if [ ! -f $a6 ] ; then echo missing: $a6 ; exit 1 ; fi
-if [ ! -f $a7 ] ; then echo missing: $a7 ; exit 1 ; fi
+if [ $error -eq 1 ] ; then
+ echo ERROR: $errmsg
+ exit 1
+fi
 
 #wait until work hours
 if [ x"$NOWAIT" == x ] ; then
@@ -28,19 +26,7 @@ hm=`date +%k%M`
 while [ $hm -lt 900 ] ; do date ; echo sleep ;  sleep 60 ; hm=`date +%k%M` ; echo $hm ; done
 fi
 
-mailx \
-  -s "$subject" \
-  -c "$cc" \
-  -a $a1 \
-  -a $a2 \
-  -a $a3 \
-  -a $a4 \
-  -a $a5 \
-  -a $a6 \
-  -a $a7 \
-  $recip << EOF
-Auto-generated weekly statistics.
+mailx -s "$email_subject" -c "$email_cc" $attach $email_recip << EOF
+Auto-generated statistics.
 Have not been checked to confirm accuracy.
 EOF
-
-cp -pv *.png application_usage-${suffix}.xlsx "$logdir/reporting/$type/"

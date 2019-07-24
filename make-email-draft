@@ -1,0 +1,27 @@
+#!/bin/sh
+cd `dirname $0` || exit $?
+. ./config
+
+if [ x"$email_draft" == x ] ; then echo missing: target email ; exit 1 ; fi
+if [ x"$email_subject" == x ] ; then echo missing: subject line ; exit 1 ; fi
+if [ x"$email_files" == x ] ; then echo missing: attachment list ; exit 1 ; fi
+
+error=0
+errmsg="missing "
+attach=""
+for f in $email_files ; do
+ if [ ! -f $f ] ; then echo missing: $f ; errmsg="$errmsg $f" ; error=1 ; fi
+ attach="$attach -a $f"
+done
+
+if [ $error -eq 1 ] ; then
+mailx -s "ERROR: $email_subject" $email_draft << EOF
+ERROR $errmsg
+EOF
+exit 1
+fi
+
+subject="DRAFT: $email_subject"
+mailx -s "$subject" $attach $email_draft << EOF
+DRAFT statistics
+EOF

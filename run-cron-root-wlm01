@@ -63,6 +63,7 @@ fi
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  if [ x"$type" == xweekly ] ; then
   echo circulate weekly spreadsheet via email
+  su $statsuser -c $PWD/make-email-draft
   su $statsuser -c $PWD/make-email
  fi
 fi

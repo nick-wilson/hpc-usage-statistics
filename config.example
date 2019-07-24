@@ -71,3 +71,10 @@ repos="file:///app/nsccadmin/apps/usage-statistics/reports/repos"
 # Username for output files
 statsuser=fsg3
 statsgroup=nscc-proj
+
+# Email addresses to deliver reports
+email_recip="utsui.shun@sg.fujitsu.com,nick.wilson@fujitsu.com"
+email_cc="srikanth.gumma@fujitsu.com,amitabh.pandey@fujitsu.com"
+email_draft="nick.wilson@fujitsu.com"
+email_subject="Weekly application statistics for $ed/$em/$ey"
+email_files="application_usage-${suffix}.xlsx wait_byqueue+outliers.${suffix}.png wait_byqueue-outliers.${suffix}.png wait_bycore_cpu-outliers.${suffix}.png wait_byqueue_bycore_cpu-outliers.${suffix}.png wait_bycore_gpu-outliers.${suffix}.png wait_byqueue_bycore_gpu-outliers.${suffix}.png"
