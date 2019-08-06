@@ -79,7 +79,7 @@ sed -i \
 fi
 
 # all filesets
-csvf="storage-byfileset.$suffix.csv"
+csvf="storage-fileset-usage.$suffix.csv"
 if [ ! -f $csvf ] ; then
 echo 'Fileset,GB,quota,Filesystem' > "$csvf"
 for fs in home home1 ; do

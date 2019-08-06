@@ -158,7 +158,7 @@ myupdate(sheet_name,sc,ec,df=myread(prefix))
 sheet_name<-'Storage by Fileset'
 # 10,000 placeholders
 sc<-1
-ec<-3
+ec<-5
 prefix<-'storage-byfileset'
 myupdate(sheet_name,sc,ec,df=myread(prefix))
 
