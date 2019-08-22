@@ -1,0 +1,14 @@
+#!/bin/bash
+. ./config
+
+odir="../aggregate/archive/input"
+if [ ! -d "$odir" ] ; then echo ERROR: cannot find directory with aggregate report: $odir ; exit 1 ; fi
+
+./pbsreport-aggregate.py
+tail -n +3 "pbs-report.cleaned.$suffix.csv" > "$odir/pbs-report.cleaned.$suffix.csv"
+
+nraw=`cat "$odir/pbs-report.raw.$suffix.csv" | wc -l`
+ncleaned=`cat "$odir/pbs-report.cleaned.$suffix.csv" | wc -l`
+if [ $nraw -ne $ncleaned ] ; then echo ERROR: mismatch in number of jobs ; exit 1 ; fi
+
+gzip "$odir/pbs-report.raw.$suffix.csv" "$odir/pbs-report.cleaned.$suffix.csv"

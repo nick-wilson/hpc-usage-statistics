@@ -60,6 +60,11 @@ if [ ! -f "application_usage-${suffix}.xlsx" ] ; then
  ssh nscc04 su $statsuser -c $PWD/make-reporting
 fi
 
+if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
+ echo copy raw data to be used in aggregate report
+ ./copy-to-aggregate || true
+fi
+
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  if [ x"$type" == xweekly ] ; then
   echo circulate weekly spreadsheet via email
