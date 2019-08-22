@@ -14,43 +14,11 @@ sed -i \
 . ./config
 make config.py
 
-pbsreportrawalpha=pbs-report.raw.alpha.csv
-pbsreportcleanedalpha=pbs-report.cleaned.alpha.csv
-
-pbsreportrawproduction=pbs-report.raw.production.csv
-pbsreportrawpartialproduction=pbs-report.raw.partial.production.csv
-pbsreportcleanedproduction=pbs-report.cleaned.production.csv
-pbsreportcleanedpartialproduction=pbs-report.cleaned.partial.production.csv
-
-pbsreportrawaggregate=pbs-report.raw.$suffix.csv
-pbsreportrawpartialaggregate=pbs-report.raw.partial.$suffix.csv
-pbsreportcleanedaggregate=pbs-report.cleaned.$suffix.csv
-pbsreportcleanedpartialaggregate=pbs-report.cleaned.partial.$suffix.csv
-
-export MEMLIMIT=100000000
-make $pbsreportrawaggregate
-if [ $pbsreportrawaggregate -nt $pbsreportcleanedproduction ] ; then echo rm -f $pbsreportcleanedproduction $pbsreportcleanedpartialproduction ; fi
-
-if [ ! -f $pbsreportcleanedproduction ] ; then
- rm -f $pbsreportcleanedaggregate && \
-  make $pbsreportcleanedaggregate && \
-  mv $pbsreportcleanedaggregate $pbsreportcleanedproduction && \
-  mv $pbsreportcleanedpartialaggregate $pbsreportcleanedpartialproduction || \
-  rm -f $pbsreportcleanedaggregate $pbsreportcleanedproduction $pbsreportcleanedpartialaggregate $pbsreportcleanedpartialproduction
-fi
-
-if [ ! -f $pbsreportcleanedalpha ] ; then
- # Alpha Phase
- gzip -dc archive/alpha/pbs-report.cleaned.alpha.csv.gz > $pbsreportcleanedalpha || \
-  rm -f $pbsreportcleanedalpha
-fi
-
-cp $pbsreportcleanedalpha $pbsreportcleanedaggregate && \
- tail -n +3 $pbsreportcleanedproduction >> $pbsreportcleanedaggregate || \
- rm -f $pbsreportcleanedaggregate
-
-cp $pbsreportcleanedalpha $pbsreportcleanedpartialaggregate && \
- tail -n +3 $pbsreportcleanedpartialproduction >> $pbsreportcleanedpartialaggregate || \
- rm -f $pbsreportcleanedpartialaggregate
+for t in raw cleaned ; do
+ for f in archive/input/pbs-report.$t.*.csv.gz ; do
+  gzip -dc $f
+ done > pbs-report.$t.aggregate.csv
+ ln -s pbs-report.$t.aggregate.csv pbs-report.$t.partial.aggregate.csv
+done
 
 ./make-unused
