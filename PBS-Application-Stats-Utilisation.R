@@ -1,5 +1,5 @@
 #!/usr/bin/env Rscript
-cat("generate utillisation based on partial time accounting\n")
+cat("generate utilisation based on partial time accounting\n")
 
 source("config.R")
 source("PBS-Application-Stats-Common.R")
