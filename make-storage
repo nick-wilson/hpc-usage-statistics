@@ -1,5 +1,5 @@
 #!/bin/bash
-##set -x
+if [ x"$DEBUG" == xy ] ; then set -x ; fi
 set -eu
 # search for ou=People misses GIS service accounts
 users=`ldapsearch -xxx | grep '^dn: uid' | egrep -v '^dn: uid=(adel|brighttestuser),' | sed -e "s/^dn: uid=//" -e "s/,.*//" | sort | uniq`
