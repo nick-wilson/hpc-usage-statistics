@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+if [ x"$DEBUG" == xy ] ; then set -x ; fi
 
 if [ ! -f config ] ; then echo error: no config ; exit 1 ; fi
 
@@ -20,7 +20,8 @@ for t in raw cleaned ; do
  for f in archive/input/pbs-report.$t.*.csv.gz ; do
   gzip -dc $f
  done > pbs-report.$t.aggregate.csv
- ln -s pbs-report.$t.aggregate.csv pbs-report.$t.partial.aggregate.csv
+ rm -f pbs-report.$t.partial.aggregate.csv && \
+  ln -s pbs-report.$t.aggregate.csv pbs-report.$t.partial.aggregate.csv
 done
 
 ./make-unused
