@@ -30,6 +30,7 @@ data[grepl("dgx",data$Execution.Hosts),"Node.Type"]<-"DGX"
 
 # Merge in separately calculated data on cores per job
 cores<-read.csv(file=jobcores,header=TRUE)
+cores<-cores%>%distinct()
 data<-merge(data,cores,all.x=TRUE,all.y=FALSE,sort=FALSE)
 
 # Multiply cores by wall time to get CoreHours
