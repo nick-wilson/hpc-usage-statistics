@@ -36,7 +36,7 @@ elif [ x"$type" == xweekly ] ; then
  copy_to_logdir weekly
 else
  copy_to_logdir
- ./make-totals
+ if [ ! -f cumulative.$suffix.csv ] ; then ./make-totals ; fi
 fi
 
 if [ -d dgx ] ; then (cd dgx && ./make-publish) ; fi

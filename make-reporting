@@ -17,11 +17,16 @@ pwd
 . /app/modules/modules.sh
 module load singularity
 
+t=""
+if [ x"$type" == x"monthly" ] ; then
+ if [ ! -f cumulative.$suffix.csv ] ; then ./make-totals ; fi
+ t="-monthly"
+fi
 singularity exec /app/singularity/images/nscc/common/R_3.2.3.simg /bin/sh << EOF
 export LANG=C
-Rscript PBS-xlsx.R
+Rscript PBS-xlsx${t}.R
 cp -p application_usage-${suffix}.xlsx no_rename-${suffix}.xlsx
-python rename-worksheets.py
+python rename-worksheets${t}.py
 xvfb-run Rscript PBS-wait-boxplots.R
 EOF
 
@@ -31,3 +36,7 @@ chown ${statsuser}.${statsgroup} *.png *.xlsx *.pyc
 # apt-get install -y r-base r-base-dev libcurl4-openssl-dev libssl-dev libxml2-dev default-jre default-jdk xvfb
 # R CMD javareconf
 # R CMD 'install.packages(c("tidyverse","rJava","xlsx"))'
+
+if [ -d R-stats-trending ] ; then
+ (cd R-stats-trending && ./copyin && ./make-reporting)
+fi

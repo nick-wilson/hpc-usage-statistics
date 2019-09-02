@@ -1,0 +1,36 @@
+#!/bin/sh
+cd `dirname $0` || exit $?
+. ./config
+
+email_files="application_usage-${suffix}.xlsx wait_byqueue+outliers.${suffix}.png wait_byqueue-outliers.${suffix}.png application_trending_cpu.${suffix}.png application_trending_gpu.${suffix}.png"
+email_subject="DRAFT: Monthly application statistics for $ed/$em"
+
+if [ x"$email_recip" == x ] ; then echo missing: target email ; exit 1 ; fi
+if [ x"$email_cc" == x ] ; then echo missing: target cc email ; exit 1 ; fi
+if [ x"$email_subject" == x ] ; then echo missing: subject line ; exit 1 ; fi
+if [ x"$email_files" == x ] ; then echo missing: attachment list ; exit 1 ; fi
+
+error=0
+errmsg="missing "
+attach=""
+for f in $email_files ; do
+ if [ ! -f $f ] ; then echo missing: $f ; errmsg="$errmsg $f" ; error=1 ; fi
+ attach="$attach -a $f"
+done
+
+if [ $error -eq 1 ] ; then
+ echo ERROR: $errmsg
+ exit 1
+fi
+
+#wait until work hours
+if [ x"$NOWAIT" == x ] ; then
+hm=`date +%k%M`
+while [ $hm -lt 900 ] ; do date ; echo sleep ;  sleep 60 ; hm=`date +%k%M` ; echo $hm ; done
+fi
+
+##mailx -s "$email_subject" -c "$email_cc" $attach $email_recip << EOF
+mailx -s "$email_subject" $attach $email_draft << EOF
+Auto-generated statistics.
+Have not been checked to confirm accuracy.
+EOF

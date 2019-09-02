@@ -70,6 +70,9 @@ if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
   echo circulate weekly spreadsheet via email
   su $statsuser -c $PWD/make-email-draft
   su $statsuser -c $PWD/make-email
+ elif [ x"$type" == xmonthly ] ; then
+  echo email draft monthly report
+  su $statsuser -c $PWD/make-email-monthly-draft
  fi
 fi
 

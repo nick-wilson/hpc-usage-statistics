@@ -1,5 +1,6 @@
 #!/bin/bash
 . ./config
+sed -i "/$suffix/d"  "$logdir"/utilisation*.csv
 
 cd `dirname $0`
 
@@ -150,3 +151,31 @@ for s in $stakeholders ; do
 done
 echo >> "$f"
 tail -n 1 "$f"
+
+(
+cat << EOF
+"date","corehours_cpu","corehours_gpu","corehours_jobs","corehours_online","corehours_unused","blank","date","corehours_astar","corehours_nus","corehours_ntu","corehours_create","corehours_other"
+"28/3/2016",0.0,0.0,0.0,0.0,0.0,,"28/3/2016",0.0,0.0,0.0,0.0,0.0
+EOF
+paste -d, \
+ <(tail -n +2 $logdir/utilisation.csv | awk -F, '{print $1}' | sed -e 's/^.*-/"/' -e 's,\([0-9][0-9][0-9][0-9]\)\([0-9][0-9]\)\([0-9][0-9]\),\3/\2/\1,' -e 's,/0,/,') \
+ <(tail -n +2 $logdir/utilisation_cpu.csv | awk -F, '{print $7}') \
+ <(tail -n +2 $logdir/utilisation_gpu.csv | awk -F, '{printf "%.1f\n",$7*24}') \
+ <(tail -n +2 $logdir/utilisation.csv | awk -F, '{printf "%.1f,%.1f,%.1f,\n",$7,$8,$8-$7}') \
+ <(tail -n +2 $logdir/utilisation.csv | awk -F, '{print $1}' | sed -e 's/^.*-/"/' -e 's,\([0-9][0-9][0-9][0-9]\)\([0-9][0-9]\)\([0-9][0-9]\),\3/\2/\1,' -e 's,/0,/,') \
+ <(tail -n +2 $logdir/utilisation.csv | awk -F, '{printf "%.1f,%.1f,%.1f,%.1f,%.1f\n",$12,$14,$13,$19,$7-$12-$14-$13-$19}')
+) > monthly.$suffix.csv
+echo
+head -n 1 monthly.$suffix.csv
+tail -n 1 monthly.$suffix.csv
+
+(
+cat << EOF
+"date","corehours_cpu","corehours_gpu","corehours_jobs","corehours_online","corehours_unused","percent_utilisation","blank","date","corehours_astar","corehours_nus","corehours_ntu","corehours_create","corehours_other"
+"28/3/2016",0.0,0.0,0.0,0.0,0.0,0.000,,"28/3/2016",0.0,0.0,0.0,0.0,0.0
+EOF
+tail -n +3 monthly.$suffix.csv | awk -F, 'BEGIN {t02=0.0;t03=0.0;t04=0.0;t05=0.0;t06=0.0;t09=0.0;t10=0.0;t11=0.0;t12=0.0;t13=0.0;} {t02+=$2;t03+=$3;t04+=$4;t05+=$5;t06+=$6;t09+=$9;t10+=$10;t11+=$11;t12+=$12;t13+=$13;printf "%s,%.1f,%.1f,%.1f,%.1f,%.1f,%.3f,%s,%s,%.1f,%.1f,%.1f,%.1f,%.1f\n",$1,t02,t03,t04,t05,t06,t04/t05,$7,$8,t09,t10,t11,t12,t13}'
+) > cumulative.$suffix.csv
+echo
+head -n 1 cumulative.$suffix.csv
+tail -n 1 cumulative.$suffix.csv
