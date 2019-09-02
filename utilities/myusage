@@ -1,0 +1,134 @@
+#!/bin/bash 
+logdir=/app/nscc/log/user_usage
+
+all=0
+u=${LOGNAME}
+while getopts u:a opt; do
+ case $opt in
+  u) u="$OPTARG" ;;
+  a) all=1 ;;
+  *) echo unknown option ; exit 1 ;;
+ esac
+done
+
+if [ $all -eq 1 ] ; then
+ if [ ! -f "$logdir/all/$u.csv" ] ; then
+  echo No data
+  exit 1
+ else
+  cat "$logdir/all/$u.csv"
+  exit
+ fi
+fi
+
+# exit if user doesn't have permission to access data
+for t in week month aggregate ; do
+ if [ -f "$logdir/cpu/$t/$u" ] ; then
+  cat "$logdir/cpu/$t/$u" > /dev/null || exit $?
+ fi
+done
+
+cw_date="N/A"
+cw_njob="0"
+cw_coreh="0.0"
+gw_date="N/A"
+gw_njob="0"
+gw_coreh="0.0"
+aw_date="N/A"
+aw_njob="0"
+aw_coreh="0.0"
+cm_date="N/A"
+cm_njob="0"
+cm_coreh="0.0"
+gm_date="N/A"
+gm_njob="0"
+gm_coreh="0.0"
+am_date="N/A"
+am_njob="0"
+am_coreh="0.0"
+ca_date="N/A"
+ca_njob="0"
+ca_coreh="0.0"
+ga_date="N/A"
+ga_njob="0"
+ga_coreh="0.0"
+aa_date="N/A"
+aa_njob="0"
+aa_coreh="0.0"
+
+if [ -f "$logdir/cpu/week/$u" ] ; then
+ read cw_date cw_njob cw_coreh < "$logdir/cpu/week/$u"
+fi
+if [ -f "$logdir/cpu/month/$u" ] ; then
+ read cm_date cm_njob cm_coreh < "$logdir/cpu/month/$u"
+fi
+if [ -f "$logdir/cpu/aggregate/$u" ] ; then
+ read ca_date ca_njob ca_coreh < "$logdir/cpu/aggregate/$u"
+fi
+if [ -f "$logdir/gpu/week/$u" ] ; then
+ read gw_date gw_njob gw_coreh < "$logdir/gpu/week/$u"
+fi
+if [ -f "$logdir/gpu/month/$u" ] ; then
+ read gm_date gm_njob gm_coreh < "$logdir/gpu/month/$u"
+fi
+if [ -f "$logdir/gpu/aggregate/$u" ] ; then
+ read ga_date ga_njob ga_coreh < "$logdir/gpu/aggregate/$u"
+fi
+if [ -f "$logdir/ai/week/$u" ] ; then
+ read aw_date aw_njob aw_coreh < "$logdir/ai/week/$u"
+fi
+if [ -f "$logdir/ai/month/$u" ] ; then
+ read am_date am_njob am_coreh < "$logdir/ai/month/$u"
+fi
+if [ -f "$logdir/ai/aggregate/$u" ] ; then
+ read aa_date aa_njob aa_coreh < "$logdir/ai/aggregate/$u"
+fi
+
+cat << EOF
+
+Usage in 7 days to ${cw_date}:
+ Number of jobs on CPU nodes: $cw_njob
+ Core hours on CPU nodes:     $cw_coreh
+ Number of jobs on GPU nodes: $gw_njob
+ Core hours on GPU nodes:     $gw_coreh
+EOF
+i_aw_njob=${aw_njob//,/}
+if [ $i_aw_njob -gt 0 ] ; then
+cat << EOF
+ Number of jobs on AI nodes:  $aw_njob
+ GPU hours on AI nodes:       $aw_coreh
+EOF
+fi
+cat << EOF
+
+Usage in month to ${cm_date}:
+ Number of jobs on CPU nodes: $cm_njob
+ Core hours on CPU nodes:     $cm_coreh
+ Number of jobs on GPU nodes: $gm_njob
+ Core hours on GPU nodes:     $gm_coreh
+EOF
+i_am_njob=${aw_njob//,/}
+if [ $i_am_njob -gt 0 ] ; then
+cat << EOF
+ Number of jobs on AI nodes:  $am_njob
+ GPU hours on AI nodes:       $am_coreh
+EOF
+fi
+cat << EOF
+
+Usage since system start to ${ca_date}:
+ Number of jobs on CPU nodes: $ca_njob
+ Core hours on CPU nodes:     $ca_coreh
+ Number of jobs on GPU nodes: $ga_njob
+ Core hours on GPU nodes:     $ga_coreh
+EOF
+i_aa_njob=${aw_njob//,/}
+if [ $i_aa_njob -gt 0 ] ; then
+cat << EOF
+ Number of jobs on AI nodes:  $aa_njob
+ GPU hours on AI nodes:       $aa_coreh
+EOF
+fi
+cat << EOF
+
+EOF
