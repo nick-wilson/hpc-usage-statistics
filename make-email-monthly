@@ -1,9 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 cd `dirname $0` || exit $?
 . ./config
 
 email_files="application_usage-${suffix}.xlsx wait_byqueue+outliers.${suffix}.png wait_byqueue-outliers.${suffix}.png application_trending_cpu.${suffix}.png application_trending_gpu.${suffix}.png"
-email_subject="Monthly application statistics for $ed/$em"
+email_subject="Monthly application statistics for $ey/$em"
+
+if [ x"$DRAFT" == xy ] ; then
+ email_subject="DRAFT: $email_subject"
+fi
 
 if [ x"$email_recip" == x ] ; then echo missing: target email ; exit 1 ; fi
 if [ x"$email_cc" == x ] ; then echo missing: target cc email ; exit 1 ; fi
@@ -19,18 +23,29 @@ for f in $email_files ; do
 done
 
 if [ $error -eq 1 ] ; then
+ if [ x"$DRAFT" == xy ] ; then
+  mailx -s "ERROR: $email_subject" $email_draft << EOF
+ERROR $errmsg
+EOF
+ fi
  echo ERROR: $errmsg
  exit 1
 fi
 
-#wait until work hours
-if [ x"$NOWAIT" == x ] ; then
-hm=`date +%k%M`
-while [ $hm -lt 900 ] ; do date ; echo sleep ;  sleep 60 ; hm=`date +%k%M` ; echo $hm ; done
+if [ x"$DRAFT" != xy ] ; then
+ #wait until work hours
+ if [ x"$NOWAIT" == x ] ; then
+  hm=`date +%k%M`
+  while [ $hm -lt 900 ] ; do date ; echo sleep ;  sleep 60 ; hm=`date +%k%M` ; echo $hm ; done
+ fi
 fi
 
-##mailx -s "$email_subject" -c "$email_cc" $attach $email_recip << EOF
-mailx -s "$email_subject" $attach $email_draft << EOF
-Auto-generated statistics.
-Have not been checked to confirm accuracy.
+if [ x"$DRAFT" == xy ] ; then
+  mailx -s "$email_subject" $attach $email_draft << EOF
+Draft monthly application statistics for $ed/$em
 EOF
+ else
+  mailx -s "$email_subject" -c "$email_cc" $attach $email_recip << EOF
+Auto-generated monthly application statistics for $ey/$em
+EOF
+fi
