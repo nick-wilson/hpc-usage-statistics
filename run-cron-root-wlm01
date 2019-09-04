@@ -48,6 +48,10 @@ make
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  echo Update myusage data
  ./update-myusage --all
+ ./make-publish
+ if [ x"$type" == xmonthly ] ; then
+  ./make-copyout
+ fi
 fi
 
 echo fix file ownership
@@ -84,6 +88,8 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
    if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi && \
    make && \
    ./update-myusage --all --reset && \
+   ./make-publish && \
+   ./make-copyout && \
    ./fix-permissions
 fi
 
