@@ -78,6 +78,7 @@ if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
   echo email draft monthly report
   su $statsuser -c $PWD/make-email-monthly-draft
  fi
+ ./make-publish
 fi
 
 if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
