@@ -18,6 +18,7 @@ def cleancsv( rawfile, csvfile ):
         line=line.replace("|", "%",npipe-11)
         # put first three field separators back
         line=line.replace("%", "|",3)
+      line=line.replace(",","_")
       g.write(line);
     f.close()
     g.close()
