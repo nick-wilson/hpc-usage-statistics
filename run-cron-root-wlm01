@@ -30,6 +30,17 @@ if [ -d system-utilisation ] ; then (cd system-utilisation && ./clean) ; fi
 echo first make, only interested in pbs-report data
 make pbs-report.raw.$suffix.csv
 
+# manual cleaning for bug
+rm -f *.csv.tmp
+for f in pbs-report.raw.$suffix.csv pbs-report.raw.partial.$suffix.csv ; do
+ cp -p "$f" "$f".tmp
+ sed -i -e 's%^9238329|.*%9238329|jyauyong|medium|GridSearch_set_9.pbs|2019/11/14 10:34|None|std0663/0*24|1|72400kb|1602992kb|4|12|275|0|1%' \
+       -e 's%^9238331|.*%9238331|jyauyong|medium|GridSearch_set_10.pbs|2019/11/14 10:34|None|std0504/0*24|1|82704kb|1596968kb|4|12|0|0|1%' \
+       -e 's%^9238334|.*%9238334|jyauyong|medium|GridSearch_set_11.pbs|2019/11/14 10:36|None|std0264/0*24|1|69576kb|1546468kb|4|12|0|0|1%' \
+    "$f"
+ diff "$f" "$f".tmp && rm -f "$f".tmp
+done
+
 if [ ${GET_LATEST:-1} -eq 1 ] ; then
  echo get latest application and project data
  if [ -x /app/nsccadmin/log/printjob/get-latest ] ; then /app/nsccadmin/log/printjob/get-latest ; fi
@@ -93,6 +104,12 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
    ./make-copyout && \
    ./fix-permissions
 fi
+
+echo check walltime of jobs
+./walltime-check
+echo ===
+sort -nk 5 walltime-check.$suffix.stdout | tail -n 10
+echo
 
 echo system utilisation data
 head cores-mean.$suffix.csv gpus-mean.$suffix.csv

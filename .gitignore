@@ -3,6 +3,7 @@ config.R
 config.py
 config.pyc
 *.csv
+*.csv.tmp
 application_usage-*.xlsx
 no_rename-*.xlsx
 *.Rdata

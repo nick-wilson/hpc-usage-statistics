@@ -1,0 +1,17 @@
+#!/bin/bash
+if [ x"$DEBUG" == xy ] ; then set -x ; fi
+. ./config
+tail -n +2 alldata.$suffix.csv | awk -F, '{print $2,$13}' | sed -e 's/"//g' | while read j w ; do
+  isarray=`echo "$j" | fgrep '['`
+  if [ x"$isarray" != x ] ; then
+   echo $j N 0 0 0
+   continue
+  fi
+  s=Y
+  a=${j:0:3}
+  grep 'job_state = F' "$qstatd/$a/$j" > /dev/null 2>&1  || { echo $j R $w $w 0 ; continue ; }
+  c=`egrep resources_used.walltime "$qstatd/$a/$j" 2>/dev/null | awk '{print $NF}' | awk -F: '{printf "%d\n",$1*3600+$2*60+$3}'` 
+  if [ x"$c" == x ] ; then s=N ; c=$w ; fi
+  d=`expr $w - $c`
+  echo $j $s $w $c $d
+done | tee walltime-check.$suffix.stdout | awk '{if ( $5 > 1 || $5 < -1 ) {print $0;};}'
