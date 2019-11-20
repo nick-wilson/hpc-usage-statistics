@@ -50,6 +50,7 @@ data=printjob
 #
 logdir=$base/$log
 amsdir=$base/$ams
+qstatd=$base/qstat/cleaned
 #data and base used in Makefile
 
 # Name of csv files
