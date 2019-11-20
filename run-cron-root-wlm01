@@ -37,6 +37,7 @@ for f in pbs-report.raw.$suffix.csv pbs-report.raw.partial.$suffix.csv ; do
  sed -i -e 's%^9238329|.*%9238329|jyauyong|medium|GridSearch_set_9.pbs|2019/11/14 10:34|None|std0663/0*24|1|72400kb|1602992kb|4|12|275|0|1%' \
        -e 's%^9238331|.*%9238331|jyauyong|medium|GridSearch_set_10.pbs|2019/11/14 10:34|None|std0504/0*24|1|82704kb|1596968kb|4|12|0|0|1%' \
        -e 's%^9238334|.*%9238334|jyauyong|medium|GridSearch_set_11.pbs|2019/11/14 10:36|None|std0264/0*24|1|69576kb|1546468kb|4|12|0|0|1%' \
+       -e 's%^9191524|.*%9191524|tsltaywb|medium|OF-comp_corner|2019/10/31 16:49|None|std0330/0*24|1|2975560kb|16718116kb|137|14|481|0|0%' \
     "$f"
  diff "$f" "$f".tmp && rm -f "$f".tmp
 done
