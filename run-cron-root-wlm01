@@ -108,6 +108,7 @@ fi
 
 echo check walltime of jobs
 ./walltime-check
+./fix-permissions
 echo ===
 sort -nk 5 walltime-check.$suffix.stdout | tail -n 10
 echo
