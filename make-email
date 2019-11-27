@@ -26,7 +26,10 @@ hm=`date +%k%M`
 while [ $hm -lt 900 ] ; do date ; echo sleep ;  sleep 60 ; hm=`date +%k%M` ; echo $hm ; done
 fi
 
+checked=""
+if [ ! -f checked ] ; then checked="Have not been checked to confirm accuracy."
+
 mailx -s "$email_subject" -c "$email_cc" $attach $email_recip << EOF
 Auto-generated statistics.
-Have not been checked to confirm accuracy.
+$checked
 EOF
