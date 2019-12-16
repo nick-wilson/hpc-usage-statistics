@@ -58,6 +58,11 @@ echo third pass of statistics with fixed application data
 make
 
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
+ echo collect AM transaction data
+ make -C am > run-cron-am.stdout 2>&1 < dev/null &
+fi
+
+if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  echo Update myusage data
  ./update-myusage --all
  ./make-publish
