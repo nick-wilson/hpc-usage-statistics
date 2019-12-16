@@ -16,3 +16,5 @@ for d in "$PWD" "$logdir" ; do
   setfacl -R -bk "$d" ; chmod -R u+rwX,g-w,g+rX,o-rwx "$d" ; chown -R ${statsuser}.${statsgroup} "$d"
  fi
 done
+setfacl -m u:${am_u}:r "$logdir"/am-*
+setfacl -m u:${am_u}:rx "$logdir"
