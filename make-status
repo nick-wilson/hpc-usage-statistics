@@ -5,7 +5,7 @@ echo base
 git status
 echo
 
-for d in system-utilisation load2apps dgx dgx/system-utilisation ; do
+for d in system-utilisation load2apps dgx dgx/system-utilisation am ; do
  if [ -d $d ] ; then
   echo $d
   (cd $d && git status)
