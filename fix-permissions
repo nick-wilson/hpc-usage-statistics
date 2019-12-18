@@ -10,11 +10,20 @@ if [ x"$statsgroup" == x ] ; then statsgroup="root" ; fi
  find "$logdir" -type f -a -perm /0111 -exec chmod a-x {} \;
 fi
 
-for d in "$PWD" "$logdir" ; do
- if [ -d "$d" ] ; then
-  # Set appropriate file permissions on data
-  setfacl -R -bk "$d" ; chmod -R u+rwX,g-w,g+rX,o-rwx "$d" ; chown -R ${statsuser}.${statsgroup} "$d"
- fi
-done
-setfacl -m u:${am_u}:r "$logdir"/am-*
-setfacl -m u:${am_u}:rx "$logdir"
+if [ x"$1" == x--full ] ; then
+ for d in "$PWD" "$logdir" ; do
+  if [ -d "$d" ] ; then
+   # Set appropriate file permissions on data
+   chown -R ${statsuser}.${statsgroup} "$d"
+   chmod -R u+rwX,g-w,g+rX,o-rwx "$d"
+   setfacl -R -bk "$d"
+  fi
+ done
+else
+ chown ${statsuser}.${statsgroup} *
+ chown -R ${statsuser}.${statsgroup} dgx load2apps R-stats-trending system-utilisation
+ chown -R ${statsuser}.${statsgroup} "$logdir"
+fi
+
+setfacl -m u:${am_u}:rw "$logdir"/am-*
+setfacl -m u:${am_u}:rwx "$logdir" "$logdir/weekly" "$logdir/aggregate"
