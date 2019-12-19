@@ -35,7 +35,7 @@ usernames.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
 
 # Collect application information
 alljobs.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
-	cp $(base)/$(data)/$(csvalljobs) $@ ; rm -f alljobs1.$(suffix).csv
+	cp $(base)/$(data)/$(csvalljobs) $@ ; rm -f alljobs?.$(suffix).csv
 
 # Collect project information
 project.$(suffix).csv: pbs-report.cleaned.$(suffix).csv
@@ -81,7 +81,7 @@ clean:
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv alljobs1.$(suffix).csv alljobs2.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-p*.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv pbs-report.cleaned.$(suffix).csv pbs-report.cleaned.partial.$(suffix).csv cores.$(suffix).csv cores.partial.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv user-summary.$(suffix).csv monthly.$(suffix).csv cumulative.$(suffix).csv
+	rm -f alljobs.$(suffix).csv alljobs?.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-p*.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv pbs-report.cleaned.$(suffix).csv pbs-report.cleaned.partial.$(suffix).csv cores.$(suffix).csv cores.partial.$(suffix).csv config.R config.pyc config.py data.Rdata users.Rdata storage*.$(suffix).csv user-summary.$(suffix).csv monthly.$(suffix).csv cumulative.$(suffix).csv
 
 # Remove data which requires root access
 # Only remove pbs-report data as a last resort as it is an external dependency

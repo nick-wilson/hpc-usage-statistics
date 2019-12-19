@@ -23,3 +23,9 @@ if [ ! -d load2apps ] ; then
 else
  (cd load2apps && git pull)
 fi
+
+if [ ! -d am ] ; then
+ git clone $repos/usage-pbs-am.git am
+else
+ (cd am && git pull)
+fi
