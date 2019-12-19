@@ -79,3 +79,7 @@ email_cc="srikanth.gumma@fujitsu.com,amitabh.pandey@fujitsu.com"
 email_draft="nick.wilson@fujitsu.com"
 email_subject="Weekly application statistics for $ed/$em/$ey"
 email_files="application_usage-${suffix}.xlsx wait_byqueue+outliers.${suffix}.png wait_byqueue-outliers.${suffix}.png wait_bycore_cpu-outliers.${suffix}.png wait_byqueue_bycore_cpu-outliers.${suffix}.png wait_bycore_gpu-outliers.${suffix}.png wait_byqueue_bycore_gpu-outliers.${suffix}.png"
+
+# Username and password for AM dump
+am_u=am_u
+am_p=am_p
