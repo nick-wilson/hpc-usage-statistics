@@ -26,6 +26,7 @@ make veryveryclean
 if [ -d dgx ] ; then make -C dgx veryclean ; fi
 if [ -d load2apps ] ; then (cd load2apps && ./clean) ; fi
 if [ -d system-utilisation ] ; then (cd system-utilisation && ./clean) ; fi
+if [ -d dgx/system-utilisation ] ; then (cd dgx/system-utilisation && ./clean) ; fi
 if [ -d R-stats-trending ] ; then make -C R-stats-trending clean ; fi
 if [ -d am ] ; then make -C am clean ; fi
 
