@@ -25,6 +25,7 @@ else
  chown -R ${statsuser}.${statsgroup} "$logdir"
 fi
 
+setfacl -m u:${am_u}:rx .
 setfacl -R -m u:${am_u}:rwX am
 setfacl -m u:${am_u}:rw "$logdir"/am-* "$logdir"/weekly/am-*
 setfacl -m u:${am_u}:rwx "$logdir" "$logdir/weekly" "$logdir/aggregate"
