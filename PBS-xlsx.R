@@ -12,6 +12,7 @@ wb <- loadWorkbook(file)
 sheets <- getSheets(wb)
 
 myread<-function(prefix){
+  print(prefix)
   csvf<-paste0(prefix,".",suffix,".csv")
   df<-read.csv(csvf,header=TRUE)
   return(df)
