@@ -4,7 +4,7 @@ set -eu
 # search for ou=People misses GIS service accounts
 users=`ldapsearch -xxx | grep '^dn: uid' | egrep -v '^dn: uid=(adel|brighttestuser),' | sed -e "s/^dn: uid=//" -e "s/,.*//" | sort | uniq`
 users="root $users"
-projects=`ldapsearch -x -b 'ou=Projects,dc=cm,dc=cluster' cn | grep ^cn: | sort | uniq | awk '{printf "%s ",$2}'`
+projects=`ldapsearch -x -b 'ou=Projects,dc=cm,dc=cluster' cn | grep ^cn: | sed -e "s/cn=//" | sort | uniq | awk '{printf "%s ",$2}'`
 
 . ./config
 
