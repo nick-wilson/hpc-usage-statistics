@@ -3,7 +3,7 @@
 source("config.R")
 source("PBS-Application-Stats-Common.R")
 
-load("data.Rdata")
+load(alldata_R)
 
 bkup_data<-data
 am<-read.csv(file="am-jobs.csv")

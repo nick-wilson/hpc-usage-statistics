@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
-library(dplyr,warn.conflicts=FALSE)
-alldata_R<-'data.Rdata'
+source("config.R")
+source("PBS-Application-Stats-Common.R")
 
 # Load cleaned data
 load(file=alldata_R)

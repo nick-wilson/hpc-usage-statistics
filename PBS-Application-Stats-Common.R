@@ -1,6 +1,6 @@
 
-alldata_R<-'data.Rdata'
-users_R<-'users.Rdata'
+alldata_R<-paste0("data.",suffix,".Rdata")
+users_R<-paste0("users.",suffix,".Rdata")
 unused_csv<-paste0("unused.",suffix,".csv")
 
 # vector to sort by core count

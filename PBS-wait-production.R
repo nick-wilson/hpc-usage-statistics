@@ -1,5 +1,8 @@
-library(dplyr)
-load('data.Rdata')
+#!/usr/bin/env Rscript
+
+source("config.R")
+source("PBS-Application-Stats-Common.R")
+
 filename<-'production.png'
 png(filename,width=854,height=544)
 q<-"production"

@@ -4,12 +4,11 @@ cd `dirname "$0"` || exit $?
 . ./config
 
 # Copy data to log directory
-outputfiles=`echo {active-totals,user-summary,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_,ams-,queue_firstrun,partial,{cores,gpus}-{mean,summary}}*.$suffix.csv`
+outputfiles=`echo {active-totals,user-summary,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_,ams-,queue_firstrun,partial,{cores,gpus}-{mean,summary}}*.$suffix.csv {data,qwait}.$suffix.Rdata`
 
 copy_to_logdir () {
  mkdir -p $logdir/$1/stakeholder $logdir/$1/other && \
  cp -pv $outputfiles $logdir/$1/
- cp -pv data.Rdata $logdir/$1/$suffix.Rdata
  for stakeholder in $stakeholders ; do
   mv -v $logdir/$1/*.$stakeholder.$suffix.csv $logdir/$1/stakeholder/ 2>/dev/null
  done
