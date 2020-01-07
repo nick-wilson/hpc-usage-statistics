@@ -70,8 +70,16 @@ queue_firstrun.$(suffix).csv: config
 alldata.$(suffix).csv: unused.$(suffix).csv pbs-report.cleaned.$(suffix).csv cores.$(suffix).csv usernames.$(suffix).csv storage-byproject.$(suffix).csv alljobs.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv config.R
 	./make-stats
 
+# Generate statistics (default)
 .PHONY : stats
 stats: queue_firstrun.$(suffix).csv alldata.$(suffix).csv ams-personal.$(suffix).csv ams-projects.$(suffix).csv
+
+# Generate Excel report
+application_usage-$(suffix).xlsx: alldata.$(suffix).csv
+	./make-reporting
+
+.PHONY: reporting
+reporting: application_usage-$(suffix).xlsx
 
 # Clean up data generated from R scripts
 .PHONY : clean
