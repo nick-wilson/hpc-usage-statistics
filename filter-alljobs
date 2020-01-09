@@ -28,5 +28,13 @@ for f in depend.$suffix.csv ; do
  fgrep -f "$tmpfile_g" "$f" >> "$tmpfile_d" && touch -r "$f" "$tmpfile_d" && mv "$tmpfile_d" "$f"
 done
 
+# Filter AM
+f="am-jobs.$suffix.csv"
+if [ -f "$f" ] ; then
+ tail -n +3 "$pbsreport" | sed -e 's/|.*/.wlm01,/' > "$tmpfile_g"
+ head -n 1 "$f" > "$tmpfile_d"
+ fgrep -f "$tmpfile_g" "$f" >> "$tmpfile_d" && touch -r "$f" "$tmpfile_d" && mv "$tmpfile_d" "$f"
+fi
+
 # cleanup before exit
 rm -f "$tmpfile_g" "$tmpfile_d"

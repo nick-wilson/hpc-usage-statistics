@@ -18,7 +18,7 @@ save(data,file=paste0("data+am.",suffix,".Rdata"))
 data<-data%>%filter(Node.Type!="DGX")
 write.csv(data,file=paste0("alldata+am.",suffix,".csv"),row.names=FALSE)
 
-data<-data%>%select(Job.ID,Username,Queue,Cores,Wall.Time.Hours,CoreHours,AM.cpu_hrs)
+data<-data%>%select(Job.ID,Project,Username,Queue,Cores,Wall.Time.Hours,CoreHours,AM.cpu_hrs)
 data$diff<-data$AM.cpu_hrs-data$CoreHours
 data<-na.omit(data)
 
