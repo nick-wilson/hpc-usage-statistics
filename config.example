@@ -60,6 +60,7 @@ csvprojectinfo=project-info.csv
 csvdepend=depend.csv
 csvusernames=usernames.csv
 csvngpus=ngpus.csv
+csvam=am-jobs.csv
 
 # list of stakeholder
 stakeholders="ASTAR NTU NUS SUTD TCOMS Industry GOV CREATE SMU NSCC ADMIN"

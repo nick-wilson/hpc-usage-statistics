@@ -129,5 +129,7 @@ echo
 
 # wait for AM transaction dump to finish
 wait
+# publish merged AM data
+if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then ./make-publish ; fi
 # full reset of file permissions
 ./fix-permissions --full

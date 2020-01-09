@@ -81,6 +81,16 @@ application_usage-$(suffix).xlsx: alldata.$(suffix).csv
 .PHONY: reporting
 reporting: application_usage-$(suffix).xlsx
 
+# Difference between AM and utilisation
+am-jobs.$(suffix).csv:
+	cp $(base)/$(data)/$(csvam) $@
+
+alldata+am.$(suffix).csv: am-jobs.$(suffix).csv alldata.$(suffix).csv
+	Rscript am-merge.R
+
+.PHONY: am-merge
+am-merge: alldata+am.$(suffix).csv
+
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
