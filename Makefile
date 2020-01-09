@@ -94,7 +94,7 @@ am-merge: alldata+am.$(suffix).csv
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-byorg,storage-byuser,project_,partial,alldata+am,am-discrepancy}*.$(suffix).csv qwait.$(suffix).Rdata $(prefix)-*.zip *.$(suffix).png no_rename-$(suffix).xlsx application_usage-$(suffix).xlsx data+am.$(suffix).Rdata
+	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-byorg,storage-byuser,project_,partial,alldata+am,am-discrepancy}*.$(suffix).csv qwait.$(suffix).Rdata *.$(suffix).png no_rename-$(suffix).xlsx application_usage-$(suffix).xlsx data+am.$(suffix).Rdata
 
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
