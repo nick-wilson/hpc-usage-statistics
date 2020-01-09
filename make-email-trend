@@ -2,9 +2,9 @@
 cd `dirname $0` || exit $?
 . ./config
 
-if [ x"$email_trend_recip" == x ] ; then echo missing: target email ; exit 1 ; fi
-if [ x"$email_trend_subject" == x ] ; then echo missing: subject line ; exit 1 ; fi
 if [ x"$email_trend_files" == x ] ; then echo missing: attachment list ; exit 1 ; fi
+if [ x"$email_trend_recip" == x ] ; then echo missing: target email ; exit 1 ; fi
+if [ x"$email_subject" == x ] ; then echo missing: subject line ; exit 1 ; fi
 
 error=0
 errmsg="missing "
@@ -28,7 +28,7 @@ fi
 checked=""
 if [ ! -f checked ] ; then checked="Have not been checked to confirm accuracy." ; fi
 
-mailx -s "$email_trend_subject" $attach $email_trend_recip << EOF
+mailx -s "$email_subject" $attach $email_trend_recip << EOF
 Auto-generated statistics.
 $checked
 EOF
