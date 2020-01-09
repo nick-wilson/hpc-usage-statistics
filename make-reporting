@@ -4,15 +4,7 @@ cd `dirname $0`
 pwd
 . ./config
 
-#export PATH="/app/pbs/bin:$PATH:/opt/pbs/bin:/opt/pbs/sbin"
-#. /etc/profile.d/modules.sh
-#. /app/modules/modules.sh
-#module load R
-#which Rscript
-#
-#echo making boxplots
-#xvfb-run Rscript PBS-wait-boxplots.R
-
+# Local environment, modify as required
 . /etc/profile.d/modules.sh
 . /app/modules/modules.sh
 module load singularity
@@ -29,14 +21,12 @@ cp -p application_usage-${suffix}.xlsx no_rename-${suffix}.xlsx
 python rename-worksheets${t}.py
 xvfb-run Rscript PBS-wait-boxplots.R
 EOF
-
-chmod 0640 *.png *.xlsx *.pyc
-chown ${statsuser}.${statsgroup} *.png *.xlsx *.pyc
-
+## Configuration of Singularity container
 # apt-get install -y r-base r-base-dev libcurl4-openssl-dev libssl-dev libxml2-dev default-jre default-jdk xvfb
 # R CMD javareconf
 # R CMD 'install.packages(c("tidyverse","rJava","xlsx"))'
 
-if [ -d R-stats-trending ] ; then
- (cd R-stats-trending && ./copyin && ./make-reporting)
-fi
+chmod 0640 *.png *.xlsx *.pyc
+chown ${statsuser}.${statsgroup} *.png *.xlsx *.pyc
+
+if [ -d R-stats-trending ] ; then make -C R-stats-trending ; fi
