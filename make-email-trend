@@ -1,0 +1,34 @@
+#!/bin/sh
+cd `dirname $0` || exit $?
+. ./config
+
+if [ x"$email_trend_recip" == x ] ; then echo missing: target email ; exit 1 ; fi
+if [ x"$email_trend_subject" == x ] ; then echo missing: subject line ; exit 1 ; fi
+if [ x"$email_trend_files" == x ] ; then echo missing: attachment list ; exit 1 ; fi
+
+error=0
+errmsg="missing "
+attach=""
+for f in $email_trend_files ; do
+ if [ ! -f $f ] ; then echo missing: $f ; errmsg="$errmsg $f" ; error=1 ; fi
+ attach="$attach -a $f"
+done
+
+if [ $error -eq 1 ] ; then
+ echo ERROR: $errmsg
+ exit 1
+fi
+
+#wait until work hours
+if [ x"$NOWAIT" == x ] ; then
+hm=`date +%k%M`
+while [ $hm -lt 900 ] ; do date ; echo sleep ;  sleep 60 ; hm=`date +%k%M` ; echo $hm ; done
+fi
+
+checked=""
+if [ ! -f checked ] ; then checked="Have not been checked to confirm accuracy." ; fi
+
+mailx -s "$email_trend_subject" $attach $email_trend_recip << EOF
+Auto-generated statistics.
+$checked
+EOF

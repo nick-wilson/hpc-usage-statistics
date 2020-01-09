@@ -80,6 +80,8 @@ email_cc="null@localhost.localdomain,noone@localhost.localdomain"
 email_draft="null@localhost.localdomain"
 email_subject="Application statistics for $ed/$em/$ey"
 email_files="application_usage-${suffix}.xlsx wait_byqueue+outliers.${suffix}.png wait_byqueue-outliers.${suffix}.png wait_bycore_cpu-outliers.${suffix}.png wait_byqueue_bycore_cpu-outliers.${suffix}.png wait_bycore_gpu-outliers.${suffix}.png wait_byqueue_bycore_gpu-outliers.${suffix}.png"
+email_trend_recip="null@localhost.localdomain"
+email_trend_files="dgx/dgx-nvaitc.png application_trending_cpu.${suffix}.png application_trending_gpu.${suffix}.png project_trending.${suffix}.png qwait+outliers.${suffix}.png stakeholder_trending_gpu.${suffix}.png"
 
 # Username and password for AM dump
 am_u=am_u
