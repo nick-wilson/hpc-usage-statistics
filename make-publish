@@ -6,7 +6,7 @@ cd `dirname "$0"` || exit $?
 # Copy data to log directory
 outputfiles=`echo {active-totals,user-summary,alldata,top100,total,org,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage,project_,ams-,queue_firstrun,partial,{cores,gpus}-{mean,summary}}*.$suffix.csv {data,qwait}.$suffix.Rdata`
 
-if [ -f data+am.$suffix.Rdata ] ; then outputfiles="$outputfiles data+am.$suffix.Rdata alldata+am.$suffix.csv am-discrepancy.$suffix.csv"
+if [ -f am-discrepancy.$suffix.Rdata ] ; then outputfiles="$outputfiles am-discrepancy.$suffix.csv"
 
 copy_to_logdir () {
  mkdir -p $logdir/$1/stakeholder $logdir/$1/other && \

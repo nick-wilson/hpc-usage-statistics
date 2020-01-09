@@ -94,12 +94,12 @@ am-merge: alldata+am.$(suffix).csv
 # Clean up data generated from R scripts
 .PHONY : clean
 clean:
-	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-byorg,storage-byuser,project_,partial,alldata+am,am-discrepancy}*.$(suffix).csv qwait.$(suffix).Rdata $(prefix)-*.zip *.$(suffix).png no_rename-$(suffix).xlsx application_usage-$(suffix).xlsx
+	rm -f {active*,alldata,top100,unknown,org,total,application,user_,stats_by_core,cpu_walltime_by_user_by_application_,storage-byorg,storage-byuser,project_,partial,alldata+am,am-discrepancy}*.$(suffix).csv qwait.$(suffix).Rdata $(prefix)-*.zip *.$(suffix).png no_rename-$(suffix).xlsx application_usage-$(suffix).xlsx data+am.$(suffix).Rdata
 
 # Remove everything apart from raw PBS data and config file
 .PHONY : veryclean
 veryclean: clean
-	rm -f alljobs.$(suffix).csv alljobs?.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-p*.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv pbs-report.cleaned.$(suffix).csv pbs-report.cleaned.partial.$(suffix).csv cores.$(suffix).csv cores.partial.$(suffix).csv config.R config.pyc config.py data.$(suffix).Rdata users.$(suffix).Rdata storage*.$(suffix).csv user-summary.$(suffix).csv monthly.$(suffix).csv cumulative.$(suffix).csv am-jobs.$(suffix).csv data+am.$(suffix).Rdata
+	rm -f alljobs.$(suffix).csv alljobs?.$(suffix).csv project.$(suffix).csv project-info.$(suffix).csv usernames.$(suffix).csv ams-p*.$(suffix).csv depend.$(suffix).csv ngpus.$(suffix).csv pbs-report.cleaned.$(suffix).csv pbs-report.cleaned.partial.$(suffix).csv cores.$(suffix).csv cores.partial.$(suffix).csv config.R config.pyc config.py data.$(suffix).Rdata users.$(suffix).Rdata storage*.$(suffix).csv user-summary.$(suffix).csv monthly.$(suffix).csv cumulative.$(suffix).csv am-jobs.$(suffix).csv
 
 # Remove data which requires root access
 # Only remove pbs-report data as a last resort as it is an external dependency
