@@ -11,10 +11,10 @@ ifile<-paste0('project-info.',suffix,'.csv')
 i<-read.csv(ifile)
 
 q<-merge(p,i,all.x=TRUE,all.y=FALSE,sort=FALSE)
-q$Project_Name<-as.character(q$Project_Name)
-q$Project_Name[is.na(q$Project_Name)]<-""
-q$PI<-as.character(q$PI)
-q$PI[is.na(q$PI)]<-""
+q$Project.Name<-as.character(q$Project.Name)
+q$Project.Name[is.na(q$Project.Name)]<-""
+q$Project.Requestor<-as.character(q$Project.Requestor)
+q$Project.Requestor[is.na(q$Project.Requestor)]<-""
 
 r<-q%>%arrange(desc(CoreHours),desc(home_gb))
 #r$Project_Short<-gsub('(A.STAR-|NUS-|Industry-|NTU-|SUTD-|SMU-)','',r$Project)
