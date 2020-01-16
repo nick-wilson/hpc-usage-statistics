@@ -2,7 +2,7 @@
 cd `dirname $0` || exit $?
 . ./config
 
-email_files="application_usage-${suffix}.xlsx wait_byqueue+outliers.${suffix}.png wait_byqueue-outliers.${suffix}.png application_trending_cpu.${suffix}.png application_trending_gpu.${suffix}.png"
+email_files="application_usage-${suffix}.xlsx wait_byqueue+outliers.${suffix}.png wait_byqueue-outliers.${suffix}.png application_trending_cpu.${suffix}.png application_trending_gpu.${suffix}.png dgx/dgx-nvaitc.png"
 email_subject="Monthly application statistics for $ey/$em"
 
 if [ x"$DRAFT" == xy ] ; then
