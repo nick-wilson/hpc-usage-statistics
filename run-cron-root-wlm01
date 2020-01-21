@@ -90,15 +90,16 @@ if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
 fi
 
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
+ ./make-publish
  if [ x"$type" == xweekly ] ; then
   echo circulate weekly spreadsheet via email
   su $statsuser -c $PWD/make-email-draft
   su $statsuser -c $PWD/make-email
+  su $statsuser -c $PWD/make-email-trend
  elif [ x"$type" == xmonthly ] ; then
   echo email draft monthly report
   su $statsuser -c $PWD/make-email-monthly-draft
  fi
- ./make-publish
 fi
 
 if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
