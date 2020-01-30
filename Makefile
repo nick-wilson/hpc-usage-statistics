@@ -110,3 +110,7 @@ veryveryclean: veryclean
 .PHONY : distclean
 distclean: veryveryclean
 	rm -f config
+
+.PHONY: pull
+pull:
+	./make-pull

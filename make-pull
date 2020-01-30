@@ -2,30 +2,10 @@
 . ./config
 
 type git > /dev/null 2>&1 || exit 0
-git pull
 
-if [ ! -d dgx ] ; then
- git clone $repos/usage-dgx.git dgx
-else
- (cd dgx && git pull)
-fi
+find . -name .git -type d | sed -e 's,/.git,,' | while read d ; do (cd $d && git pull) ; done
 
-if [ -d system-utilisation ] ; then
- if [ -d system-utilisation/.git ] ; then
-  (cd system-utilisation && git pull)
- fi
-else
- git clone $repos/system-utilisation.git
-fi
-
-if [ ! -d load2apps ] ; then
- git clone $repos/load2apps.git
-else
- (cd load2apps && git pull)
-fi
-
-if [ ! -d am ] ; then
- git clone $repos/usage-pbs-am.git am
-else
- (cd am && git pull)
-fi
+if [ ! -d dgx ] ; then git clone $repos/usage-dgx.git dgx ; fi
+if [ ! -d system-utilisation ] ; then git clone $repos/system-utilisation.git ; fi
+if [ ! -d load2apps ] ; then git clone $repos/load2apps.git ; fi
+if [ ! -d am ] ; then git clone $repos/usage-pbs-am.git am ; fi
