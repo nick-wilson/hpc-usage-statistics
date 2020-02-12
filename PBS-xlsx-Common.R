@@ -264,7 +264,7 @@ myupdate(sheet_name,sc,ec,df=tmp)
 sheet_name<-'User DGX'
 # 1000 placeholders
 sc<-1
-ec<-7
+ec<-9
 prefix<-'dgx/user_walltime_dgx'
 myupdate(sheet_name,sc,ec,df=myread(prefix))
 
