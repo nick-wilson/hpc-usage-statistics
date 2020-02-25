@@ -41,6 +41,7 @@ for f in pbs-report.raw.$suffix.csv pbs-report.raw.partial.$suffix.csv ; do
        -e 's%^9238331|.*%9238331|jyauyong|medium|GridSearch_set_10.pbs|2019/11/14 10:34|None|std0504/0*24|1|82704kb|1596968kb|4|12|0|0|1%' \
        -e 's%^9238334|.*%9238334|jyauyong|medium|GridSearch_set_11.pbs|2019/11/14 10:36|None|std0264/0*24|1|69576kb|1546468kb|4|12|0|0|1%' \
        -e 's%^9191524|.*%9191524|tsltaywb|medium|OF-comp_corner|2019/10/31 16:49|None|std0330/0*24|1|2975560kb|16718116kb|137|14|481|0|0%' \
+       -e 's%^9605727|.*%9605727|chenq|q4|9NP-SBN4-15c-2|2020/02/04 15:38|None|std0517/0*24+std0525/0*24+std0553/0*24+std0561/0*24+std0569/0*24+std0703/0*24+std0713/0*24+std0717/0*24+std0745/0*24+std0759/0*24+std0772/0*24+std0851/0*24+std1017/0*24+std1018/0*24+std1019/0*24+std1020/0*24+std1021/0*24+std1022/0*24+std1023/0*24+std1024/0*24+std1025/0*24+std1026/0*24+std1027/0*24+std1115/0*24|24|6305420kb|6821284kb|44703987|86447|417856|0|271%' \
     "$f"
  diff "$f" "$f".tmp && rm -f "$f".tmp
 done
