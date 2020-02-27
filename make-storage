@@ -110,7 +110,7 @@ for proj in $projects ; do
  echo home1:${proj},DATA_PROJECTS >> $csvf
 done
 #echo home:csibio,HOME_PROJECTS_CSIBIO >> $csvf
-echo home:csibio,HOME_PROJECTS >> $csvf
+#echo home:csibio,HOME_PROJECTS >> $csvf
 fi
 
 csvf="user-summary.$suffix.csv"
