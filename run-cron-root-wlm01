@@ -103,19 +103,6 @@ if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then
  fi
 fi
 
-if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
- echo update aggregate statistics when running monthly report
- cd /app/nsccadmin/apps/usage-statistics/reports/aggregate && \
-   ./aggregate && \
-   make && \
-   if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi && \
-   make && \
-   ./update-myusage --all --reset && \
-   ./make-publish && \
-   ./make-copyout && \
-   ./fix-permissions
-fi
-
 echo system utilisation data
 head cores-mean.$suffix.csv gpus-mean.$suffix.csv
 echo
@@ -135,3 +122,17 @@ wait
 if [ ${UPDATE_MYUSAGE:-1} -eq 1 ] ; then ./make-publish ; fi
 # full reset of file permissions
 ./fix-permissions --full
+
+
+if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
+ echo update aggregate statistics when running monthly report
+ cd /app/nsccadmin/apps/usage-statistics/reports/aggregate && \
+   ./aggregate && \
+   make && \
+   if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi && \
+   make && \
+   ./update-myusage --all --reset && \
+   ./make-publish && \
+   ./make-copyout && \
+   ./fix-permissions
+fi
