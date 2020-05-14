@@ -43,7 +43,7 @@ suffix=${sy}${sm}${sd}-${ey}${em}${ed}
 prefix=${ey}-${em}
 
 #Location of data
-base=/app/nsccadmin/log
+base=/log
 log=usage-statistics
 ams=ams
 data=printjob
@@ -63,16 +63,16 @@ csvngpus=ngpus.csv
 csvam=am-jobs.csv
 
 # list of stakeholder
-stakeholders="ASTAR NTU NUS SUTD TCOMS Industry GOV CREATE SMU NSCC ADMIN"
+stakeholders="EDU RESEARCH INDUSTRY GOV ADMIN"
 # Other organisations repored against
-others="GIS IHPC KOMTECH MACHINELEARNING"
+others="MACHINELEARNING"
 
 # Location of source code repositories
-repos="file:///app/nsccadmin/apps/usage-statistics/reports/repos"
+repos="git@github.com:nick-wilson"
 
 # Username for output files
-statsuser=fsg3
-statsgroup=nscc-proj
+statsuser=user1
+statsgroup=proj1
 
 # Email addresses to deliver reports
 email_recip="null@localhost.localdomain"
