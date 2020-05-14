@@ -1,0 +1,124 @@
+#!/bin/bash
+
+# This script has workflow required to run statistics in cron
+# Needs to be run as root on PBS server
+# 
+# Following environment variables should be set when running script
+# For weekly report:        GET_LATEST=1 PUBLISH=1 MAKE_AGGREGATE=0
+# For monthly report:       GET_LATEST=1 PUBLISH=1 MAKE_AGGREGATE=1
+# For pre-checks:           GET_LATEST=0 PUBLISH=0 MAKE_AGGREGATE=0
+
+cd `dirname $0` || exit $?
+
+if [ ! -f config ] ; then echo missing config file ; exit 1 ; fi
+. ./config
+
+if [ -f profile ] ; then . ./profile ; fi
+
+echo get latest version
+./make-pull
+
+echo clean up old results and only leave config file
+make veryveryclean
+if [ -d dgx ] ; then make -C dgx veryclean ; fi
+if [ -d load2apps ] ; then (cd load2apps && ./clean) ; fi
+if [ -d system-utilisation ] ; then (cd system-utilisation && ./clean) ; fi
+if [ -d dgx/system-utilisation ] ; then (cd dgx/system-utilisation && ./clean) ; fi
+if [ -d R-stats-trending ] ; then make -C R-stats-trending veryclean ; fi
+if [ -d am ] ; then make -C am clean ; fi
+
+echo first make, only interested in pbs-report data
+make pbs-report.raw.$suffix.csv
+
+if [ ${GET_LATEST:-0} -eq 1 ] ; then
+ echo get latest application and project data
+ get-latest
+fi
+
+echo second pass of statistics with latest application and qstat information
+make veryclean stats
+
+echo reduce size of ancillary files
+./filter-alljobs --regex
+
+echo get alternate application names
+if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi
+if [ -d dgx ] ; then make -C dgx veryclean ; fi
+
+echo third pass of statistics with fixed application data
+make
+
+if [ ${PUBLISH:-0} -eq 1 ] ; then
+ echo collect AM transaction data
+ make -C am > am.stdout 2>&1 < /dev/null &
+fi
+
+if [ ${PUBLISH:-0} -eq 1 ] ; then
+ echo Update myusage data
+ ./update-myusage --all
+ echo publish data to log directory
+ ./make-publish
+fi
+
+echo fix file ownership so statsuser can write to directory when generating reports
+./fix-permissions
+
+echo make spreadsheet and graphics
+su $statsuser -c "make -C $PWD reporting"
+
+if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
+ echo copy raw data to be used in aggregate report
+ ./copy-to-aggregate || true
+fi
+
+if [ ${PUBLISH:-0} -eq 1 ] ; then
+ ./make-publish
+ if [ x"$type" == xweekly ] ; then
+  echo circulate weekly spreadsheet via email
+  su $statsuser -c $PWD/make-email-draft
+  su $statsuser -c $PWD/make-email
+  su $statsuser -c $PWD/make-email-trend
+ elif [ x"$type" == xmonthly ] ; then
+  echo email draft monthly report
+  su $statsuser -c $PWD/make-email-monthly-draft
+ fi
+fi
+
+echo system utilisation data
+head cores-mean.$suffix.csv gpus-mean.$suffix.csv
+echo
+echo alternate application names
+sed -e 's/^.*,//' load2apps/alternate.csv  | sort | uniq -c | sort -n
+
+echo check walltime of jobs
+./walltime-check
+echo ===
+sort -nk 5 walltime-check.stdout | tail -n 10
+echo
+
+# wait for AM transaction dump to finish
+wait
+# publish merged AM data
+if [ ${PUBLISH:-0} -eq 1 ] ; then ./make-publish ; fi
+# full reset of file permissions
+./fix-permissions --full
+if [ ${PUBLISH:-0} -eq 1 ] ; then
+ if [ x"$type" == xweekly ] ; then
+  # email discrepancies for weekly reports
+  su $statsuser -c "make -C $PWD/am email"
+ fi
+fi
+
+if [ ${MAKE_AGGREGATE:-0} -eq 1 ] ; then
+ echo update aggregate statistics when running monthly report
+ cd /app/nsccadmin/apps/usage-statistics/reports/aggregate && \
+   ./aggregate && \
+   make && \
+   if [ -d load2apps ] ; then (cd load2apps && ./run) ; fi && \
+   make && \
+   if [ ${PUBLISH:-0} -eq 1 ] ; then
+     ./update-myusage --all --reset && \
+     ./make-publish && \
+     ./fix-permissions
+   fi
+fi
